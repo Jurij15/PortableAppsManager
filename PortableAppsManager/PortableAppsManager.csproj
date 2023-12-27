@@ -16,6 +16,7 @@
   <ItemGroup>
     <None Remove="Assets\Package.svg" />
     <None Remove="Controls\AppItemControl.xaml" />
+    <None Remove="Dialogs\EditAppDialogContent.xaml" />
     <None Remove="Pages\AppDetailsPage.xaml" />
     <None Remove="Pages\AppsPage.xaml" />
     <None Remove="Pages\GamesPage.xaml" />
@@ -104,6 +105,11 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Managers\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Dialogs\EditAppDialogContent.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\Setup\SetupPages\AppsDirectorySetupPages.xaml">

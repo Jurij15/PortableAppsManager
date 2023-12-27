@@ -48,12 +48,14 @@ namespace PortableAppsManager.Pages
             StorageFolder dir = await DialogService.OpenFolderPickerToSelectSingleFolder(Windows.Storage.Pickers.PickerViewMode.List);
 
             Driller driller = new Driller();
-            List<Driller.DrillerFoundApp> list = driller.GetAllAppsInsideDirectory(dir.Path);
+            //List<Driller.DrillerFoundApp> list = driller.GetAllAppsInsideDirectory(dir.Path);
+            /*
             foreach (Driller.DrillerFoundApp item in list)
             {
                 //MessageBox.Show(item.Source + "\n" + item.ExecutablePath + "\n" + item.ExecutableParentDirectoryPath);
                 AppItems.Items.Add(new Controls.AppItemControl() { AppName = item.ExecutablePath, AppNameSubText = item.ExecutableParentDirectoryPath, ImgSource = ImageHelper.ConvertIconToImageSource(System.Drawing.Icon.ExtractAssociatedIcon(item.ExecutablePath)) });
             }
+            */
 
             
         }

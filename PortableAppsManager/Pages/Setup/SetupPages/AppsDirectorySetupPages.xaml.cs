@@ -33,11 +33,16 @@ namespace PortableAppsManager.Pages.Setup.SetupPages
     /// </summary>
     public sealed partial class AppsDirectorySetupPages : Page
     {
-        List<AppItem> apps;
+        List<AppItem> PortableAppsApps;
+        List<AppItem> OtherApps;
+
+        List<string> ExceptionsDirectories;
         public AppsDirectorySetupPages()
         {
             this.InitializeComponent();
             this.DataContext = this;
+
+            ExceptionsDirectories = new List<string>();
         }
 
         private async void ScanNowBtn_Click(object sender, RoutedEventArgs e)
@@ -52,11 +57,12 @@ namespace PortableAppsManager.Pages.Setup.SetupPages
 
             await Task.Delay(900);
 
-            apps = new List<AppItem>();
+            PortableAppsApps = new List<AppItem>();
+            OtherApps = new List<AppItem>();
             try
             {
                 Driller d = new Driller();
-                List<Driller.DrillerFoundApp> foundapps = d.GetAllAppsInsideDirectory(PathTextBox.Text);
+                List<Driller.DrillerFoundApp> foundapps = d.GetAllAppsInsideDirectory(PathTextBox.Text,ExceptionsDirectories.ToArray());
                 foreach (var found in foundapps)
                 {
                     AppItem item = new AppItem();
@@ -70,12 +76,13 @@ namespace PortableAppsManager.Pages.Setup.SetupPages
                     if (found.Source == Driller.DrillerFoundAppSource.PortableApps)
                     {
                         item.Setup_IsPortableAppsCom = true;
+                        PortableAppsApps.Add(item);
                     }
                     else
                     {
                         item.Setup_IsPortableAppsCom = false;
+                        OtherApps.Add(item);
                     }
-                    apps.Add(item);
                     ScanNowCard.Description = $"Found {item.AppName}";
                 }
             }
@@ -87,13 +94,18 @@ namespace PortableAppsManager.Pages.Setup.SetupPages
 
             await Task.Delay(10);
 
-            PortableAppsComAppsGrid.ItemsSource = apps;
+            PortableAppsComAppsGrid.ItemsSource = PortableAppsApps;
+            OtherAppsGrid.ItemsSource = OtherApps;
 
             AppsExpander.IsEnabled = true;
             AppsExpander.IsExpanded = true;
             await Task.Delay(100);
             PrepGrid.Visibility = Visibility.Collapsed;
             PortableAppsComAppsGrid.SelectAll();
+
+            othertext.Visibility = Visibility.Visible;
+            portableappsppstext.Visibility = Visibility.Visible;
+            ContinueSetupCard.Visibility = Visibility.Visible;
         }
 
         private void PathTextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -105,6 +117,33 @@ namespace PortableAppsManager.Pages.Setup.SetupPages
         {
             StorageFolder folder = await DialogService.OpenFolderPickerToSelectSingleFolder(Windows.Storage.Pickers.PickerViewMode.List);
             PathTextBox.Text = folder.Path;
+        }
+
+        private void ContinueSetupCard_Click(object sender, RoutedEventArgs e)
+        {
+            //ShellSetupPage.RootSetupFrame.Navigate()
+        }
+
+        private async void AddException_Click(object sender, RoutedEventArgs e)
+        {
+            StorageFolder folder = await DialogService.OpenFolderPickerToSelectSingleFolder(Windows.Storage.Pickers.PickerViewMode.List);
+            string path = folder.Path;
+
+            ExceptionsDirectories.Add(path);
+
+            ExceptionsFlyout.SystemBackdrop = new MicaBackdrop();
+            ExceptionItems.ItemsSource = ExceptionsDirectories;
+        }
+
+        private void ClearBtn_Click(object sender, RoutedEventArgs e)
+        {
+            ExceptionsDirectories.Clear();
+            ExceptionItems.ItemsSource = ExceptionsDirectories;
+        }
+
+        private void ExceptionItems_Loaded(object sender, RoutedEventArgs e)
+        {
+            ExceptionItems.ItemsSource = ExceptionsDirectories;
         }
     }
 }

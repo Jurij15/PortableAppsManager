@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using ABI.Microsoft.UI.Xaml;
@@ -25,7 +26,21 @@ namespace PortableAppsManager.Core
             public string ExecutablePath { get; set; }
         }
 
-        public List<DrillerFoundApp> GetAllAppsInsideDirectory(string DirectoryPath)
+        private bool IsDirOnExceptionList(string Path, string[] ExceptionsList)
+        {
+            bool returnVal = false;
+            foreach (var item in ExceptionsList)
+            {
+                if (Path == item)
+                {
+                    returnVal = true;
+                    break;
+                }
+            }
+            return returnVal;
+        }
+
+        public List<DrillerFoundApp> GetAllAppsInsideDirectory(string DirectoryPath, string[] Exceptions)
         {
             List<DrillerFoundApp> apps = new List<DrillerFoundApp>();
 
@@ -43,6 +58,10 @@ namespace PortableAppsManager.Core
             string[] dirs = Directory.GetDirectories(DirectoryPath);
             foreach (var parentDirectory in dirs)
             {
+                if (IsDirOnExceptionList(parentDirectory, Exceptions))
+                {
+                    continue;
+                }
                 bool foundAppDir = false;
                 bool foundDataDir = false;
                 bool foundOtherDir = false;
@@ -95,6 +114,10 @@ namespace PortableAppsManager.Core
             //now, lets find all the remaining directories that possbly are not portableapps
             foreach (var item in NonPortableAppsDirs)
             {
+                if (IsDirOnExceptionList(item, Exceptions))
+                {
+                    continue;
+                }
                 foreach (var exe in Directory.GetFiles(item))
                 {
                     //MessageBox.Show(Path.GetExtension(Path.GetFileName(exe)), "other loop");

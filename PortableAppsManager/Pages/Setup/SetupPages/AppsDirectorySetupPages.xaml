@@ -15,6 +15,9 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
@@ -36,6 +39,7 @@
                     <StackPanel Orientation="Horizontal" Spacing="4">
                         <TextBox
                             x:Name="PathTextBox"
+                            MinWidth="350"
                             PlaceholderText="Path"
                             TextChanged="PathTextBox_TextChanged" />
                         <Button x:Name="PickPathBtn" Click="PickPathBtn_Click">
@@ -52,11 +56,37 @@
                     <settings:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xF78B;" />
                     </settings:SettingsCard.HeaderIcon>
-                    <Button
-                        x:Name="ScanNowBtn"
-                        Click="ScanNowBtn_Click"
-                        Content="Scan Now"
-                        Style="{ThemeResource AccentButtonStyle}" />
+                    <StackPanel Orientation="Horizontal" Spacing="2">
+                        <Button x:Name="ExceptionsBtn">
+                            <FontIcon Glyph="&#xE712;" />
+                            <Button.Flyout>
+                                <Flyout x:Name="ExceptionsFlyout">
+                                    <StackPanel Orientation="Vertical" Spacing="2">
+                                        <TextBlock Style="{ThemeResource BodyStrongTextBlockStyle}" Text="List of exceptions:" />
+                                        <ListView x:Name="ExceptionItems" Loaded="ExceptionItems_Loaded">
+                                        </ListView>
+                                        <StackPanel Orientation="Horizontal" Spacing="2">
+                                            <Button x:Name="AddException" Click="AddException_Click">
+                                                <StackPanel Spacing="2">
+                                                    <TextBlock Text="Add" />
+                                                </StackPanel>
+                                            </Button>
+                                            <Button
+                                                x:Name="ClearBtn"
+                                                Click="ClearBtn_Click"
+                                                Content="Clear" />
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Flyout>
+                            </Button.Flyout>
+                        </Button>
+                        <Button
+                            x:Name="ScanNowBtn"
+                            Click="ScanNowBtn_Click"
+                            Content="Scan Now"
+                            FontFamily="Segoe UI Variable Display"
+                            Style="{ThemeResource AccentButtonStyle}" />
+                    </StackPanel>
                 </settings:SettingsCard>
             </StackPanel>
             <settings:SettingsExpander
@@ -71,26 +101,29 @@
                 <settings:SettingsExpander.HeaderIcon>
                     <FontIcon Glyph="&#xE762;" />
                 </settings:SettingsExpander.HeaderIcon>
-                <Button Content="Return Back" />
+                <Button
+                    Content="Return Back"
+                    FontFamily="Segoe UI Variable Display"
+                    UseSystemFocusVisuals="True" />
                 <settings:SettingsExpander.Items>
-                    <settings:SettingsCard Header="Add Another" IsClickEnabled="True" />
+                    <settings:SettingsCard
+                        FontFamily="Segoe UI Variable Display"
+                        Header="Add Another"
+                        IsClickEnabled="True" />
                 </settings:SettingsExpander.Items>
-                <settings:SettingsExpander.ItemsFooter>
-                    <settings:SettingsCard HorizontalContentAlignment="Right">
-                        <StackPanel
-                            HorizontalAlignment="Right"
-                            Orientation="Horizontal"
-                            Spacing="4">
-                            <Button Visibility="Collapsed"
-                                x:Name="SelectAllBtn"
-                                Content="Select All" />
-                        </StackPanel>
-                    </settings:SettingsCard>
-                </settings:SettingsExpander.ItemsFooter>
             </settings:SettingsExpander>
+            <TextBlock
+                x:Name="portableappsppstext"
+                Grid.Row="2"
+                Margin="2"
+                FontFamily="Segoe UI Variable Display"
+                Style="{ThemeResource BodyStrongTextBlockStyle}"
+                Text="PortableApps.com apps:"
+                Visibility="Collapsed" />
             <GridView
                 x:Name="PortableAppsComAppsGrid"
-                Grid.Row="2"
+                Grid.Row="3"
+                FontFamily="Segoe UI Variable Display"
                 SelectionMode="Multiple">
                 <GridView.ItemTemplate>
                     <DataTemplate x:DataType="classes:AppItem">
@@ -121,6 +154,7 @@
                                 Grid.Row="1"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
+                                FontFamily="Segoe UI Variable Display"
                                 Style="{ThemeResource BodyTextBlockStyle}"
                                 Text="{x:Bind AppName}"
                                 TextTrimming="CharacterEllipsis"
@@ -135,12 +169,14 @@
                                 <Button
                                     x:Name="AddTagsBtn"
                                     Margin="-4"
+                                    FontFamily="Segoe UI Variable Display"
                                     ToolTipService.ToolTip="Add Tags">
                                     <FontIcon Glyph="&#xE710;" />
                                 </Button>
                                 <Button
                                     x:Name="EditMoreDetailsBtn"
                                     Margin="-4"
+                                    FontFamily="Segoe UI Variable Display"
                                     ToolTipService.ToolTip="Edit">
                                     <FontIcon Glyph="&#xE712;" />
                                 </Button>
@@ -149,6 +185,92 @@
                     </DataTemplate>
                 </GridView.ItemTemplate>
             </GridView>
+            <TextBlock
+                x:Name="othertext"
+                Grid.Row="4"
+                Margin="2"
+                FontFamily="Segoe UI Variable Display"
+                Style="{ThemeResource BodyStrongTextBlockStyle}"
+                Text="Other apps:"
+                Visibility="Collapsed" />
+            <GridView
+                x:Name="OtherAppsGrid"
+                Grid.Row="5"
+                FontFamily="Segoe UI Variable Display"
+                SelectionMode="Multiple">
+                <GridView.ItemTemplate>
+                    <DataTemplate x:DataType="classes:AppItem">
+                        <Grid
+                            Width="170"
+                            MaxHeight="150"
+                            Margin="2"
+                            Padding="24"
+                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                            ToolTipService.ToolTip="{x:Bind ExePath}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Image
+                                x:Name="AppIcon"
+                                Grid.Row="0"
+                                Width="32"
+                                Height="32"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Top"
+                                Source="{x:Bind ImgSource}" />
+                            <TextBlock
+                                x:Name="AppNameBlock"
+                                Grid.Row="1"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                FontFamily="Segoe UI Variable Display"
+                                Style="{ThemeResource BodyTextBlockStyle}"
+                                Text="{x:Bind AppName}"
+                                TextTrimming="CharacterEllipsis"
+                                TextWrapping="WrapWholeWords" />
+                            <GridView x:Name="TagsGrid" Grid.Row="2" />
+                            <StackPanel
+                                Grid.Row="3"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Bottom"
+                                Orientation="Horizontal"
+                                Spacing="12">
+                                <Button
+                                    x:Name="AddTagsBtn"
+                                    Margin="-4"
+                                    FontFamily="Segoe UI Variable Display"
+                                    ToolTipService.ToolTip="Add Tags">
+                                    <FontIcon Glyph="&#xE710;" />
+                                </Button>
+                                <Button
+                                    x:Name="EditMoreDetailsBtn"
+                                    Margin="-4"
+                                    FontFamily="Segoe UI Variable Display"
+                                    ToolTipService.ToolTip="Edit">
+                                    <FontIcon Glyph="&#xE712;" />
+                                </Button>
+                            </StackPanel>
+                        </Grid>
+                    </DataTemplate>
+                </GridView.ItemTemplate>
+            </GridView>
+            <settings:SettingsCard
+                x:Name="ContinueSetupCard"
+                Grid.Row="6"
+                Click="ContinueSetupCard_Click"
+                Description="Save apps and go to the next step."
+                FontFamily="Segoe UI Variable Display"
+                Header="Continue Setup"
+                IsClickEnabled="True"
+                Visibility="Collapsed">
+                <settings:SettingsCard.ActionIcon>
+                    <FontIcon Glyph="&#xE72A;" />
+                </settings:SettingsCard.ActionIcon>
+            </settings:SettingsCard>
         </Grid>
     </ScrollViewer>
 </Page>

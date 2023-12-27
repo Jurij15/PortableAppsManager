@@ -25,6 +25,7 @@ namespace PortableAppsManager.Pages.Setup
     /// </summary>
     public sealed partial class ShellSetupPage : Page
     {
+        public static Frame RootSetupFrame;
         public ShellSetupPage()
         {
             this.InitializeComponent();
@@ -43,6 +44,7 @@ namespace PortableAppsManager.Pages.Setup
 
         private void SetupFrame_Loaded(object sender, RoutedEventArgs e)
         {
+            RootSetupFrame = SetupFrame;
             ((Frame)sender).Navigate(typeof(AppsDirectorySetupPages));
         }
     }
