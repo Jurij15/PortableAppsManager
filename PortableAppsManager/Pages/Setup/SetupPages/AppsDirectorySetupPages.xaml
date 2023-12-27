@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Page
+    x:Class="PortableAppsManager.Pages.Setup.SetupPages.AppsDirectorySetupPages"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:classes="using:PortableAppsManager.Classes"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:PortableAppsManager.Pages.Setup.SetupPages"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:settings="using:CommunityToolkit.WinUI.Controls"
+    mc:Ignorable="d">
+
+    <ScrollViewer Margin="24">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ChildrenTransitions>
+                <RepositionThemeTransition />
+            </Grid.ChildrenTransitions>
+            <StackPanel
+                x:Name="PrepGrid"
+                Grid.Row="0"
+                Spacing="2">
+                <settings:SettingsCard
+                    x:Name="PickDirectoryCard"
+                    Description="Select the directory that contains all of your porable applications."
+                    FontFamily="Segoe UI Variable Display"
+                    Header="1. Select your apps Directory">
+                    <settings:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xE8B7;" />
+                    </settings:SettingsCard.HeaderIcon>
+                    <StackPanel Orientation="Horizontal" Spacing="4">
+                        <TextBox
+                            x:Name="PathTextBox"
+                            PlaceholderText="Path"
+                            TextChanged="PathTextBox_TextChanged" />
+                        <Button x:Name="PickPathBtn" Click="PickPathBtn_Click">
+                            <FontIcon Glyph="&#xED25;" />
+                        </Button>
+                    </StackPanel>
+                </settings:SettingsCard>
+                <settings:SettingsCard
+                    x:Name="ScanNowCard"
+                    Description="Click scan now to start scanning"
+                    FontFamily="Segoe UI Variable Display"
+                    Header="2. Scan for applications"
+                    IsEnabled="False">
+                    <settings:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xF78B;" />
+                    </settings:SettingsCard.HeaderIcon>
+                    <Button
+                        x:Name="ScanNowBtn"
+                        Click="ScanNowBtn_Click"
+                        Content="Scan Now"
+                        Style="{ThemeResource AccentButtonStyle}" />
+                </settings:SettingsCard>
+            </StackPanel>
+            <settings:SettingsExpander
+                x:Name="AppsExpander"
+                Grid.Row="1"
+                Margin="1,3,1,1"
+                Description=""
+                FontFamily="Segoe UI Variable Display"
+                Header="3. Select and customize apps"
+                IsEnabled="False"
+                IsExpanded="False">
+                <settings:SettingsExpander.HeaderIcon>
+                    <FontIcon Glyph="&#xE762;" />
+                </settings:SettingsExpander.HeaderIcon>
+                <Button Content="Return Back" />
+                <settings:SettingsExpander.Items>
+                    <settings:SettingsCard Header="Add Another" IsClickEnabled="True" />
+                </settings:SettingsExpander.Items>
+                <settings:SettingsExpander.ItemsFooter>
+                    <settings:SettingsCard HorizontalContentAlignment="Right">
+                        <StackPanel
+                            HorizontalAlignment="Right"
+                            Orientation="Horizontal"
+                            Spacing="4">
+                            <Button Visibility="Collapsed"
+                                x:Name="SelectAllBtn"
+                                Content="Select All" />
+                        </StackPanel>
+                    </settings:SettingsCard>
+                </settings:SettingsExpander.ItemsFooter>
+            </settings:SettingsExpander>
+            <GridView
+                x:Name="PortableAppsComAppsGrid"
+                Grid.Row="2"
+                SelectionMode="Multiple">
+                <GridView.ItemTemplate>
+                    <DataTemplate x:DataType="classes:AppItem">
+                        <Grid
+                            Width="170"
+                            MaxHeight="150"
+                            Margin="2"
+                            Padding="24"
+                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                            ToolTipService.ToolTip="{x:Bind ExePath}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Image
+                                x:Name="AppIcon"
+                                Grid.Row="0"
+                                Width="32"
+                                Height="32"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Top"
+                                Source="{x:Bind ImgSource}" />
+                            <TextBlock
+                                x:Name="AppNameBlock"
+                                Grid.Row="1"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Style="{ThemeResource BodyTextBlockStyle}"
+                                Text="{x:Bind AppName}"
+                                TextTrimming="CharacterEllipsis"
+                                TextWrapping="WrapWholeWords" />
+                            <GridView x:Name="TagsGrid" Grid.Row="2" />
+                            <StackPanel
+                                Grid.Row="3"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Bottom"
+                                Orientation="Horizontal"
+                                Spacing="12">
+                                <Button
+                                    x:Name="AddTagsBtn"
+                                    Margin="-4"
+                                    ToolTipService.ToolTip="Add Tags">
+                                    <FontIcon Glyph="&#xE710;" />
+                                </Button>
+                                <Button
+                                    x:Name="EditMoreDetailsBtn"
+                                    Margin="-4"
+                                    ToolTipService.ToolTip="Edit">
+                                    <FontIcon Glyph="&#xE712;" />
+                                </Button>
+                            </StackPanel>
+                        </Grid>
+                    </DataTemplate>
+                </GridView.ItemTemplate>
+            </GridView>
+        </Grid>
+    </ScrollViewer>
+</Page>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<windowex:WindowEx
+    x:Class="PortableAppsManager.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:PortableAppsManager"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:windowex="using:WinUIEx"
+    mc:Ignorable="d">
+    <Grid x:Name="RootGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="48" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid
+            x:Name="AppTitleBar"
+            Grid.Row="0"
+            Margin="8,0,0,0"
+            VerticalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Image
+                Grid.Column="0"
+                MaxWidth="16"
+                MaxHeight="16"
+                Source="/Assets/Package.svg" />
+            <TextBlock
+                Grid.Column="1"
+                Margin="8,0,0,0"
+                Style="{ThemeResource CaptionTextBlockStyle}"
+                Text="Portable Apps Manager" />
+        </Grid>
+        <Frame
+            x:Name="RootFrame"
+            Grid.Row="1"
+            Loaded="RootFrame_Loaded" />
+    </Grid>
+</windowex:WindowEx>

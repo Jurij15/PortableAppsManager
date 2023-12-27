@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "PortableAppsManager (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "PortableAppsManager (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

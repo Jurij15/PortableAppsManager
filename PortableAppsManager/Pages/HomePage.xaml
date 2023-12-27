@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Page
+    x:Class="PortableAppsManager.Pages.HomePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:PortableAppsManager.Pages"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:navigation="using:NavigationService"
+    navigation:PageProperties.AllowNavigationViewItemFocusWhenNavigatedToProperty="True"
+    navigation:PageProperties.ClearNavigationProperty="True"
+    navigation:PageProperties.IsHeaderVisibleProperty="False"
+    navigation:PageProperties.NavigationViewItemNameProperty="HomeItem"
+    navigation:PageProperties.PageTitleProperty="Home"
+    mc:Ignorable="d" />
