@@ -64,6 +64,11 @@
                                     <StackPanel Orientation="Vertical" Spacing="2">
                                         <TextBlock Style="{ThemeResource BodyStrongTextBlockStyle}" Text="List of exceptions:" />
                                         <ListView x:Name="ExceptionItems" Loaded="ExceptionItems_Loaded">
+                                            <ListView.ItemTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding}" />
+                                                </DataTemplate>
+                                            </ListView.ItemTemplate>
                                         </ListView>
                                         <StackPanel Orientation="Horizontal" Spacing="2">
                                             <Button x:Name="AddException" Click="AddException_Click">
@@ -110,6 +115,43 @@
                         FontFamily="Segoe UI Variable Display"
                         Header="Add Another"
                         IsClickEnabled="True" />
+                    <settings:SettingsCard ContentAlignment="Left">
+                        <StackPanel
+                            HorizontalAlignment="Left"
+                            Orientation="Horizontal"
+                            Spacing="4">
+                            <DropDownButton ToolTipService.ToolTip="Select All">
+                                <FontIcon Glyph="&#xE8B3;" />
+                                <DropDownButton.Flyout>
+                                    <MenuFlyout>
+                                        <MenuFlyoutItem
+                                            x:Name="SelectAllInPortableApps"
+                                            Click="SelectAllInPortableApps_Click"
+                                            Text="Portable Apps" />
+                                        <MenuFlyoutItem
+                                            x:Name="SelectAllInOtherApps"
+                                            Click="SelectAllInOtherApps_Click"
+                                            Text="Other Apps" />
+                                    </MenuFlyout>
+                                </DropDownButton.Flyout>
+                            </DropDownButton>
+                            <DropDownButton ToolTipService.ToolTip="Deselect All">
+                                <FontIcon Glyph="&#xE8E6;" />
+                                <DropDownButton.Flyout>
+                                    <MenuFlyout>
+                                        <MenuFlyoutItem
+                                            x:Name="DeSelectAllInPortableApps"
+                                            Click="DeSelectAllInPortableApps_Click"
+                                            Text="Portable Apps" />
+                                        <MenuFlyoutItem
+                                            x:Name="DeSelectAllInOtherApps"
+                                            Click="DeSelectAllInOtherApps_Click"
+                                            Text="Other Apps" />
+                                    </MenuFlyout>
+                                </DropDownButton.Flyout>
+                            </DropDownButton>
+                        </StackPanel>
+                    </settings:SettingsCard>
                 </settings:SettingsExpander.Items>
             </settings:SettingsExpander>
             <TextBlock
@@ -125,6 +167,9 @@
                 Grid.Row="3"
                 FontFamily="Segoe UI Variable Display"
                 SelectionMode="Multiple">
+                <GridView.Transitions>
+                    <AddDeleteThemeTransition />
+                </GridView.Transitions>
                 <GridView.ItemTemplate>
                     <DataTemplate x:DataType="classes:AppItem">
                         <Grid
@@ -159,8 +204,18 @@
                                 Text="{x:Bind AppName}"
                                 TextTrimming="CharacterEllipsis"
                                 TextWrapping="WrapWholeWords" />
-                            <GridView x:Name="TagsGrid" Grid.Row="2" />
+                            <GridView
+                                x:Name="TagsGrid"
+                                Grid.Row="2"
+                                ItemsSource="{x:Bind Tags}">
+                                <GridView.ItemTemplate>
+                                    <DataTemplate>
+                                        <InfoBadge Style="{StaticResource AttentionValueInfoBadgeStyle}" Value="{Binding}" />
+                                    </DataTemplate>
+                                </GridView.ItemTemplate>
+                            </GridView>
                             <StackPanel
+                                x:Name="AppOptionsPanel"
                                 Grid.Row="3"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Bottom"
@@ -172,12 +227,49 @@
                                     FontFamily="Segoe UI Variable Display"
                                     ToolTipService.ToolTip="Add Tags">
                                     <FontIcon Glyph="&#xE710;" />
+                                    <Button.Flyout>
+                                        <Flyout x:Name="AddTagFlyout">
+                                            <StackPanel Padding="4" Spacing="4">
+                                                <AutoSuggestBox
+                                                    x:Name="TagSearchBox"
+                                                    PlaceholderText="Type to add new"
+                                                    QueryIcon="Find"
+                                                    SuggestionChosen="TagSearchBox_SuggestionChosen"
+                                                    TextChanged="TagSearchBox_TextChanged" />
+                                                <ListView
+                                                    x:Name="TagsList"
+                                                    x:FieldModifier="public"
+                                                    DoubleTapped="IDK_DoubleTapped"
+                                                    IsDoubleTapEnabled="True"
+                                                    ItemsSource="{Binding AllTags}"
+                                                    Loaded="TagsList_Loaded"
+                                                    Tag="{x:Bind ID}" />
+                                                <TextBlock
+                                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                    Style="{ThemeResource CaptionTextBlockStyle}"
+                                                    Text="Double-click to add tag" />
+                                            </StackPanel>
+                                        </Flyout>
+                                    </Button.Flyout>
                                 </Button>
                                 <Button
                                     x:Name="EditMoreDetailsBtn"
                                     Margin="-4"
                                     FontFamily="Segoe UI Variable Display"
                                     ToolTipService.ToolTip="Edit">
+                                    <Button.Flyout>
+                                        <MenuFlyout>
+                                            <MenuFlyoutItem
+                                                x:Name="EditAppInfo"
+                                                Click="EditAppInfo_Click"
+                                                Tag="{x:Bind ID}"
+                                                Text="Edit App Information">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xE946;" />
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+                                        </MenuFlyout>
+                                    </Button.Flyout>
                                     <FontIcon Glyph="&#xE712;" />
                                 </Button>
                             </StackPanel>
@@ -197,6 +289,7 @@
                 x:Name="OtherAppsGrid"
                 Grid.Row="5"
                 FontFamily="Segoe UI Variable Display"
+                ItemsSource="{x:Bind OtherApps, Mode=OneWay}"
                 SelectionMode="Multiple">
                 <GridView.ItemTemplate>
                     <DataTemplate x:DataType="classes:AppItem">

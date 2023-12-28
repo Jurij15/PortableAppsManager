@@ -22,6 +22,10 @@ using PortableAppsManager.Classes;
 using PortableAppsManager.Helpers;
 using PortableAppsManager.Interop;
 using System.Text.RegularExpressions;
+using PortableAppsManager.Dialogs;
+using CommunityToolkit.WinUI;
+using System.Diagnostics;
+using System.Collections;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -33,16 +37,30 @@ namespace PortableAppsManager.Pages.Setup.SetupPages
     /// </summary>
     public sealed partial class AppsDirectorySetupPages : Page
     {
-        List<AppItem> PortableAppsApps;
-        List<AppItem> OtherApps;
+        List<AppItem> PortableAppsApps { get; set; }
+        List<AppItem> OtherApps {  get; set; }
 
         List<string> ExceptionsDirectories;
+        List<string> AllTags;
+
+        private void UpdateItemsSources()
+        {
+            PortableAppsComAppsGrid.ItemsSource = null;
+            PortableAppsComAppsGrid.ItemsSource = PortableAppsApps;
+
+            OtherAppsGrid.ItemsSource = null;
+            OtherAppsGrid.ItemsSource = OtherApps;
+        }
         public AppsDirectorySetupPages()
         {
             this.InitializeComponent();
             this.DataContext = this;
 
+            PortableAppsApps = new List<AppItem>();
+            OtherApps = new List<AppItem>();
+
             ExceptionsDirectories = new List<string>();
+            AllTags = new List<string>(){ "TEST"};
         }
 
         private async void ScanNowBtn_Click(object sender, RoutedEventArgs e)
@@ -57,8 +75,8 @@ namespace PortableAppsManager.Pages.Setup.SetupPages
 
             await Task.Delay(900);
 
-            PortableAppsApps = new List<AppItem>();
-            OtherApps = new List<AppItem>();
+            //PortableAppsApps = new List<AppItem>();
+            //OtherApps = new List<AppItem>();
             try
             {
                 Driller d = new Driller();
@@ -94,8 +112,7 @@ namespace PortableAppsManager.Pages.Setup.SetupPages
 
             await Task.Delay(10);
 
-            PortableAppsComAppsGrid.ItemsSource = PortableAppsApps;
-            OtherAppsGrid.ItemsSource = OtherApps;
+            UpdateItemsSources();
 
             AppsExpander.IsEnabled = true;
             AppsExpander.IsExpanded = true;
@@ -131,7 +148,6 @@ namespace PortableAppsManager.Pages.Setup.SetupPages
 
             ExceptionsDirectories.Add(path);
 
-            ExceptionsFlyout.SystemBackdrop = new MicaBackdrop();
             ExceptionItems.ItemsSource = ExceptionsDirectories;
         }
 
@@ -144,6 +160,140 @@ namespace PortableAppsManager.Pages.Setup.SetupPages
         private void ExceptionItems_Loaded(object sender, RoutedEventArgs e)
         {
             ExceptionItems.ItemsSource = ExceptionsDirectories;
+        }
+
+        private AppItem GetAppItemFromID(string ID)
+        {
+            AppItem ReturnAppItem = null;
+            bool IsInPortableApps = false;
+            foreach (var item in PortableAppsApps)
+            {
+                if (item.ID == ID)
+                {
+                    IsInPortableApps = true;
+                    ReturnAppItem = item;
+                    break;
+                }
+            }
+
+            if (!IsInPortableApps)
+            {
+                foreach (var item in OtherApps)
+                {
+                    if (item.ID == ID)
+                    {
+                        ReturnAppItem = item;
+                        break;
+                    }
+                }
+            }
+
+            return ReturnAppItem;
+        }
+
+        private void UpdateModifiedApp(AppItem App)
+        {
+            bool IsInPortableApps = false;
+            foreach (var item in PortableAppsApps)
+            {
+                if (item.ID == App.ID)
+                {
+                    IsInPortableApps = true;
+
+                    PortableAppsApps[PortableAppsApps.IndexOf(item)] = App;
+                    break;
+                }
+            }
+
+            if (!IsInPortableApps)
+            {
+                foreach (var item in OtherApps)
+                {
+                    if (item.ID == App.ID)
+                    {
+                        IsInPortableApps = true;
+
+                        OtherApps[OtherApps.IndexOf(item)] = App;
+                        break;
+                    }
+                }
+            }
+
+            UpdateItemsSources();
+        }
+
+        private async void EditAppInfo_Click(object sender, RoutedEventArgs e)
+        {
+            MenuFlyoutItem parent = sender as MenuFlyoutItem;
+            ContentDialog editdialog = DialogService.CreateBlankContentDialog(false);
+            EditAppDialogContent content = new EditAppDialogContent(GetAppItemFromID(parent.Tag.ToString()), editdialog);
+
+            editdialog.Content = content;
+            editdialog.UpdateLayout();
+
+            await editdialog.ShowAsync();
+            editdialog.UpdateLayout();
+
+            AppItem modified = content.ModifiedAppItem;
+            UpdateModifiedApp(modified);
+        }
+
+        private void SelectAllInPortableApps_Click(object sender, RoutedEventArgs e)
+        {
+            PortableAppsComAppsGrid.SelectAll();
+        }
+
+        private void SelectAllInOtherApps_Click(object sender, RoutedEventArgs e)
+        {
+            OtherAppsGrid.SelectAll();
+        }
+
+        private void DeSelectAllInPortableApps_Click(object sender, RoutedEventArgs e)
+        {
+            PortableAppsComAppsGrid.DeselectAll();
+        }
+
+        private void DeSelectAllInOtherApps_Click(object sender, RoutedEventArgs e)
+        {
+            OtherAppsGrid.DeselectAll();
+        }
+
+        private void TagSearchBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
+            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+            {
+                sender.ItemsSource = new List<string>() { $"Click to add {sender.Text}" };
+            }
+
+        }
+
+        private ListView TargetListView;
+        private void TagsList_Loaded(object sender, RoutedEventArgs e)
+        {
+            TargetListView = sender as ListView;
+            ((ListView)sender).ItemsSource = AllTags;
+        }
+
+        private void IDK_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            string content = (((ListView)sender).ItemsSource as IList)[((ListView)sender).SelectedIndex].ToString();
+
+            if (GetAppItemFromID((((ListView)sender).Tag as string)).Tags == null)
+            {
+                GetAppItemFromID((((ListView)sender).Tag as string)).Tags = new List<string>();
+            }
+            GetAppItemFromID((((ListView)sender).Tag as string)).Tags.Add(content);
+        }
+
+        private void TagSearchBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
+        {
+            AllTags.Add(sender.Text);
+            //MessageBox.Show(sender.Text);
+            sender.Text = string.Empty;
+            sender.ItemsSource = null;
+
+            TargetListView.ItemsSource = null ;
+            TargetListView.ItemsSource = AllTags;
         }
     }
 }

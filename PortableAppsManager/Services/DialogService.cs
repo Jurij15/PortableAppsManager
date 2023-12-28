@@ -26,6 +26,17 @@ namespace PortableAppsManager.Services
 
             dialog.ShowAsync();
         }
+
+        public static ContentDialog CreateBlankContentDialog(bool SetDefaultStyle)
+        {
+            ContentDialog dialog = new ContentDialog();
+            dialog.XamlRoot = MainWindow.MainWindowXamlRoot;
+            if (SetDefaultStyle)
+            {
+                dialog.Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style;
+            }
+            return dialog;
+        }
         public static async Task<object> OpenFilePickerToSelectSingleFile(PickerViewMode ViewMode)
         {
             // Create a file picker

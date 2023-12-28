@@ -14,5 +14,6 @@ namespace PortableAppsManager.Classes
         public string PortableAppsDirectory { get; set; }
 
         public List<AppItem> Apps {  get; set; }
+        public List<string> Tags { get; set; }
     }
 }

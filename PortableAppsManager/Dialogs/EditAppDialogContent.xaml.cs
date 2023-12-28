@@ -12,6 +12,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using PortableAppsManager.Classes;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -23,9 +24,29 @@ namespace PortableAppsManager.Dialogs
     /// </summary>
     public sealed partial class EditAppDialogContent : Page
     {
-        public EditAppDialogContent()
+        public ContentDialog ParentDialog { get; private set; }
+        public string _title;
+
+        public AppItem ModifiedAppItem { get; private set; }
+        public EditAppDialogContent(AppItem Item, ContentDialog parentDialog)
         {
             this.InitializeComponent();
+            this.DataContext = this;
+            ModifiedAppItem = Item;
+
+            _title = $"Edit {ModifiedAppItem.AppName} details";
+            ParentDialog = parentDialog;
+            parentDialog.UpdateLayout();
+        }
+
+        private void DialogCloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            ParentDialog.Hide();
+        }
+
+        private void SaveBtn_Click(object sender, RoutedEventArgs e)
+        {
+            ParentDialog.Hide();
         }
     }
 }

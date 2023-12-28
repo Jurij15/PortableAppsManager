@@ -19,7 +19,7 @@ namespace PortableAppsManager.Classes
         public string Description { get; set; } = "";
         public ImageSource ImgSource { get; set; }
 
-        public List<string> Tags { get; set; }
+        public List<string> Tags { get; set; } = new List<string>();
 
         public bool Setup_IsPortableAppsCom { get; set; } = false;
     }
