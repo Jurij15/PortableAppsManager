@@ -17,6 +17,9 @@ using Windows.Foundation.Collections;
 using Windows.Storage;
 using PortableAppsManager.Interop;
 using PortableAppsManager.Helpers;
+using PortableAppsManager.Classes;
+using Windows.Devices.Display.Core;
+using PortableAppsManager.Controls;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -28,9 +31,26 @@ namespace PortableAppsManager.Pages
     /// </summary>
     public sealed partial class AppsPage : Page
     {
+        public class DisplayApp
+        {
+            public DisplayApp(string name, ImageSource imageSource, AppItem appItem)
+            {
+                Name = name;
+                ImgSrc = imageSource;
+                OAppItem = appItem;
+            }
+            public string Name { get; set; }
+            public ImageSource ImgSrc { get; set; }
+
+            public AppItem OAppItem { get; set; }
+        }
+
+        List<DisplayApp> Apps;
         public AppsPage()
         {
             this.InitializeComponent();
+
+            this.DataContext = this;
         }
 
         private void SearchBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
@@ -43,21 +63,40 @@ namespace PortableAppsManager.Pages
 
         }
 
-        private async void Grid_Loaded(object sender, RoutedEventArgs e)
+        private void Grid_Loaded(object sender, RoutedEventArgs e)
         {
-            StorageFolder dir = await DialogService.OpenFolderPickerToSelectSingleFolder(Windows.Storage.Pickers.PickerViewMode.List);
-
-            Driller driller = new Driller();
-            //List<Driller.DrillerFoundApp> list = driller.GetAllAppsInsideDirectory(dir.Path);
-            /*
-            foreach (Driller.DrillerFoundApp item in list)
-            {
-                //MessageBox.Show(item.Source + "\n" + item.ExecutablePath + "\n" + item.ExecutableParentDirectoryPath);
-                AppItems.Items.Add(new Controls.AppItemControl() { AppName = item.ExecutablePath, AppNameSubText = item.ExecutableParentDirectoryPath, ImgSource = ImageHelper.ConvertIconToImageSource(System.Drawing.Icon.ExtractAssociatedIcon(item.ExecutablePath)) });
-            }
-            */
-
             
+        }
+
+        private void AppItems_Loaded(object sender, RoutedEventArgs e)
+        {
+            AppItems.Items.Clear();
+            foreach (var item in Globals.Settings.Apps)
+            {
+                if (item.Tags != null)
+                {
+                    item.Tags.Add("Add Tags!");
+                }
+                else
+                {
+                    item.Tags = new List<string> { "Add Tags!" };
+                }
+                AppItemControl control = new AppItemControl();
+                control.AppItem = item;
+                control.AppName = item.AppName;
+                control.IMAGEControl.Source = item.ImgSource;
+                control.Width = 315;
+                if (Launcher.IsAppLaunchAvailable(item.ExePath))
+                {
+                    control.LabelText = "Open";
+                }
+                else
+                {
+                    control.LabelText = "Info";
+                }
+
+                AppItems.Items.Add(control);
+            }
         }
     }
 }

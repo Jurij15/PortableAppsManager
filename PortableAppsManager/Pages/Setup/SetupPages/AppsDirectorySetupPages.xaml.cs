@@ -26,6 +26,7 @@ using PortableAppsManager.Dialogs;
 using CommunityToolkit.WinUI;
 using System.Diagnostics;
 using System.Collections;
+using Microsoft.UI.Xaml.Media.Animation;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -69,8 +70,8 @@ namespace PortableAppsManager.Pages.Setup.SetupPages
             PickDirectoryCard.IsEnabled = false;
             ScanNowCard.Description = "Scan in progress...";
             ProgressRing r = new ProgressRing() { IsIndeterminate = true };
-            r.Height = 25;
-            r.Width = 25;
+            r.Height = 20;
+            r.Width = 20;
             (sender as Button).Content = r;
 
             await Task.Delay(900);
@@ -138,7 +139,17 @@ namespace PortableAppsManager.Pages.Setup.SetupPages
 
         private void ContinueSetupCard_Click(object sender, RoutedEventArgs e)
         {
-            //ShellSetupPage.RootSetupFrame.Navigate()
+            Globals.Settings.Apps = new List<AppItem>();
+            foreach (AppItem item in PortableAppsComAppsGrid.SelectedItems)
+            {
+                Globals.Settings.Apps.Add(item);
+            }
+            foreach (AppItem item in OtherAppsGrid.SelectedItems)
+            {
+                Globals.Settings.Apps.Add(item);
+            }
+
+            ShellSetupPage.RootSetupFrame.Navigate(typeof(OtherSettingsSetupPage), null, new SlideNavigationTransitionInfo() { Effect=SlideNavigationTransitionEffect.FromRight});
         }
 
         private async void AddException_Click(object sender, RoutedEventArgs e)

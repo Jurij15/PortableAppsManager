@@ -3,6 +3,8 @@
     x:Class="PortableAppsManager.Pages.AppsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:classes="using:PortableAppsManager.Classes"
+    xmlns:custom="using:PortableAppsManager.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:PortableAppsManager.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -36,6 +38,11 @@
                 <ComboBoxItem Content="Test" />
             </ComboBox>
         </Grid>
-        <GridView x:Name="AppItems" Grid.Row="2" />
+        <GridView
+            x:Name="AppItems"
+            Grid.Row="2"
+            Loaded="AppItems_Loaded"
+            SelectionMode="None">
+        </GridView>
     </Grid>
 </Page>

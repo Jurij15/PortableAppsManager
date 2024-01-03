@@ -6,6 +6,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Shapes;
+using PortableAppsManager.Classes;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -33,6 +34,8 @@ namespace PortableAppsManager
         public App()
         {
             this.InitializeComponent();
+
+            ConfigJson.LoadSettings();
         }
 
         /// <summary>

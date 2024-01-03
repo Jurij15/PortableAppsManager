@@ -10,8 +10,8 @@
     xmlns:settings="using:CommunityToolkit.WinUI.Controls"
     mc:Ignorable="d">
 
-    <ScrollViewer Margin="24">
-        <Grid>
+    <ScrollViewer>
+        <Grid Margin="24">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -57,6 +57,9 @@
                         <FontIcon Glyph="&#xF78B;" />
                     </settings:SettingsCard.HeaderIcon>
                     <StackPanel Orientation="Horizontal" Spacing="2">
+                        <StackPanel.ChildrenTransitions>
+                            <RepositionThemeTransition />
+                        </StackPanel.ChildrenTransitions>
                         <Button x:Name="ExceptionsBtn">
                             <FontIcon Glyph="&#xE712;" />
                             <Button.Flyout>

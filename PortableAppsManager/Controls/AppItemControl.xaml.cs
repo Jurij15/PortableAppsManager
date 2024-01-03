@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using PortableAppsManager.Classes;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -20,6 +21,14 @@ namespace PortableAppsManager.Controls
 {
     public sealed partial class AppItemControl : UserControl
     {
+        public static readonly DependencyProperty AppItemProperty =
+                 DependencyProperty.Register("AppItem", typeof(AppItem), typeof(AppItemControl), new PropertyMetadata(null));
+        public AppItem AppItem
+        {
+            get { return (AppItem)GetValue(AppItemProperty); }
+            set { SetValue(AppItemProperty, value); }
+        }
+
         public static readonly DependencyProperty AppNameProperty =
                  DependencyProperty.Register("AppName", typeof(string), typeof(AppItemControl), new PropertyMetadata(null));
         public string AppName
@@ -36,6 +45,14 @@ namespace PortableAppsManager.Controls
             set { SetValue(AppNameSubTextProperty, value); }
         }
 
+        public static readonly DependencyProperty LabelTextProperty =
+                 DependencyProperty.Register("LabelText", typeof(string), typeof(AppItemControl), new PropertyMetadata(null));
+        public string LabelText
+        {
+            get { return (string)GetValue(LabelTextProperty); }
+            set { SetValue(LabelTextProperty, value); }
+        }
+
         public static readonly DependencyProperty ImageSourceProperty =
                  DependencyProperty.Register("ImageSource", typeof(ImageSource), typeof(AppItemControl), new PropertyMetadata(null));
         public ImageSource ImgSource
@@ -47,6 +64,8 @@ namespace PortableAppsManager.Controls
         public Image IMAGEControl;
         public TextBlock APPNAMEBlock { get; set; }
         public TextBlock APPNAMESUBTEXTBlock;
+
+        string DisplayTags { get; set; }
         public AppItemControl()
         {
             this.InitializeComponent();
@@ -71,6 +90,28 @@ namespace PortableAppsManager.Controls
         private void SetPointerPressedState(object sender, PointerRoutedEventArgs e)
         {
             VisualStateManager.GoToState(this, "Pressed", true);
+        }
+
+        public void PlayLaunchAnimationOnLabel()
+        {
+
+        }
+        public void StopLaunchAnimationOnLabel()
+        {
+
+        }
+
+        private void Tags_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (AppItem.Tags != null)
+            {
+                foreach (string item in AppItem.Tags)
+                {
+                    DisplayTags = DisplayTags + item;
+                }
+            }
+
+            //Tags.Items = DisplayTags;
         }
     }
 }

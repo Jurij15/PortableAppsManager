@@ -22,6 +22,7 @@
     <None Remove="Pages\GamesPage.xaml" />
     <None Remove="Pages\HomePage.xaml" />
     <None Remove="Pages\Setup\SetupPages\AppsDirectorySetupPages.xaml" />
+    <None Remove="Pages\Setup\SetupPages\OtherSettingsSetupPage.xaml" />
     <None Remove="Pages\Setup\ShellSetupPage.xaml" />
     <None Remove="Pages\Setup\StartupSetupPage.xaml" />
     <None Remove="Pages\ShellPage.xaml" />
@@ -43,6 +44,7 @@
     <PackageReference Include="CommunityToolkit.WinUI.Animations" Version="8.0.230907" />
     <PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.0.230907" />
     <PackageReference Include="CommunityToolkit.WinUI.Controls.HeaderedControls" Version="8.0.230907" />
+    <PackageReference Include="CommunityToolkit.WinUI.Controls.MetadataControl" Version="8.0.230907" />
     <PackageReference Include="CommunityToolkit.WinUI.Controls.Segmented" Version="8.0.230907" />
     <PackageReference Include="CommunityToolkit.WinUI.Controls.SettingsControls" Version="8.0.230907" />
     <PackageReference Include="CommunityToolkit.WinUI.UI" Version="7.1.2" />
@@ -105,6 +107,11 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Managers\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\Setup\SetupPages\OtherSettingsSetupPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Dialogs\EditAppDialogContent.xaml">
