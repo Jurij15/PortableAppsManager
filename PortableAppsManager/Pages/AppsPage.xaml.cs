@@ -20,6 +20,8 @@ using PortableAppsManager.Helpers;
 using PortableAppsManager.Classes;
 using Windows.Devices.Display.Core;
 using PortableAppsManager.Controls;
+using Microsoft.UI.Xaml.Media.Animation;
+using System.Diagnostics;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -94,9 +96,38 @@ namespace PortableAppsManager.Pages
                 {
                     control.LabelText = "Info";
                 }
+                control.APPLABEL.Tag = control;
+                control.CardLabelBtn_Clicked += Control_CardLabelBtn_Clicked;
+
+                control.PointerReleased += OnPointerReleased;
 
                 AppItems.Items.Add(control);
             }
+        }
+
+        private void Control_CardLabelBtn_Clicked(object sender, RoutedEventArgs e)
+        {
+            AppItemControl control = (sender as Button).Tag as AppItemControl;
+            if (Launcher.IsAppLaunchAvailable(control.AppItem.ExePath))
+            {
+                control.PlayLaunchAnimationOnLabel();
+            }
+            else
+            {
+                //OnPointerReleased((sender as Button).Tag, null);
+            }
+        }
+
+        private void OnPointerReleased(object sender, PointerRoutedEventArgs e)
+        {
+            AppItemControl source = sender as AppItemControl;
+            source.APPLABEL.Visibility = Visibility.Collapsed;
+
+            var imageanim = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardImageAnim", source.IMAGEControl);
+            var animation = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", source);
+            var textanim = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardTextAnim", source.APPNAMEBlock);
+
+            NavigationService.NavigationService.MainFrame.Navigate(typeof(AppInfoPage), source.AppItem, new SuppressNavigationTransitionInfo());
         }
     }
 }

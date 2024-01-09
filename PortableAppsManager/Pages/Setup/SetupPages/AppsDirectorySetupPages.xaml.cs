@@ -156,7 +156,7 @@ namespace PortableAppsManager.Pages.Setup.SetupPages
         {
             StorageFolder folder = await DialogService.OpenFolderPickerToSelectSingleFolder(Windows.Storage.Pickers.PickerViewMode.List);
             string path = folder.Path;
-
+            MessageBox.Show(path);
             ExceptionsDirectories.Add(path);
 
             ExceptionItems.ItemsSource = ExceptionsDirectories;

@@ -55,15 +55,16 @@ namespace PortableAppsManager.Controls
 
         public static readonly DependencyProperty ImageSourceProperty =
                  DependencyProperty.Register("ImageSource", typeof(ImageSource), typeof(AppItemControl), new PropertyMetadata(null));
-        public ImageSource ImgSource
+        public ImageSource ImageSource
         {
-            get { return (ImageSource)GetValue(AppNameSubTextProperty); }
-            set { SetValue(AppNameSubTextProperty, value);}
+            get { return (ImageSource)GetValue(ImageSourceProperty); }
+            set { SetValue(ImageSourceProperty, value);}
         }
 
         public Image IMAGEControl;
         public TextBlock APPNAMEBlock { get; set; }
         public TextBlock APPNAMESUBTEXTBlock;
+        public Button APPLABEL;
 
         string DisplayTags { get; set; }
         public AppItemControl()
@@ -75,6 +76,7 @@ namespace PortableAppsManager.Controls
             IMAGEControl = IMG;
             APPNAMEBlock = AppNameTextBlockO;
             APPNAMESUBTEXTBlock = AppNameSubTextBlockO;
+            APPLABEL = CardBtn;
         }
 
         private void SetPointerNormalState(object sender, PointerRoutedEventArgs e)
@@ -94,15 +96,18 @@ namespace PortableAppsManager.Controls
 
         public void PlayLaunchAnimationOnLabel()
         {
-
+            LoadingRing.Visibility = Visibility.Visible;
+            LabelTextBlock.Visibility = Visibility.Collapsed;
         }
         public void StopLaunchAnimationOnLabel()
         {
-
+            LoadingRing.Visibility = Visibility.Visible;
+            LabelTextBlock.Visibility = Visibility.Collapsed;
         }
 
         private void Tags_Loaded(object sender, RoutedEventArgs e)
         {
+            /*
             if (AppItem.Tags != null)
             {
                 foreach (string item in AppItem.Tags)
@@ -112,6 +117,15 @@ namespace PortableAppsManager.Controls
             }
 
             //Tags.Items = DisplayTags;
+            */
         }
+
+        public event RoutedEventHandler CardLabelBtn_Clicked;
+
+        private void CardBtn_Click(object sender, RoutedEventArgs e)
+        {
+            CardLabelBtn_Clicked?.Invoke(sender, e);
+        }
+
     }
 }

@@ -86,7 +86,7 @@
                 MaxHeight="70"
                 VerticalAlignment="Center"
                 CornerRadius="4">
-                <Image x:Name="IMG" Source="{Binding ImgSource}" />
+                <Image x:Name="IMG" Source="{Binding ImageSource}" />
             </Border>
             <StackPanel
                 Grid.Column="1"
@@ -117,11 +117,30 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <Button Grid.Row="0" VerticalAlignment="Top">
-                    <TextBlock
-                        x:Name="LabelTextBlock"
-                        Style="{ThemeResource CaptionTextBlockStyle}"
-                        Text="{Binding LabelText}" />
+                <Button
+                    x:Name="CardBtn"
+                    Grid.Row="0"
+                    VerticalAlignment="Top"
+                    Click="CardBtn_Click">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <TextBlock
+                            x:Name="LabelTextBlock"
+                            Grid.Row="0"
+                            Style="{ThemeResource CaptionTextBlockStyle}"
+                            Text="{Binding LabelText}" />
+                        <ProgressRing
+                            x:Name="LoadingRing"
+                            Grid.Row="1"
+                            Width="25"
+                            Height="25"
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            IsIndeterminate="True"
+                            Visibility="Collapsed" />
+                    </Grid>
                 </Button>
             </Grid>
         </Grid>

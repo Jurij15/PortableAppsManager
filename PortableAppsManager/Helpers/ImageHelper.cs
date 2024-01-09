@@ -32,7 +32,7 @@ namespace PortableAppsManager.Helpers
             }
         }
         */
-        public static ImageSource ConvertIconToImageSource(Icon icon, int dpi = 196)
+        public static ImageSource ConvertIconToImageSource(Icon icon, int dpi = 512)
         {
             using (MemoryStream stream = new MemoryStream())
             {

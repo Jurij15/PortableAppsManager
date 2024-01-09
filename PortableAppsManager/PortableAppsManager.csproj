@@ -18,6 +18,7 @@
     <None Remove="Controls\AppItemControl.xaml" />
     <None Remove="Dialogs\EditAppDialogContent.xaml" />
     <None Remove="Pages\AppDetailsPage.xaml" />
+    <None Remove="Pages\AppInfoPage.xaml" />
     <None Remove="Pages\AppsPage.xaml" />
     <None Remove="Pages\GamesPage.xaml" />
     <None Remove="Pages\HomePage.xaml" />
@@ -107,6 +108,11 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Managers\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\AppInfoPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\Setup\SetupPages\OtherSettingsSetupPage.xaml">

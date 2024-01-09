@@ -67,11 +67,6 @@
                                     <StackPanel Orientation="Vertical" Spacing="2">
                                         <TextBlock Style="{ThemeResource BodyStrongTextBlockStyle}" Text="List of exceptions:" />
                                         <ListView x:Name="ExceptionItems" Loaded="ExceptionItems_Loaded">
-                                            <ListView.ItemTemplate>
-                                                <DataTemplate>
-                                                    <TextBlock Text="{Binding}" />
-                                                </DataTemplate>
-                                            </ListView.ItemTemplate>
                                         </ListView>
                                         <StackPanel Orientation="Horizontal" Spacing="2">
                                             <Button x:Name="AddException" Click="AddException_Click">

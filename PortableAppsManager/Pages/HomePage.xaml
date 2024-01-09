@@ -9,7 +9,7 @@
     xmlns:navigation="using:NavigationService"
     navigation:PageProperties.AllowNavigationViewItemFocusWhenNavigatedToProperty="True"
     navigation:PageProperties.ClearNavigationProperty="True"
-    navigation:PageProperties.IsHeaderVisibleProperty="False"
+    navigation:PageProperties.IsHeaderVisibleProperty="True"
     navigation:PageProperties.NavigationViewItemNameProperty="HomeItem"
     navigation:PageProperties.PageTitleProperty="Home"
     mc:Ignorable="d" />
