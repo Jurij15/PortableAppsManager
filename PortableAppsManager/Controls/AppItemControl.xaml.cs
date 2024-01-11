@@ -1,3 +1,4 @@
+using CommunityToolkit.WinUI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -11,6 +12,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
@@ -65,8 +67,9 @@ namespace PortableAppsManager.Controls
         public TextBlock APPNAMEBlock { get; set; }
         public TextBlock APPNAMESUBTEXTBlock;
         public Button APPLABEL;
+        public MetadataControl MetadataControl;
 
-        string DisplayTags { get; set; }
+        List<MetadataItem> DisplayTags { get; set; }
         public AppItemControl()
         {
             this.InitializeComponent();
@@ -77,6 +80,7 @@ namespace PortableAppsManager.Controls
             APPNAMEBlock = AppNameTextBlockO;
             APPNAMESUBTEXTBlock = AppNameSubTextBlockO;
             APPLABEL = CardBtn;
+            MetadataControl = Tags;
         }
 
         private void SetPointerNormalState(object sender, PointerRoutedEventArgs e)
@@ -99,25 +103,43 @@ namespace PortableAppsManager.Controls
             LoadingRing.Visibility = Visibility.Visible;
             LabelTextBlock.Visibility = Visibility.Collapsed;
         }
-        public void StopLaunchAnimationOnLabel()
+        public async void StopLaunchAnimationOnLabel(bool Success, int StatusDisplayMiliseconds)
         {
-            LoadingRing.Visibility = Visibility.Visible;
+            LoadingRing.Visibility = Visibility.Collapsed;
             LabelTextBlock.Visibility = Visibility.Collapsed;
+
+            if (StatusDisplayMiliseconds != 0)
+            {
+                if (Success)
+                {
+                    SuccessIcon.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    FailIcon.Visibility = Visibility.Visible;
+                }
+
+                await Task.Delay(StatusDisplayMiliseconds);
+            }
+
+            SuccessIcon.Visibility = Visibility.Collapsed;
+            FailIcon.Visibility = Visibility.Collapsed;
+
+            LabelTextBlock.Visibility = Visibility.Visible;
         }
 
         private void Tags_Loaded(object sender, RoutedEventArgs e)
         {
-            /*
+            DisplayTags = new List<MetadataItem>();
             if (AppItem.Tags != null)
             {
                 foreach (string item in AppItem.Tags)
                 {
-                    DisplayTags = DisplayTags + item;
+                    DisplayTags.Add(new MetadataItem() { AccessibleLabel = item, Label = item });
                 }
             }
 
-            //Tags.Items = DisplayTags;
-            */
+            Tags.Items = DisplayTags;
         }
 
         public event RoutedEventHandler CardLabelBtn_Clicked;

@@ -11,6 +11,7 @@
     navigation:PageProperties.ClearNavigationProperty="False"
     navigation:PageProperties.IsHeaderVisibleProperty="False"
     navigation:PageProperties.PageTitleProperty="App"
+    NavigationCacheMode="Disabled"
     mc:Ignorable="d">
 
     <Grid>
@@ -41,6 +42,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Image
                     x:Name="AppIconImage"
@@ -54,6 +56,45 @@
                     Style="{ThemeResource TitleTextBlockStyle}"
                     TextTrimming="CharacterEllipsis"
                     TextWrapping="Wrap" />
+                <TextBlock
+                    x:Name="AuthorBox"
+                    Grid.Row="2"
+                    HorizontalAlignment="Center"
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                    Style="{ThemeResource CaptionTextBlockStyle}" />
+                <Button
+                    x:Name="LaunchButton"
+                    Grid.Row="3"
+                    MinWidth="165"
+                    MinHeight="35"
+                    MaxWidth="165"
+                    MaxHeight="35"
+                    Margin="0,16,0,0"
+                    HorizontalAlignment="Center"
+                    Click="LaunchButton_Click"
+                    Style="{ThemeResource AccentButtonStyle}">
+                    <Grid HorizontalAlignment="Center">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <StackPanel
+                            x:Name="LaunchText"
+                            Grid.Row="0"
+                            Orientation="Horizontal"
+                            Spacing="2">
+                            <FontIcon Glyph="&#xE8A7;" />
+                            <TextBlock Style="{ThemeResource BodyTextBlockStyle}" Text="Open" />
+                        </StackPanel>
+                        <ProgressRing
+                            x:Name="LoadingIcon"
+                            Grid.Row="1"
+                            Width="20"
+                            Height="20"
+                            IsIndeterminate="True"
+                            Visibility="Collapsed" />
+                    </Grid>
+                </Button>
             </Grid>
         </Grid>
         <Grid

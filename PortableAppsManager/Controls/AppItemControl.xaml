@@ -97,7 +97,7 @@
                     Margin="0,0,0,1"
                     FontSize="15"
                     MaxLines="1"
-                    Style="{ThemeResource BodyStrongTextBlockStyle}"
+                    Style="{ThemeResource SubtitleTextBlockStyle}"
                     Text="{Binding AppName}"
                     TextTrimming="CharacterEllipsis"
                     TextWrapping="Wrap" />
@@ -109,7 +109,9 @@
                     Visibility="Collapsed" />
                 <controls:MetadataControl
                     x:Name="Tags"
-                    AccessibleSeparator=" | "
+                    AccessibleSeparator=" • "
+                    FontSize="12"
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                     Loaded="Tags_Loaded"
                     Separator=" | " />
             </StackPanel>
@@ -126,7 +128,12 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" />
                             <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
+                        <Grid.ChildrenTransitions>
+                            <ContentThemeTransition />
+                        </Grid.ChildrenTransitions>
                         <TextBlock
                             x:Name="LabelTextBlock"
                             Grid.Row="0"
@@ -139,6 +146,16 @@
                             Height="25"
                             Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                             IsIndeterminate="True"
+                            Visibility="Collapsed" />
+                        <FontIcon
+                            x:Name="SuccessIcon"
+                            Grid.Row="2"
+                            Glyph="&#xE73E;"
+                            Visibility="Collapsed" />
+                        <FontIcon
+                            x:Name="FailIcon"
+                            Grid.Row="3"
+                            Glyph="&#xE783;"
                             Visibility="Collapsed" />
                     </Grid>
                 </Button>

@@ -1,4 +1,5 @@
-﻿using Microsoft.UI.Xaml.Media;
+﻿using Microsoft.UI.Xaml.Documents;
+using Microsoft.UI.Xaml.Media;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,9 @@ namespace PortableAppsManager.Classes
         public ImageSource ImgSource { get; set; }
 
         public List<string> Tags { get; set; } = new List<string>();
+
+        public string LaunchArguments { get; set; } = "";
+        public bool LaunchAsAdmin { get; set; } = false;
 
         public bool Setup_IsPortableAppsCom { get; set; } = false;
     }

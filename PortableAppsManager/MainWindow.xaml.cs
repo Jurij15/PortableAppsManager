@@ -29,6 +29,8 @@ namespace PortableAppsManager
     {
         public static Frame RootAppFrame;
         public static XamlRoot MainWindowXamlRoot;
+
+        public static Button AppTitleBarBackButton;
         public MainWindow()
         {
             this.InitializeComponent();
@@ -49,6 +51,8 @@ namespace PortableAppsManager
             RootAppFrame.Navigate(typeof(StartupPage));
 
             MainWindowXamlRoot = RootGrid.XamlRoot;
+
+            AppTitleBarBackButton = TitleBarBackButton;
         }
     }
 }

@@ -22,6 +22,7 @@ using Windows.Devices.Display.Core;
 using PortableAppsManager.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -33,6 +34,7 @@ namespace PortableAppsManager.Pages
     /// </summary>
     public sealed partial class AppsPage : Page
     {
+        bool AppsItemsLoaded = false;
         public class DisplayApp
         {
             public DisplayApp(string name, ImageSource imageSource, AppItem appItem)
@@ -48,6 +50,7 @@ namespace PortableAppsManager.Pages
         }
 
         List<DisplayApp> Apps;
+        AppItemControl CachedItem;
         public AppsPage()
         {
             this.InitializeComponent();
@@ -55,9 +58,10 @@ namespace PortableAppsManager.Pages
             this.DataContext = this;
         }
 
-        private void SearchBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-
+            //MessageBox.Show(e.SourcePageType.ToString(), "NavigatedTo Fired!");
+            base.OnNavigatedTo(e);
         }
 
         private void SearchBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
@@ -72,45 +76,71 @@ namespace PortableAppsManager.Pages
 
         private void AppItems_Loaded(object sender, RoutedEventArgs e)
         {
-            AppItems.Items.Clear();
-            foreach (var item in Globals.Settings.Apps)
+            if (!AppsItemsLoaded)
             {
-                if (item.Tags != null)
+                AppItems.Items.Clear();
+                foreach (var item in Globals.Settings.Apps)
                 {
-                    item.Tags.Add("Add Tags!");
-                }
-                else
-                {
-                    item.Tags = new List<string> { "Add Tags!" };
-                }
-                AppItemControl control = new AppItemControl();
-                control.AppItem = item;
-                control.AppName = item.AppName;
-                control.IMAGEControl.Source = item.ImgSource;
-                control.Width = 315;
-                if (Launcher.IsAppLaunchAvailable(item.ExePath))
-                {
-                    control.LabelText = "Open";
-                }
-                else
-                {
-                    control.LabelText = "Info";
-                }
-                control.APPLABEL.Tag = control;
-                control.CardLabelBtn_Clicked += Control_CardLabelBtn_Clicked;
+                    if (item.Tags != null)
+                    {
+                        item.Tags.Add("Add Tags!");
+                    }
+                    else
+                    {
+                        item.Tags = new List<string> { "Add Tags!" };
+                    }
+                    AppItemControl control = new AppItemControl();
+                    control.AppItem = item;
+                    control.AppName = item.AppName;
+                    control.IMAGEControl.Source = item.ImgSource;
+                    control.Width = 315;
+                    if (Launcher.IsAppLaunchAvailable(item.ExePath))
+                    {
+                        control.LabelText = "Open";
+                    }
+                    else
+                    {
+                        control.LabelText = "Info";
+                    }
+                    control.APPLABEL.Tag = control;
+                    control.CardLabelBtn_Clicked += Control_CardLabelBtn_Clicked;
 
-                control.PointerReleased += OnPointerReleased;
+                    control.PointerReleased += OnPointerReleased;
 
-                AppItems.Items.Add(control);
+                    AppItems.Items.Add(control);
+                }
+                AppsItemsLoaded = true;
+            }
+            else
+            {
+                var anim = ConnectedAnimationService.GetForCurrentView().GetAnimation("BackConnectedAnimation");
+                if (anim != null)
+                {
+                    anim.TryStart(CachedItem);
+                }
+
+                var imganim = ConnectedAnimationService.GetForCurrentView().GetAnimation("BackImageAnim");
+                if (imganim != null)
+                {
+                    imganim.TryStart(CachedItem.IMAGEControl);
+                }
+
+                var textanim = ConnectedAnimationService.GetForCurrentView().GetAnimation("BackTextAnim");
+                if (textanim != null)
+                {
+                    textanim.TryStart(CachedItem.APPNAMEBlock);
+                }
             }
         }
 
-        private void Control_CardLabelBtn_Clicked(object sender, RoutedEventArgs e)
+        private async void Control_CardLabelBtn_Clicked(object sender, RoutedEventArgs e)
         {
             AppItemControl control = (sender as Button).Tag as AppItemControl;
             if (Launcher.IsAppLaunchAvailable(control.AppItem.ExePath))
             {
                 control.PlayLaunchAnimationOnLabel();
+                await Task.Delay(1000);
+                control.StopLaunchAnimationOnLabel(true, 900);
             }
             else
             {
@@ -118,16 +148,24 @@ namespace PortableAppsManager.Pages
             }
         }
 
-        private void OnPointerReleased(object sender, PointerRoutedEventArgs e)
+        private async void OnPointerReleased(object sender, PointerRoutedEventArgs e)
         {
             AppItemControl source = sender as AppItemControl;
-            source.APPLABEL.Visibility = Visibility.Collapsed;
 
             var imageanim = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardImageAnim", source.IMAGEControl);
             var animation = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", source);
             var textanim = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardTextAnim", source.APPNAMEBlock);
 
+            source.APPLABEL.Visibility = Visibility.Collapsed;
+            source.MetadataControl.Visibility = Visibility.Collapsed;
+            await Task.Delay(100);
+
             NavigationService.NavigationService.MainFrame.Navigate(typeof(AppInfoPage), source.AppItem, new SuppressNavigationTransitionInfo());
+
+            source.APPLABEL.Visibility = Visibility.Visible;
+            source.MetadataControl.Visibility = Visibility.Visible;
+
+            CachedItem = source;
         }
     }
 }

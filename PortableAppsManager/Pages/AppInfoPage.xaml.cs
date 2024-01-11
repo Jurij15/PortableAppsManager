@@ -7,6 +7,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using PortableAppsManager.Classes;
+using PortableAppsManager.Interop;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,6 +16,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using WinUIEx.Messaging;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -52,7 +54,7 @@ namespace PortableAppsManager.Pages
             }
             item = e.Parameter as AppItem;
 
-            //comment this for a cool effect
+            //comment these two lines for a cool effect
             AppIconImage.Source = item.ImgSource;
             AppNameBlock.Text = item.AppName;
 
@@ -61,8 +63,22 @@ namespace PortableAppsManager.Pages
             NavigationService.NavigationService.ChangeBreadcrumbVisibility(false);
             //just a bug in the service, this just fixes it temporarely
             NavigationService.NavigationService.MainNavigation.AlwaysShowHeader = false;
+
+            //show the title bar back button and hook the back event
+            MainWindow.AppTitleBarBackButton.Visibility = Visibility.Visible;
+            MainWindow.AppTitleBarBackButton.Click += AppTitleBarBackButton_Click;
         }
 
+        bool BackButtonPressed;
+        private void AppTitleBarBackButton_Click(object sender, RoutedEventArgs e)
+        {
+            //hide it and navigate back
+            BackButtonPressed = true;
+            MainWindow.AppTitleBarBackButton.Click -= AppTitleBarBackButton_Click;
+            NavigationService.NavigationService.Navigate(typeof(AppsPage), NavigationService.NavigationService.NavigateAnimationType.NoAnimation);
+        }
+
+        #region Anims
         private void Anim_Completed(ConnectedAnimation sender, object args)
         {
             AppInfoPane.Visibility = Visibility.Visible;
@@ -75,24 +91,45 @@ namespace PortableAppsManager.Pages
             //this is the last anim, show the page content
             await Task.Delay(50);
             ContentGrid.Visibility = Visibility.Visible;
+
+            AuthorBox.Text = item.Author;
         }
 
         private void Imganim_Completed(ConnectedAnimation sender, object args)
         {
             AppIconImage.Source = item.ImgSource;
         }
+        #endregion
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
             NavigationService.NavigationService.ChangeBreadcrumbVisibility(true);
             //just a bug in the service, this just fixes it temporarely
             NavigationService.NavigationService.MainNavigation.AlwaysShowHeader = true;
+            MainWindow.AppTitleBarBackButton.Visibility = Visibility.Collapsed;
+
+            if (BackButtonPressed)
+            {
+                ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("BackConnectedAnimation", AppInfoPane).Configuration = new DirectConnectedAnimationConfiguration();
+                ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("BackImageAnim", AppInfoPane).Configuration = new DirectConnectedAnimationConfiguration();
+                ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("BackTextAnim", AppInfoPane).Configuration = new DirectConnectedAnimationConfiguration();
+                BackButtonPressed = false;
+            }
 
             base.OnNavigatingFrom(e);
         }
         public AppInfoPage()
         {
             this.InitializeComponent();
+            this.DataContext = this;
+        }
+
+        private void LaunchButton_Click(object sender, RoutedEventArgs e)
+        {
+            LaunchText.Visibility = Visibility.Collapsed;
+            LoadingIcon.Visibility = Visibility.Visible;
+
+            (sender as Button).IsEnabled = false;
         }
     }
 }

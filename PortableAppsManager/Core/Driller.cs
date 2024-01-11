@@ -26,7 +26,7 @@ namespace PortableAppsManager.Core
             public string ExecutablePath { get; set; }
         }
 
-        private bool IsDirOnExceptionList(string Path, string[] ExceptionsList)
+        private bool IsDirOnExceptionList(string Path, List<string> ExceptionsList)
         {
             bool returnVal = false;
             foreach (var item in ExceptionsList)
@@ -40,7 +40,7 @@ namespace PortableAppsManager.Core
             return returnVal;
         }
 
-        public List<DrillerFoundApp> GetAllAppsInsideDirectory(string DirectoryPath, string[] Exceptions)
+        public List<DrillerFoundApp> GetAllAppsInsideDirectory(string DirectoryPath, List<string> Exceptions)
         {
             List<DrillerFoundApp> apps = new List<DrillerFoundApp>();
 

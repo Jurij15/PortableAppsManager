@@ -41,7 +41,6 @@ namespace PortableAppsManager.Pages.Setup.SetupPages
         List<AppItem> PortableAppsApps { get; set; }
         List<AppItem> OtherApps {  get; set; }
 
-        List<string> ExceptionsDirectories;
         List<string> AllTags;
 
         private void UpdateItemsSources()
@@ -60,8 +59,18 @@ namespace PortableAppsManager.Pages.Setup.SetupPages
             PortableAppsApps = new List<AppItem>();
             OtherApps = new List<AppItem>();
 
-            ExceptionsDirectories = new List<string>();
             AllTags = new List<string>(){ "TEST"};
+        }
+
+        private List<string> GetAllExceptionsDirectories()
+        {
+            List<string> exceptions = new List<string>();
+            foreach (var item in ExceptionItems.Items)
+            {
+                exceptions.Add(item.ToString());
+            }
+
+            return exceptions;
         }
 
         private async void ScanNowBtn_Click(object sender, RoutedEventArgs e)
@@ -74,14 +83,14 @@ namespace PortableAppsManager.Pages.Setup.SetupPages
             r.Width = 20;
             (sender as Button).Content = r;
 
-            await Task.Delay(900);
+            await Task.Delay(500);
 
             //PortableAppsApps = new List<AppItem>();
             //OtherApps = new List<AppItem>();
             try
             {
                 Driller d = new Driller();
-                List<Driller.DrillerFoundApp> foundapps = d.GetAllAppsInsideDirectory(PathTextBox.Text,ExceptionsDirectories.ToArray());
+                List<Driller.DrillerFoundApp> foundapps = d.GetAllAppsInsideDirectory(PathTextBox.Text,GetAllExceptionsDirectories());
                 foreach (var found in foundapps)
                 {
                     AppItem item = new AppItem();
@@ -156,21 +165,14 @@ namespace PortableAppsManager.Pages.Setup.SetupPages
         {
             StorageFolder folder = await DialogService.OpenFolderPickerToSelectSingleFolder(Windows.Storage.Pickers.PickerViewMode.List);
             string path = folder.Path;
-            MessageBox.Show(path);
-            ExceptionsDirectories.Add(path);
+            //MessageBox.Show(path);
 
-            ExceptionItems.ItemsSource = ExceptionsDirectories;
+            ExceptionItems.Items.Add(path);
         }
 
         private void ClearBtn_Click(object sender, RoutedEventArgs e)
         {
-            ExceptionsDirectories.Clear();
-            ExceptionItems.ItemsSource = ExceptionsDirectories;
-        }
-
-        private void ExceptionItems_Loaded(object sender, RoutedEventArgs e)
-        {
-            ExceptionItems.ItemsSource = ExceptionsDirectories;
+            ExceptionItems.Items.Clear();
         }
 
         private AppItem GetAppItemFromID(string ID)
