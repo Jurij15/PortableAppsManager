@@ -27,6 +27,7 @@ using CommunityToolkit.WinUI;
 using System.Diagnostics;
 using System.Collections;
 using Microsoft.UI.Xaml.Media.Animation;
+using WinRT;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -295,7 +296,9 @@ namespace PortableAppsManager.Pages.Setup.SetupPages
             {
                 GetAppItemFromID((((ListView)sender).Tag as string)).Tags = new List<string>();
             }
-            GetAppItemFromID((((ListView)sender).Tag as string)).Tags.Add(content);
+            GetAppItemFromID((sender as ListView).Tag.ToString()).Tags.Add(content);
+            //MessageBox.Show(GetAppItemFromID((sender as ListView).Tag.ToString()).Tags.Count.ToString());
+            ((((sender as ListView).Parent as StackPanel).Parent as FlyoutPresenter).Parent as Popup).IsOpen = false;
         }
 
         private void TagSearchBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
@@ -307,6 +310,8 @@ namespace PortableAppsManager.Pages.Setup.SetupPages
 
             TargetListView.ItemsSource = null ;
             TargetListView.ItemsSource = AllTags;
+
+            sender.Text = string.Empty;
         }
     }
 }

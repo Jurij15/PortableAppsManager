@@ -81,14 +81,6 @@ namespace PortableAppsManager.Pages
                 AppItems.Items.Clear();
                 foreach (var item in Globals.Settings.Apps)
                 {
-                    if (item.Tags != null)
-                    {
-                        item.Tags.Add("Add Tags!");
-                    }
-                    else
-                    {
-                        item.Tags = new List<string> { "Add Tags!" };
-                    }
                     AppItemControl control = new AppItemControl();
                     control.AppItem = item;
                     control.AppName = item.AppName;
@@ -113,6 +105,9 @@ namespace PortableAppsManager.Pages
             }
             else
             {
+                AppItems.ScrollIntoView(CachedItem);
+
+                //ConnectedAnimationService.GetForCurrentView().DefaultDuration = new TimeSpan(0, 0, 0, 4, 400);
                 var anim = ConnectedAnimationService.GetForCurrentView().GetAnimation("BackConnectedAnimation");
                 if (anim != null)
                 {
@@ -129,6 +124,12 @@ namespace PortableAppsManager.Pages
                 if (textanim != null)
                 {
                     textanim.TryStart(CachedItem.APPNAMEBlock);
+                }
+
+                var buttonanim = ConnectedAnimationService.GetForCurrentView().GetAnimation("BackButtonAnim");
+                if (buttonanim != null)
+                {
+                    buttonanim.TryStart(CachedItem.APPLABEL);
                 }
             }
         }
@@ -152,11 +153,17 @@ namespace PortableAppsManager.Pages
         {
             AppItemControl source = sender as AppItemControl;
 
+            ConnectedAnimationService.GetForCurrentView().DefaultDuration = new TimeSpan(0,0,0,0, 400);
+            //ConnectedAnimationService.GetForCurrentView().DefaultDuration = new TimeSpan(0,0,0,4, 400);
+
+            AppItems.ScrollIntoView(source);
+
             var imageanim = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardImageAnim", source.IMAGEControl);
             var animation = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", source);
             var textanim = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardTextAnim", source.APPNAMEBlock);
+            var buttonanim = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardButtonAnim", source.APPLABEL);
 
-            source.APPLABEL.Visibility = Visibility.Collapsed;
+            //source.APPLABEL.Visibility = Visibility.Collapsed;
             source.MetadataControl.Visibility = Visibility.Collapsed;
             await Task.Delay(100);
 

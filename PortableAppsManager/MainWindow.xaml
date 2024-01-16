@@ -16,7 +16,7 @@
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
             <Grid.ChildrenTransitions>
-                <RepositionThemeTransition />
+                <RepositionThemeTransition IsStaggeringEnabled="True" />
             </Grid.ChildrenTransitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
@@ -27,8 +27,12 @@
                 Grid.Column="0"
                 Margin="4,0,0,0"
                 Background="Transparent"
-                BorderBrush="Transparent">
-                <AnimatedIcon x:Name="SearchAnimatedIcon" Height="17" Margin="-4,0,-4,0">
+                BorderBrush="Transparent"
+                Visibility="Collapsed">
+                <AnimatedIcon
+                    x:Name="SearchAnimatedIcon"
+                    Height="17"
+                    Margin="-4,0,-4,0">
                     <AnimatedIcon.Source>
                         <animatedvisuals:AnimatedBackVisualSource />
                     </AnimatedIcon.Source>
@@ -55,6 +59,7 @@
                 <TextBlock
                     Grid.Column="1"
                     Margin="8,0,0,0"
+                    FontFamily="Segoe UI Variable Display"
                     Style="{ThemeResource CaptionTextBlockStyle}"
                     Text="Portable Apps Manager" />
             </Grid>

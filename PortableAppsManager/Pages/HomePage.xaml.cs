@@ -27,6 +27,8 @@ namespace PortableAppsManager.Pages
         public HomePage()
         {
             this.InitializeComponent();
+
+            this.DataContext = this;
         }
     }
 }

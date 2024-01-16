@@ -17,13 +17,12 @@
     <None Remove="Assets\Package.svg" />
     <None Remove="Controls\AppItemControl.xaml" />
     <None Remove="Dialogs\EditAppDialogContent.xaml" />
-    <None Remove="lib\Fluent.Icons\Fluent.Icons\Assets\FluentSymbolIcons.json" />
-    <None Remove="lib\Fluent.Icons\Fluent.Icons\Themes\Generic.xbf" />
     <None Remove="Pages\AppDetailsPage.xaml" />
     <None Remove="Pages\AppInfoPage.xaml" />
     <None Remove="Pages\AppsPage.xaml" />
     <None Remove="Pages\GamesPage.xaml" />
     <None Remove="Pages\HomePage.xaml" />
+    <None Remove="Pages\SettingsPage.xaml" />
     <None Remove="Pages\Setup\SetupPages\AppsDirectorySetupPages.xaml" />
     <None Remove="Pages\Setup\SetupPages\OtherSettingsSetupPage.xaml" />
     <None Remove="Pages\Setup\ShellSetupPage.xaml" />
@@ -31,9 +30,6 @@
     <None Remove="Pages\ShellPage.xaml" />
     <None Remove="Pages\StartupPage.xaml" />
     <None Remove="Styles\NavigationView.xaml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Page Remove="lib\Fluent.Icons\Fluent.Icons\Themes\Generic.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -44,12 +40,6 @@
     <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Content Include="Assets\StoreLogo.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
-    <Content Include="lib\Fluent.Icons\Fluent.Icons\Assets\FluentSymbolIcons.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="lib\Fluent.Icons\Fluent.Icons\Themes\Generic.xbf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -118,6 +108,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="lib\" />
     <Folder Include="Managers\" />
   </ItemGroup>
   <ItemGroup>
@@ -126,9 +117,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="lib\Fluent.Icons\Fluent.Icons\Themes\Generic.xaml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Page Update="Pages\SettingsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\AppInfoPage.xaml">

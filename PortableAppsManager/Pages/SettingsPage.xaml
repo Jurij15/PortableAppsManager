@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Page
+    x:Class="PortableAppsManager.Pages.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:global="using:PortableAppsManager"
+    xmlns:local="using:PortableAppsManager.Pages"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:navigation="using:NavigationService"
+    xmlns:settings="using:CommunityToolkit.WinUI.Controls"
+    xmlns:ui="using:CommunityToolkit.WinUI.UI"
+    navigation:PageProperties.AllowNavigationViewItemFocusWhenNavigatedToProperty="True"
+    navigation:PageProperties.ClearNavigationProperty="True"
+    navigation:PageProperties.IsHeaderVisibleProperty="True"
+    navigation:PageProperties.NavigationViewItemNameProperty="SettingsItem"
+    navigation:PageProperties.PageTitleProperty="Settings"
+    mc:Ignorable="d">
+    <ScrollViewer>
+        <Grid Margin="{StaticResource DefaultPageMargin}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <TextBlock
+                Grid.Row="0"
+                Margin="0,4,0,4"
+                Style="{ThemeResource BodyStrongTextBlockStyle}"
+                Text="Personalization" />
+            <StackPanel Grid.Row="1" Spacing="4">
+                <StackPanel.ChildrenTransitions>
+                    <RepositionThemeTransition />
+                </StackPanel.ChildrenTransitions>
+                <settings:SettingsCard
+                    x:Name="ThemeCard"
+                    Description="Change App Theme"
+                    Header="Theme">
+                    <settings:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xE771;" />
+                    </settings:SettingsCard.HeaderIcon>
+                    <ComboBox
+                        x:Name="ThemeCombo"
+                        Loaded="ThemeCombo_Loaded"
+                        SelectionChanged="ThemeCombo_SelectionChanged" />
+                </settings:SettingsCard>
+            </StackPanel>
+            <TextBlock
+                Grid.Row="2"
+                Margin="0,14,0,2"
+                Style="{ThemeResource BodyStrongTextBlockStyle}"
+                Text="About" />
+            <settings:SettingsExpander
+                x:Name="AboutManager"
+                Grid.Row="3"
+                Description="By JurijG"
+                Header="PortableAppsManager">
+                <settings:SettingsExpander.HeaderIcon>
+                    <ImageIcon
+                        Grid.Column="0"
+                        MaxWidth="32"
+                        MaxHeight="32"
+                        Source="/Assets/Package.svg" />
+                </settings:SettingsExpander.HeaderIcon>
+            </settings:SettingsExpander>
+        </Grid>
+    </ScrollViewer>
+</Page>

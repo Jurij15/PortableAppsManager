@@ -63,7 +63,10 @@
             </NavigationViewItem>
         </NavigationView.MenuItems>
         <NavigationView.FooterMenuItems>
-            <NavigationViewItem Content="Settings">
+            <NavigationViewItem
+                navigation:NavigationProperties.NavigateAnimationTypeProperty="Entrance"
+                navigation:NavigationProperties.TargetPageTypePropertyProperty="pages:SettingsPage"
+                Content="Settings" x:Name="SettingsItem">
                 <NavigationViewItem.Icon>
                     <FontIcon Glyph="&#xE713;" />
                 </NavigationViewItem.Icon>

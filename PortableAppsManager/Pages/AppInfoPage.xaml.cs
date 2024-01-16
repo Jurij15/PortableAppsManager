@@ -52,6 +52,13 @@ namespace PortableAppsManager.Pages
             {
                 textanim.TryStart(AppNameBlock);
             }
+
+            var buttonanim = ConnectedAnimationService.GetForCurrentView().GetAnimation("ForwardButtonAnim");
+            if (buttonanim != null)
+            {
+                buttonanim.TryStart(LaunchButton);
+            }
+
             item = e.Parameter as AppItem;
 
             //comment these two lines for a cool effect
@@ -67,6 +74,11 @@ namespace PortableAppsManager.Pages
             //show the title bar back button and hook the back event
             MainWindow.AppTitleBarBackButton.Visibility = Visibility.Visible;
             MainWindow.AppTitleBarBackButton.Click += AppTitleBarBackButton_Click;
+
+            if (string.IsNullOrEmpty(item.Author) || string.IsNullOrWhiteSpace(item.Author))
+            {
+                AuthorBox.Visibility = Visibility.Collapsed;
+            }
         }
 
         bool BackButtonPressed;
@@ -79,6 +91,10 @@ namespace PortableAppsManager.Pages
         }
 
         #region Anims
+        private void Imganim_Completed(ConnectedAnimation sender, object args)
+        {
+            AppIconImage.Source = item.ImgSource;
+        }
         private void Anim_Completed(ConnectedAnimation sender, object args)
         {
             AppInfoPane.Visibility = Visibility.Visible;
@@ -93,11 +109,6 @@ namespace PortableAppsManager.Pages
             ContentGrid.Visibility = Visibility.Visible;
 
             AuthorBox.Text = item.Author;
-        }
-
-        private void Imganim_Completed(ConnectedAnimation sender, object args)
-        {
-            AppIconImage.Source = item.ImgSource;
         }
         #endregion
 
@@ -115,6 +126,7 @@ namespace PortableAppsManager.Pages
                 anim.Configuration = new DirectConnectedAnimationConfiguration();
                 var image = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("BackImageAnim", AppInfoPane).Configuration = new DirectConnectedAnimationConfiguration();
                 var teext = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("BackTextAnim", AppInfoPane).Configuration = new DirectConnectedAnimationConfiguration();
+                var button = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("BackButtonAnim", AppInfoPane).Configuration = new DirectConnectedAnimationConfiguration();
                 BackButtonPressed = false;
             }
 

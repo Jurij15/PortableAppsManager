@@ -95,6 +95,7 @@
                 <TextBlock
                     x:Name="AppNameTextBlockO"
                     Margin="0,0,0,1"
+                    FontFamily="Segoe UI Variable Display"
                     FontSize="15"
                     MaxLines="1"
                     Style="{ThemeResource SubtitleTextBlockStyle}"
@@ -103,6 +104,7 @@
                     TextWrapping="Wrap" />
                 <TextBlock
                     x:Name="AppNameSubTextBlockO"
+                    FontFamily="Segoe UI Variable Display"
                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                     Style="{ThemeResource CaptionTextBlockStyle}"
                     Text="{Binding AppNameSubText}"
@@ -110,6 +112,7 @@
                 <controls:MetadataControl
                     x:Name="Tags"
                     AccessibleSeparator=" • "
+                    FontFamily="Segoe UI Variable Display"
                     FontSize="12"
                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                     Loaded="Tags_Loaded"
@@ -131,12 +134,10 @@
                             <RowDefinition Height="*" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
-                        <Grid.ChildrenTransitions>
-                            <ContentThemeTransition />
-                        </Grid.ChildrenTransitions>
                         <TextBlock
                             x:Name="LabelTextBlock"
                             Grid.Row="0"
+                            FontFamily="Segoe UI Variable Display"
                             Style="{ThemeResource CaptionTextBlockStyle}"
                             Text="{Binding LabelText}" />
                         <ProgressRing

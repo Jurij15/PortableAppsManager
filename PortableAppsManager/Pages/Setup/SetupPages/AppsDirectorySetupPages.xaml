@@ -66,8 +66,7 @@
                                 <Flyout x:Name="ExceptionsFlyout">
                                     <StackPanel Orientation="Vertical" Spacing="2">
                                         <TextBlock Style="{ThemeResource BodyStrongTextBlockStyle}" Text="List of exceptions:" />
-                                        <ListView x:Name="ExceptionItems">
-                                        </ListView>
+                                        <ListView x:Name="ExceptionItems" />
                                         <StackPanel Orientation="Horizontal" Spacing="2">
                                             <Button x:Name="AddException" Click="AddException_Click">
                                                 <StackPanel Spacing="2">
@@ -205,10 +204,20 @@
                             <GridView
                                 x:Name="TagsGrid"
                                 Grid.Row="2"
-                                ItemsSource="{x:Bind Tags}">
+                                ItemsSource="{x:Bind Tags, Mode=OneWay}">
                                 <GridView.ItemTemplate>
                                     <DataTemplate>
-                                        <InfoBadge Style="{StaticResource AttentionValueInfoBadgeStyle}" Value="{Binding}" />
+                                        <Border
+                                            Padding="2"
+                                            Background="{ThemeResource AccentFillColorDefaultBrush}"
+                                            BorderBrush="{ThemeResource TextFillColorPrimaryBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="32">
+                                            <TextBlock
+                                                FontFamily="Segoe UI Variable Display"
+                                                Style="{ThemeResource CaptionTextBlockStyle}"
+                                                Text="{Binding}" />
+                                        </Border>
                                     </DataTemplate>
                                 </GridView.ItemTemplate>
                             </GridView>
@@ -226,12 +235,16 @@
                                     ToolTipService.ToolTip="Add Tags">
                                     <FontIcon Glyph="&#xE710;" />
                                     <Button.Flyout>
-                                        <Flyout x:Name="AddTagFlyout">
-                                            <StackPanel Padding="4" Spacing="4">
+                                        <Flyout x:Name="AddTagFlyout" AreOpenCloseAnimationsEnabled="True">
+                                            <StackPanel
+                                                Width="250"
+                                                Height="300"
+                                                Padding="4"
+                                                Spacing="4">
                                                 <AutoSuggestBox
                                                     x:Name="TagSearchBox"
                                                     PlaceholderText="Type to add new"
-                                                    QueryIcon="Find"
+                                                    QueryIcon="Add"
                                                     SuggestionChosen="TagSearchBox_SuggestionChosen"
                                                     TextChanged="TagSearchBox_TextChanged" />
                                                 <ListView
@@ -241,7 +254,11 @@
                                                     IsDoubleTapEnabled="True"
                                                     ItemsSource="{Binding AllTags}"
                                                     Loaded="TagsList_Loaded"
-                                                    Tag="{x:Bind ID}" />
+                                                    Tag="{x:Bind ID}">
+                                                    <ListView.ItemContainerTransitions>
+                                                        <AddDeleteThemeTransition />
+                                                    </ListView.ItemContainerTransitions>
+                                                </ListView>
                                                 <TextBlock
                                                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                                     Style="{ThemeResource CaptionTextBlockStyle}"

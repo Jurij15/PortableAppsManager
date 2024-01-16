@@ -53,6 +53,7 @@
                     x:Name="AppNameBlock"
                     Grid.Row="1"
                     HorizontalAlignment="Center"
+                    FontFamily="Segoe UI Variable Display"
                     Style="{ThemeResource TitleTextBlockStyle}"
                     TextTrimming="CharacterEllipsis"
                     TextWrapping="Wrap" />
@@ -60,18 +61,18 @@
                     x:Name="AuthorBox"
                     Grid.Row="2"
                     HorizontalAlignment="Center"
+                    FontFamily="Segoe UI Variable Display"
                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                     Style="{ThemeResource CaptionTextBlockStyle}" />
                 <Button
                     x:Name="LaunchButton"
                     Grid.Row="3"
                     MinWidth="165"
-                    MinHeight="35"
                     MaxWidth="165"
-                    MaxHeight="35"
                     Margin="0,16,0,0"
                     HorizontalAlignment="Center"
                     Click="LaunchButton_Click"
+                    FontFamily="Segoe UI Variable Display"
                     Style="{ThemeResource AccentButtonStyle}">
                     <Grid HorizontalAlignment="Center">
                         <Grid.RowDefinitions>
@@ -83,14 +84,16 @@
                             Grid.Row="0"
                             Orientation="Horizontal"
                             Spacing="2">
-                            <FontIcon Glyph="&#xE8A7;" />
-                            <TextBlock Style="{ThemeResource BodyTextBlockStyle}" Text="Open" />
+                            <FontIcon Glyph="&#xE8A7;" Visibility="Collapsed" />
+                            <TextBlock
+                                FontFamily="Segoe UI Variable Display"
+                                Style="{ThemeResource BodyTextBlockStyle}"
+                                Text="Open" />
                         </StackPanel>
                         <ProgressRing
                             x:Name="LoadingIcon"
                             Grid.Row="1"
-                            Width="20"
-                            Height="20"
+                            Foreground="{ThemeResource TextFillColorPrimaryBrush}"
                             IsIndeterminate="True"
                             Visibility="Collapsed" />
                     </Grid>
