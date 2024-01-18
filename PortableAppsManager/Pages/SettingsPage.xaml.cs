@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using PortableAppsManager.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,6 +24,21 @@ namespace PortableAppsManager.Pages
     /// </summary>
     public sealed partial class SettingsPage : Page
     {
+        public enum Theme
+        {
+            //
+            // Summary:
+            //     Use the Application.RequestedTheme value for the element. This is the default.
+            Default,
+            //
+            // Summary:
+            //     Use the **Light** default theme.
+            Light,
+            //
+            // Summary:
+            //     Use the **Dark** default theme.
+            Dark
+        }
         public SettingsPage()
         {
             this.InitializeComponent();
@@ -32,7 +48,7 @@ namespace PortableAppsManager.Pages
 
         private void ThemeCombo_Loaded(object sender, RoutedEventArgs e)
         {
-            var _themeenumval = Enum.GetValues(typeof(ElementTheme)).Cast<ElementTheme>();
+            var _themeenumval = Enum.GetValues(typeof(Theme)).Cast<Theme>();
             ThemeCombo.ItemsSource = _themeenumval;
 
             ThemeCombo.SelectedIndex = (int)Globals.Settings.Theme;
@@ -41,6 +57,7 @@ namespace PortableAppsManager.Pages
         private void ThemeCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Globals.Settings.Theme = (ElementTheme)ThemeCombo.SelectedIndex;
+            ThemeService.ChangeTheme((ElementTheme)ThemeCombo.SelectedIndex);
         }
     }
 }

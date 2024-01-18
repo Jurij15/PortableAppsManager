@@ -28,6 +28,8 @@ using System.Diagnostics;
 using System.Collections;
 using Microsoft.UI.Xaml.Media.Animation;
 using WinRT;
+using IniParser;
+using IniParser.Model;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -42,7 +44,7 @@ namespace PortableAppsManager.Pages.Setup.SetupPages
         List<AppItem> PortableAppsApps { get; set; }
         List<AppItem> OtherApps {  get; set; }
 
-        List<string> AllTags;
+        HashSet<string> AllTags;
 
         private void UpdateItemsSources()
         {
@@ -60,7 +62,7 @@ namespace PortableAppsManager.Pages.Setup.SetupPages
             PortableAppsApps = new List<AppItem>();
             OtherApps = new List<AppItem>();
 
-            AllTags = new List<string>(){ "TEST"};
+            AllTags = new HashSet<string>(){ "TEST"};
         }
 
         private List<string> GetAllExceptionsDirectories()
@@ -102,6 +104,19 @@ namespace PortableAppsManager.Pages.Setup.SetupPages
                     item.ExePath = found.ExecutablePath;
                     item.ImgSource = ImageHelper.ConvertIconToImageSource(System.Drawing.Icon.ExtractAssociatedIcon(found.ExecutablePath));
                     item.IsIncluded = true;
+                    if (File.Exists(Path.Combine(found.ExecutableParentDirectoryPath, "App", "AppInfo","appinfo.ini")))
+                    {
+                        //this is a PortableAppsApp, we can get as much info as possible
+                        var parser = new FileIniDataParser();
+                        IniData data = parser.ReadFile(Path.Combine(found.ExecutableParentDirectoryPath, "App", "AppInfo", "appinfo.ini"));
+
+                        item.AppName = Regex.Replace(data["Details"]["Name"], @"Portable", "", RegexOptions.IgnoreCase);
+                        item.Author = data["Details"]["Publisher"];
+                        item.Description = data["Details"]["Description"];
+
+                        item.Tags = new List<string>();
+                        item.Tags.Add(data["Details"]["Category"]);
+                    }
                     if (found.Source == Driller.DrillerFoundAppSource.PortableApps)
                     {
                         item.Setup_IsPortableAppsCom = true;
@@ -311,6 +326,7 @@ namespace PortableAppsManager.Pages.Setup.SetupPages
             TargetListView.ItemsSource = null ;
             TargetListView.ItemsSource = AllTags;
 
+            sender.Text = string.Empty;
             sender.Text = string.Empty;
         }
     }

@@ -36,7 +36,7 @@
                 Grid.Row="0"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                RowSpacing="6">
+                RowSpacing="4">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
@@ -69,7 +69,7 @@
                     Grid.Row="3"
                     MinWidth="165"
                     MaxWidth="165"
-                    Margin="0,16,0,0"
+                    Margin="0,24,0,0"
                     HorizontalAlignment="Center"
                     Click="LaunchButton_Click"
                     FontFamily="Segoe UI Variable Display"
@@ -93,11 +93,23 @@
                         <ProgressRing
                             x:Name="LoadingIcon"
                             Grid.Row="1"
+                            Width="20"
+                            Height="20"
                             Foreground="{ThemeResource TextFillColorPrimaryBrush}"
                             IsIndeterminate="True"
                             Visibility="Collapsed" />
                     </Grid>
                 </Button>
+                <TextBlock
+                    x:Name="QuickAppDesc"
+                    Grid.Row="4"
+                    Margin="12,48,12,0"
+                    HorizontalAlignment="Center"
+                    MaxLines="3"
+                    Style="{ThemeResource BodyTextBlockStyle}"
+                    TextAlignment="Center"
+                    TextTrimming="CharacterEllipsis"
+                    TextWrapping="WrapWholeWords" />
             </Grid>
         </Grid>
         <Grid

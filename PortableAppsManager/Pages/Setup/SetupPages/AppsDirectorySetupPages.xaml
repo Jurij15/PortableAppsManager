@@ -201,24 +201,9 @@
                                 Text="{x:Bind AppName}"
                                 TextTrimming="CharacterEllipsis"
                                 TextWrapping="WrapWholeWords" />
-                            <GridView
-                                x:Name="TagsGrid"
-                                Grid.Row="2"
-                                ItemsSource="{x:Bind Tags, Mode=OneWay}">
+                            <GridView Grid.Row="2">
                                 <GridView.ItemTemplate>
-                                    <DataTemplate>
-                                        <Border
-                                            Padding="2"
-                                            Background="{ThemeResource AccentFillColorDefaultBrush}"
-                                            BorderBrush="{ThemeResource TextFillColorPrimaryBrush}"
-                                            BorderThickness="1"
-                                            CornerRadius="32">
-                                            <TextBlock
-                                                FontFamily="Segoe UI Variable Display"
-                                                Style="{ThemeResource CaptionTextBlockStyle}"
-                                                Text="{Binding}" />
-                                        </Border>
-                                    </DataTemplate>
+                                    <DataTemplate />
                                 </GridView.ItemTemplate>
                             </GridView>
                             <StackPanel
@@ -263,6 +248,24 @@
                                                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                                     Style="{ThemeResource CaptionTextBlockStyle}"
                                                     Text="Double-click to add tag" />
+                                                <TextBlock
+                                                    Margin="0,12,0,0"
+                                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                    Style="{ThemeResource CaptionTextBlockStyle}"
+                                                    Text="Current Tags" />
+                                                <GridView
+                                                    x:Name="TagsGrid"
+                                                    Grid.Row="2"
+                                                    ItemsSource="{x:Bind Tags, Mode=OneWay}">
+                                                    <GridView.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock
+                                                                FontFamily="Segoe UI Variable Display"
+                                                                Style="{ThemeResource CaptionTextBlockStyle}"
+                                                                Text="{Binding}" />
+                                                        </DataTemplate>
+                                                    </GridView.ItemTemplate>
+                                                </GridView>
                                             </StackPanel>
                                         </Flyout>
                                     </Button.Flyout>

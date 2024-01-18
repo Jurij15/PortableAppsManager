@@ -7,6 +7,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using PortableAppsManager.Classes;
+using PortableAppsManager.Core;
 using PortableAppsManager.Interop;
 using System;
 using System.Collections.Generic;
@@ -64,6 +65,8 @@ namespace PortableAppsManager.Pages
             //comment these two lines for a cool effect
             AppIconImage.Source = item.ImgSource;
             AppNameBlock.Text = item.AppName;
+            AuthorBox.Text = item.Author;
+            QuickAppDesc.Text = item.Description;
 
             base.OnNavigatedTo(e);
 
@@ -103,12 +106,10 @@ namespace PortableAppsManager.Pages
         private async void Textanim_Completed(ConnectedAnimation sender, object args)
         {
             AppNameBlock.Text = item.AppName;
-
             //this is the last anim, show the page content
             await Task.Delay(50);
             ContentGrid.Visibility = Visibility.Visible;
 
-            AuthorBox.Text = item.Author;
         }
         #endregion
 
@@ -138,12 +139,21 @@ namespace PortableAppsManager.Pages
             this.DataContext = this;
         }
 
-        private void LaunchButton_Click(object sender, RoutedEventArgs e)
+        private async void LaunchButton_Click(object sender, RoutedEventArgs e)
         {
             LaunchText.Visibility = Visibility.Collapsed;
             LoadingIcon.Visibility = Visibility.Visible;
 
             (sender as Button).IsEnabled = false;
+
+            Launcher.Launch(item);
+
+            await Task.Delay(500); //delay for good effect
+
+            LaunchText.Visibility = Visibility.Visible;
+            LoadingIcon.Visibility = Visibility.Collapsed;
+
+            (sender as Button).IsEnabled = true;
         }
     }
 }

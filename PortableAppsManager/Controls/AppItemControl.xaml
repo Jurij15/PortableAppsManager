@@ -143,8 +143,8 @@
                         <ProgressRing
                             x:Name="LoadingRing"
                             Grid.Row="1"
-                            Width="25"
-                            Height="25"
+                            Width="15"
+                            Height="15"
                             Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                             IsIndeterminate="True"
                             Visibility="Collapsed" />

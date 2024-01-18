@@ -14,7 +14,10 @@
             <RowDefinition Height="48" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0">
+        <Grid
+            Grid.Row="0"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch">
             <Grid.ChildrenTransitions>
                 <RepositionThemeTransition IsStaggeringEnabled="True" />
             </Grid.ChildrenTransitions>
@@ -46,7 +49,8 @@
                 x:Name="AppTitleBar"
                 Grid.Column="1"
                 Margin="8,0,0,0"
-                VerticalAlignment="Center">
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
@@ -55,10 +59,12 @@
                     Grid.Column="0"
                     MaxWidth="16"
                     MaxHeight="16"
+                    VerticalAlignment="Center"
                     Source="/Assets/Package.svg" />
                 <TextBlock
                     Grid.Column="1"
                     Margin="8,0,0,0"
+                    VerticalAlignment="Center"
                     FontFamily="Segoe UI Variable Display"
                     Style="{ThemeResource CaptionTextBlockStyle}"
                     Text="Portable Apps Manager" />
