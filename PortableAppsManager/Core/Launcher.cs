@@ -24,11 +24,19 @@ namespace PortableAppsManager.Core
         }
         #endregion
 
-        public static void Launch(AppItem app, bool UseShellExecute = false)
+        public void Launch(bool UseShellExecute = false)
         {
             try
             {
-                Process.Start(app.ExePath);
+                Process process = new Process();
+                ProcessStartInfo info = new ProcessStartInfo();
+
+                info.UseShellExecute = UseShellExecute;
+                info.FileName = App.ExePath;
+
+                process.StartInfo = info;
+
+                process.Start();
             }
             catch (Exception ex)
             {

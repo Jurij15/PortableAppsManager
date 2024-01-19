@@ -176,7 +176,7 @@ namespace PortableAppsManager.Pages
 
             (sender as Button).IsEnabled = false;
 
-            Launcher.Launch(item);
+            Launcher.Launch();
 
             await Task.Delay(1500); //delay to make sure the porcess started
 
