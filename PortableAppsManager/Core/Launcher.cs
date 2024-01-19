@@ -11,25 +11,29 @@ namespace PortableAppsManager.Core
 {
     public class Launcher
     {
+        public AppItem App;
+        
+        public Launcher(AppItem a) 
+        { 
+            App = a;
+        }
+        #region Static Functions
         public static bool IsAppLaunchAvailable(string ExecutablePath)
         {
             return File.Exists(ExecutablePath);
         }
+        #endregion
 
-        public static bool Launch(AppItem app)
+        public static void Launch(AppItem app, bool UseShellExecute = false)
         {
-            bool returnval = false;
-
             try
             {
                 Process.Start(app.ExePath);
-                returnval = true;
             }
             catch (Exception ex)
             {
+                throw;
             }
-
-            return returnval;
         }
     }
 }

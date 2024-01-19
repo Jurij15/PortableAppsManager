@@ -48,5 +48,11 @@ namespace PortableAppsManager.Dialogs
         {
             ParentDialog.Hide();
         }
+
+        private void Grid_Loaded(object sender, RoutedEventArgs e)
+        {
+            //ParentDialog.Resources["ContentDialogMinWidth"] = 900;
+            ParentDialog.UpdateLayout();
+        }
     }
 }

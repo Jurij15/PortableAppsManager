@@ -33,7 +33,7 @@
             QueryIcon="Find"
             TextChanged="SearchBox_TextChanged" />
         <Grid Grid.Row="1" Margin="0,4,0,4">
-            <ComboBox SelectedIndex="0">
+            <ComboBox SelectedIndex="0" Visibility="Collapsed">
                 <ComboBoxItem Content="Test" />
             </ComboBox>
         </Grid>
@@ -41,7 +41,6 @@
             x:Name="AppItems"
             Grid.Row="2"
             Loaded="AppItems_Loaded"
-            SelectionMode="None">
-        </GridView>
+            SelectionMode="None" />
     </Grid>
 </Page>

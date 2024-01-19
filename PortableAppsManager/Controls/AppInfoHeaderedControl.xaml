@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<UserControl
+    x:Class="PortableAppsManager.Controls.AppInfoHeaderedControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:PortableAppsManager.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid
+        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+        CornerRadius="8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="48" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <TextBlock
+                Margin="16,0,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Style="{ThemeResource BodyStrongTextBlockStyle}"
+                Text="{x:Bind Header}" />
+        </Grid>
+        <Grid
+            Grid.Row="1"
+            Height="1"
+            Background="{ThemeResource TextFillColorTertiaryBrush}"
+            Opacity="0.7" />
+        <ContentPresenter
+            Grid.Row="2"
+            Padding="{x:Bind ContentMargin}"
+            Content="{x:Bind Content}" />
+    </Grid>
+</UserControl>

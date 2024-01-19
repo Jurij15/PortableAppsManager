@@ -103,7 +103,6 @@ namespace PortableAppsManager.Pages.Setup.SetupPages
                     item.AppName = res; 
                     item.ExePath = found.ExecutablePath;
                     item.ImgSource = ImageHelper.ConvertIconToImageSource(System.Drawing.Icon.ExtractAssociatedIcon(found.ExecutablePath));
-                    item.IsIncluded = true;
                     if (File.Exists(Path.Combine(found.ExecutableParentDirectoryPath, "App", "AppInfo","appinfo.ini")))
                     {
                         //this is a PortableAppsApp, we can get as much info as possible
@@ -116,6 +115,14 @@ namespace PortableAppsManager.Pages.Setup.SetupPages
 
                         item.Tags = new List<string>();
                         item.Tags.Add(data["Details"]["Category"]);
+
+                        item.IsOpenSource = Convert.ToBoolean(data["License"]["OpenSource"]);
+                        item.IsFreeware = Convert.ToBoolean(data["License"]["Freeware"]);
+
+                        item.Language = data["Details"]["Language"];
+
+                        item.PortableApps_PackageVersion = data["Version"]["PackageVersion"];
+                        item.PortableApps_DisplayVersion = data["Version"]["DisplayVersion"];
                     }
                     if (found.Source == Driller.DrillerFoundAppSource.PortableApps)
                     {

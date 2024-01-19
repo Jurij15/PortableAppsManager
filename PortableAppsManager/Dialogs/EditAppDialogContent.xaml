@@ -6,86 +6,109 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:PortableAppsManager.Dialogs"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:scontrols="using:CommunityToolkit.WinUI.Controls"
     mc:Ignorable="d">
 
-    <Grid Margin="12">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        <Grid x:Name="TitleGrid" Grid.Row="0">
-            <TextBlock
-                HorizontalAlignment="Left"
-                VerticalAlignment="Center"
-                Style="{ThemeResource SubtitleTextBlockStyle}"
-                Text="{x:Bind _title}" />
-            <Button
-                x:Name="DialogCloseButton"
-                HorizontalAlignment="Right"
-                Click="DialogCloseButton_Click">
-                <FontIcon Glyph="&#xE8BB;" />
-                <Button.Resources>
-                    <StaticResource x:Key="ButtonBackground" ResourceKey="ControlFillColorSecondaryBrush" />
-                    <StaticResource x:Key="ButtonBackgroundPointerOver" ResourceKey="ControlFillColorDefaultBrush" />
-                    <StaticResource x:Key="ButtonBackgroundPressed" ResourceKey="ControlFillColorTertiaryBrush" />
-                </Button.Resources>
-            </Button>
+    <ScrollViewer>
+        <Grid Margin="12" Loaded="Grid_Loaded">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid x:Name="TitleGrid" Grid.Row="0">
+                <TextBlock
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Style="{ThemeResource SubtitleTextBlockStyle}"
+                    Text="{x:Bind _title}" />
+                <Button
+                    x:Name="DialogCloseButton"
+                    HorizontalAlignment="Right"
+                    Click="DialogCloseButton_Click">
+                    <FontIcon Glyph="&#xE8BB;" />
+                    <Button.Resources>
+                        <StaticResource x:Key="ButtonBackground" ResourceKey="ControlFillColorSecondaryBrush" />
+                        <StaticResource x:Key="ButtonBackgroundPointerOver" ResourceKey="ControlFillColorDefaultBrush" />
+                        <StaticResource x:Key="ButtonBackgroundPressed" ResourceKey="ControlFillColorTertiaryBrush" />
+                    </Button.Resources>
+                </Button>
+            </Grid>
+            <Grid
+                x:Name="ContentGrid"
+                Grid.Row="1"
+                Margin="0,2,0,2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel
+                    x:Name="EditGrid"
+                    Grid.Column="0"
+                    Margin="0,6,4,6"
+                    Spacing="6">
+                    <TextBox
+                        x:Name="AppPathBox"
+                        Description="Once changed, the application icon will update as well"
+                        Header="Application Executable Path"
+                        Text="{x:Bind ModifiedAppItem.ExePath, Mode=TwoWay}" />
+                    <TextBox
+                        x:Name="AppNameBox"
+                        Description="Keep this within 4 to 12 characters"
+                        Header="App Name"
+                        Text="{x:Bind ModifiedAppItem.AppName, Mode=TwoWay}" />
+                    <TextBox
+                        x:Name="AppAuthorBox"
+                        Header="App Author"
+                        Text="{x:Bind ModifiedAppItem.Author, Mode=TwoWay}" />
+                    <TextBox
+                        x:Name="AppDescriptionBox"
+                        MaxHeight="172"
+                        AcceptsReturn="True"
+                        Description="Keep this at a maximum of 4 lines"
+                        Header="App Description"
+                        Text="{x:Bind ModifiedAppItem.Description, Mode=TwoWay}"
+                        TextWrapping="Wrap" />
+                    <scontrols:SettingsExpander
+                        x:Name="AdvancedOptionsExpander"
+                        Description="Run As Administrator, Launch Arguments, Language"
+                        Header="Advanced Options">
+                        <scontrols:SettingsExpander.HeaderIcon>
+                            <FontIcon Glyph="&#xE712;" />
+                        </scontrols:SettingsExpander.HeaderIcon>
+                        <scontrols:SettingsExpander.Items>
+                            <scontrols:SettingsCard Header="Language">
+                                <TextBox
+                                    x:Name="AppLangBox"
+                                    MinWidth="100"
+                                    AcceptsReturn="False"
+                                    PlaceholderText="English, Spanish, Hindi, ..." />
+                            </scontrols:SettingsCard>
+                            <scontrols:SettingsCard Header="Launch Arguments" />
+                            <scontrols:SettingsCard Header="Launch As Admin" />
+                            <scontrols:SettingsCard Header="Hide PortableApps.com properties" />
+                        </scontrols:SettingsExpander.Items>
+                    </scontrols:SettingsExpander>
+                </StackPanel>
+                <Border
+                    Grid.Column="1"
+                    Width="48"
+                    Height="48"
+                    Margin="4,6,2,6"
+                    VerticalAlignment="Top"
+                    CornerRadius="4"
+                    Visibility="Collapsed">
+                    <Image x:Name="AppIcon" Source="{x:Bind ModifiedAppItem.ImgSource}" />
+                </Border>
+            </Grid>
+            <Grid x:Name="BottomGrid" Grid.Row="2">
+                <Button
+                    x:Name="SaveBtn"
+                    HorizontalAlignment="Right"
+                    Click="SaveBtn_Click"
+                    Content="Save"
+                    Style="{ThemeResource AccentButtonStyle}" />
+            </Grid>
         </Grid>
-        <Grid
-            x:Name="ContentGrid"
-            Grid.Row="1"
-            Margin="0,2,0,2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <StackPanel
-                x:Name="EditGrid"
-                Grid.Column="0"
-                Margin="0,6,4,6"
-                Spacing="4">
-                <TextBox
-                    x:Name="AppPathBox"
-                    Description="Once changed, the application icon will update as well"
-                    Header="Application Executable Path"
-                    Text="{x:Bind ModifiedAppItem.ExePath, Mode=TwoWay}" />
-                <TextBox
-                    x:Name="AppNameBox"
-                    Description="Keep this within 4 to 12 characters"
-                    Header="App Name"
-                    Text="{x:Bind ModifiedAppItem.AppName, Mode=TwoWay}" />
-                <TextBox
-                    x:Name="AppAuthorBox"
-                    Header="App Author"
-                    Text="{x:Bind ModifiedAppItem.Author, Mode=TwoWay}" />
-                <TextBox
-                    x:Name="AppDescriptionBox"
-                    MaxHeight="172"
-                    AcceptsReturn="True"
-                    Description="Keep this at a maximum of 4 lines"
-                    Header="App Description"
-                    Text="{x:Bind ModifiedAppItem.Description, Mode=TwoWay}"
-                    TextWrapping="Wrap" />
-            </StackPanel>
-            <Border
-                Grid.Column="1"
-                Width="48"
-                Height="48"
-                Margin="4,6,2,6"
-                VerticalAlignment="Top"
-                CornerRadius="4"
-                Visibility="Collapsed">
-                <Image x:Name="AppIcon" Source="{x:Bind ModifiedAppItem.ImgSource}" />
-            </Border>
-        </Grid>
-        <Grid x:Name="BottomGrid" Grid.Row="2">
-            <Button
-                x:Name="SaveBtn"
-                HorizontalAlignment="Right"
-                Click="SaveBtn_Click"
-                Content="Save"
-                Style="{ThemeResource AccentButtonStyle}" />
-        </Grid>
-    </Grid>
+    </ScrollViewer>
 </Page>

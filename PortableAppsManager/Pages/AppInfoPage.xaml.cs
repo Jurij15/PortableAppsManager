@@ -17,6 +17,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.Popups;
 using WinUIEx.Messaging;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -30,6 +31,11 @@ namespace PortableAppsManager.Pages
     public sealed partial class AppInfoPage : Page
     {
         AppItem item;
+
+        Launcher Launcher;
+        #region Anims and Navigation
+        #region Navigation
+
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             AppInfoPane.Visibility = Visibility.Visible;
@@ -66,7 +72,7 @@ namespace PortableAppsManager.Pages
             AppIconImage.Source = item.ImgSource;
             AppNameBlock.Text = item.AppName;
             AuthorBox.Text = item.Author;
-            QuickAppDesc.Text = item.Description;
+            AppDesc.Text = item.Description;
 
             base.OnNavigatedTo(e);
 
@@ -82,36 +88,17 @@ namespace PortableAppsManager.Pages
             {
                 AuthorBox.Visibility = Visibility.Collapsed;
             }
-        }
 
-        bool BackButtonPressed;
-        private void AppTitleBarBackButton_Click(object sender, RoutedEventArgs e)
-        {
-            //hide it and navigate back
-            BackButtonPressed = true;
-            MainWindow.AppTitleBarBackButton.Click -= AppTitleBarBackButton_Click;
-            NavigationService.NavigationService.Navigate(typeof(AppsPage), NavigationService.NavigationService.NavigateAnimationType.NoAnimation);
+            try
+            {
+                Initialize();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, ex.GetType().ToString());
+                NavigationService.NavigationService.Navigate(typeof(AppsPage));
+            }
         }
-
-        #region Anims
-        private void Imganim_Completed(ConnectedAnimation sender, object args)
-        {
-            AppIconImage.Source = item.ImgSource;
-        }
-        private void Anim_Completed(ConnectedAnimation sender, object args)
-        {
-            AppInfoPane.Visibility = Visibility.Visible;
-        }
-
-        private async void Textanim_Completed(ConnectedAnimation sender, object args)
-        {
-            AppNameBlock.Text = item.AppName;
-            //this is the last anim, show the page content
-            await Task.Delay(50);
-            ContentGrid.Visibility = Visibility.Visible;
-
-        }
-        #endregion
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
@@ -133,10 +120,53 @@ namespace PortableAppsManager.Pages
 
             base.OnNavigatingFrom(e);
         }
+
+        bool BackButtonPressed;
+        private void AppTitleBarBackButton_Click(object sender, RoutedEventArgs e)
+        {
+            //hide it and navigate back
+            BackButtonPressed = true;
+            MainWindow.AppTitleBarBackButton.Click -= AppTitleBarBackButton_Click;
+            NavigationService.NavigationService.Navigate(typeof(AppsPage), NavigationService.NavigationService.NavigateAnimationType.NoAnimation);
+        }
+        #endregion
+        #region Anims
+        private void Imganim_Completed(ConnectedAnimation sender, object args)
+        {
+            AppIconImage.Source = item.ImgSource;
+        }
+        private void Anim_Completed(ConnectedAnimation sender, object args)
+        {
+            AppInfoPane.Visibility = Visibility.Visible;
+        }
+
+        private async void Textanim_Completed(ConnectedAnimation sender, object args)
+        {
+            AppNameBlock.Text = item.AppName;
+            //this is the last anim, show the page content
+            await Task.Delay(50);
+            ContentGrid.Visibility = Visibility.Visible;
+
+        }
+        #endregion
+        #endregion
+
         public AppInfoPage()
         {
             this.InitializeComponent();
             this.DataContext = this;
+        }
+
+        void Initialize()
+        {
+            if (item != null)
+            {
+                Launcher = new Launcher(item);
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(item), "AppItem was null");
+            }
         }
 
         private async void LaunchButton_Click(object sender, RoutedEventArgs e)
@@ -148,7 +178,7 @@ namespace PortableAppsManager.Pages
 
             Launcher.Launch(item);
 
-            await Task.Delay(500); //delay for good effect
+            await Task.Delay(1500); //delay to make sure the porcess started
 
             LaunchText.Visibility = Visibility.Visible;
             LoadingIcon.Visibility = Visibility.Collapsed;

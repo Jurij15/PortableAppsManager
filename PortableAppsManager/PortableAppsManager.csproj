@@ -15,9 +15,9 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Assets\Package.svg" />
+    <None Remove="Controls\AppInfoHeaderedControl.xaml" />
     <None Remove="Controls\AppItemControl.xaml" />
     <None Remove="Dialogs\EditAppDialogContent.xaml" />
-    <None Remove="Pages\AppDetailsPage.xaml" />
     <None Remove="Pages\AppInfoPage.xaml" />
     <None Remove="Pages\AppsPage.xaml" />
     <None Remove="Pages\GamesPage.xaml" />
@@ -118,6 +118,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Page Update="Controls\AppInfoHeaderedControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
     <Page Update="Pages\SettingsPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -154,11 +159,6 @@
   </ItemGroup>
   <ItemGroup>
     <Page Update="Controls\AppItemControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Pages\AppDetailsPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
