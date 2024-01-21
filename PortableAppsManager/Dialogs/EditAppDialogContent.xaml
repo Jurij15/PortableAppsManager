@@ -84,9 +84,15 @@
                                     AcceptsReturn="False"
                                     PlaceholderText="English, Spanish, Hindi, ..." />
                             </scontrols:SettingsCard>
-                            <scontrols:SettingsCard Header="Launch Arguments" />
-                            <scontrols:SettingsCard Header="Launch As Admin" />
-                            <scontrols:SettingsCard Header="Hide PortableApps.com properties" />
+                            <scontrols:SettingsCard Header="Launch Arguments">
+                                <TextBox Text="{x:Bind ModifiedAppItem.LaunchArguments, Mode=TwoWay}" />
+                            </scontrols:SettingsCard>
+                            <scontrols:SettingsCard Header="Launch As Admin">
+                                <ToggleSwitch IsOn="{x:Bind ModifiedAppItem.LaunchAsAdmin, Mode=TwoWay}" />
+                            </scontrols:SettingsCard>
+                            <scontrols:SettingsCard Header="UseShellExecute">
+                                <ToggleSwitch IsOn="{x:Bind ModifiedAppItem.UseShellExecute, Mode=TwoWay}" />
+                            </scontrols:SettingsCard>
                         </scontrols:SettingsExpander.Items>
                     </scontrols:SettingsExpander>
                 </StackPanel>

@@ -35,6 +35,7 @@ namespace PortableAppsManager
         {
             this.InitializeComponent();
 
+            //DO NOT LOAD SETTINGS UNTIL SOME BETTER WAY OF SAVING IMAGES IS FINISHED
             ConfigJson.LoadSettings();
         }
 

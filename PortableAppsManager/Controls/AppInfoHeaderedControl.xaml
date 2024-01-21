@@ -18,12 +18,28 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
             <TextBlock
+                Grid.Row="0"
+                Grid.Column="0"
                 Margin="16,0,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
+                FontFamily="Segoe UI Variable Display"
                 Style="{ThemeResource BodyStrongTextBlockStyle}"
                 Text="{x:Bind Header}" />
+            <ContentPresenter
+                Grid.Row="0"
+                Grid.Column="1"
+                Margin="0,0,8,0"
+                Content="{x:Bind HeaderContent}"
+                FontFamily="Segoe UI Variable Display" />
         </Grid>
         <Grid
             Grid.Row="1"
@@ -33,6 +49,7 @@
         <ContentPresenter
             Grid.Row="2"
             Padding="{x:Bind ContentMargin}"
-            Content="{x:Bind Content}" />
+            Content="{x:Bind Content}"
+            FontFamily="Segoe UI Variable Display" />
     </Grid>
 </UserControl>

@@ -8,7 +8,9 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using PortableAppsManager.Classes;
 using PortableAppsManager.Core;
+using PortableAppsManager.Enums;
 using PortableAppsManager.Interop;
+using PortableAppsManager.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -31,8 +33,10 @@ namespace PortableAppsManager.Pages
     public sealed partial class AppInfoPage : Page
     {
         AppItem item;
+        private AppItemModificationType AppWasModified { get; set; } = AppItemModificationType.None;
 
         Launcher Launcher;
+        TagsService tagsService;
         #region Anims and Navigation
         #region Navigation
 
@@ -68,7 +72,7 @@ namespace PortableAppsManager.Pages
 
             item = e.Parameter as AppItem;
 
-            //comment these two lines for a cool effect
+            //comment these lines for a cool effect
             AppIconImage.Source = item.ImgSource;
             AppNameBlock.Text = item.AppName;
             AuthorBox.Text = item.Author;
@@ -127,7 +131,7 @@ namespace PortableAppsManager.Pages
             //hide it and navigate back
             BackButtonPressed = true;
             MainWindow.AppTitleBarBackButton.Click -= AppTitleBarBackButton_Click;
-            NavigationService.NavigationService.Navigate(typeof(AppsPage), NavigationService.NavigationService.NavigateAnimationType.NoAnimation);
+            NavigationService.NavigationService.Navigate(typeof(AppsPage), NavigationService.NavigationService.NavigateAnimationType.NoAnimation, AppWasModified);
         }
         #endregion
         #region Anims
@@ -155,6 +159,8 @@ namespace PortableAppsManager.Pages
         {
             this.InitializeComponent();
             this.DataContext = this;
+
+            tagsService = new TagsService();
         }
 
         void Initialize()
@@ -176,14 +182,56 @@ namespace PortableAppsManager.Pages
 
             (sender as Button).IsEnabled = false;
 
-            Launcher.Launch();
+            try
+            {
+                Launcher.Launch();
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("elevation"))
+                {
+                    DialogService.ShowSimpleDialog("This app requires elevated (administrator) privileges to run. Edit the application and toggle Launch as Admin", "OK", "Error");
+                }
+            }
 
             await Task.Delay(1500); //delay to make sure the porcess started
 
             LaunchText.Visibility = Visibility.Visible;
             LoadingIcon.Visibility = Visibility.Collapsed;
 
+            LaunchSuccessfulInfoBar.IsOpen = true;
+
             (sender as Button).IsEnabled = true;
+        }
+
+        private void DeletTagBtn_Click(object sender, RoutedEventArgs e)
+        {
+            item.Tags.Remove((sender as Button).Tag.ToString());
+            TagsGrid.ItemsSource = null;
+            TagsGrid.ItemsSource = item.Tags;
+        }
+
+        private void ConfirmAddTagButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(NewTagNameBox.Text) && !string.IsNullOrWhiteSpace(NewTagNameBox.Text))
+            {
+                item.Tags.Add(NewTagNameBox.Text);
+                TagsGrid.ItemsSource = null;
+                TagsGrid.ItemsSource = item.Tags;
+            }
+
+            AddTagFlyout.Hide();
+        }
+
+        private void AllTagsList_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            string tag = AllTagsList.SelectedItem.ToString();
+
+            item.Tags.Add(tag);
+            TagsGrid.ItemsSource = null;
+            TagsGrid.ItemsSource = item.Tags;
+
+            AddTagFlyout.Hide();
         }
     }
 }

@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using PortableAppsManager.Classes;
 using PortableAppsManager.Services;
 using System;
 using System.Collections.Generic;
@@ -44,6 +45,8 @@ namespace PortableAppsManager.Pages
             this.InitializeComponent();
 
             this.DataContext = this;
+
+            VersionBlock.Text = Globals.Version;
         }
 
         private void ThemeCombo_Loaded(object sender, RoutedEventArgs e)

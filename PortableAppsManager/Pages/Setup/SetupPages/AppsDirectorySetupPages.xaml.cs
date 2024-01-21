@@ -30,6 +30,7 @@ using Microsoft.UI.Xaml.Media.Animation;
 using WinRT;
 using IniParser;
 using IniParser.Model;
+using Microsoft.UI.Xaml.Media.Imaging;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -112,17 +113,35 @@ namespace PortableAppsManager.Pages.Setup.SetupPages
                         item.AppName = Regex.Replace(data["Details"]["Name"], @"Portable", "", RegexOptions.IgnoreCase);
                         item.Author = data["Details"]["Publisher"];
                         item.Description = data["Details"]["Description"];
+                        item.PortableApps_Homepage = data["Details"]["Homepage"];
+                        if (!item.PortableApps_Homepage.Contains("http")) //some apps do not have the correct url
+                        {
+                            item.PortableApps_Homepage = "https://" + item.PortableApps_Homepage;
+                        }
 
                         item.Tags = new List<string>();
                         item.Tags.Add(data["Details"]["Category"]);
 
-                        item.IsOpenSource = Convert.ToBoolean(data["License"]["OpenSource"]);
-                        item.IsFreeware = Convert.ToBoolean(data["License"]["Freeware"]);
+                        item.PortableApps_IsOpenSource = Convert.ToBoolean(data["License"]["OpenSource"]);
+                        item.PortableApps_IsFreeware = Convert.ToBoolean(data["License"]["Freeware"]);
+
+                        item.PortableApps_IsShareable = Convert.ToBoolean(data["License"]["Freeware"]);
+                        item.PortableApps_IsCommercialUse = Convert.ToBoolean(data["License"]["Freeware"]);
 
                         item.Language = data["Details"]["Language"];
 
                         item.PortableApps_PackageVersion = data["Version"]["PackageVersion"];
                         item.PortableApps_DisplayVersion = data["Version"]["DisplayVersion"];
+
+                        //lets try to get a higer quality image
+                        if (File.Exists(Path.Combine(found.ExecutableParentDirectoryPath, "App", "AppInfo", "appicon_128.png")))
+                        {
+                            BitmapImage bitmapImage = new BitmapImage();
+
+                            bitmapImage.UriSource = new System.Uri(Path.Combine(found.ExecutableParentDirectoryPath, "App", "AppInfo", "appicon_128.png"));
+
+                            //item.ImgSource = bitmapImage;
+                        }
                     }
                     if (found.Source == Driller.DrillerFoundAppSource.PortableApps)
                     {

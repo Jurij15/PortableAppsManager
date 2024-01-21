@@ -68,6 +68,11 @@
                             MaxHeight="32"
                             Source="/Assets/Package.svg" />
                     </settings:SettingsExpander.HeaderIcon>
+                    <settings:SettingsExpander.Items>
+                        <settings:SettingsCard Header="Version">
+                            <TextBlock x:Name="VersionBlock" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                        </settings:SettingsCard>
+                    </settings:SettingsExpander.Items>
                 </settings:SettingsExpander>
             </Grid>
         </Grid>

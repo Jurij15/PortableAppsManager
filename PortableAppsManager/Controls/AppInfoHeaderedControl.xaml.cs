@@ -40,8 +40,20 @@ namespace PortableAppsManager.Controls
                 SetValue(HeaderProperty, value);
             }
         }
+
         public static new readonly DependencyProperty HeaderProperty =
         DependencyProperty.Register("Header", typeof(string), typeof(AppInfoHeaderedControl), new PropertyMetadata(null));
+
+        public new UIElement HeaderContent
+        {
+            get => (UIElement)GetValue(HeaderContentProperty);
+            set
+            {
+                SetValue(HeaderContentProperty, value);
+            }
+        }
+        public static new readonly DependencyProperty HeaderContentProperty =
+        DependencyProperty.Register("HeaderContent", typeof(UIElement), typeof(AppInfoHeaderedControl), new PropertyMetadata(null));
 
         public new Thickness ContentMargin
         {

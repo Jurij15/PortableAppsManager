@@ -23,6 +23,7 @@ using PortableAppsManager.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using PortableAppsManager.Enums;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -34,6 +35,7 @@ namespace PortableAppsManager.Pages
     /// </summary>
     public sealed partial class AppsPage : Page
     {
+        Launcher launcher;
         bool AppsItemsLoaded = false;
         public class DisplayApp
         {
@@ -49,19 +51,25 @@ namespace PortableAppsManager.Pages
             public AppItem OAppItem { get; set; }
         }
 
-        List<DisplayApp> Apps;
         AppItemControl CachedItem;
+
+        AppItemModificationType AppWasModified;
         public AppsPage()
         {
             this.InitializeComponent();
 
             this.DataContext = this;
+            launcher = new Launcher();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             //MessageBox.Show(e.SourcePageType.ToString(), "NavigatedTo Fired!");
             base.OnNavigatedTo(e);
+            if (e.Parameter != null)
+            {
+                AppWasModified = (AppItemModificationType)e.Parameter;
+            }
         }
 
         private void SearchBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
@@ -105,7 +113,40 @@ namespace PortableAppsManager.Pages
             }
             else
             {
+                //if there were any modifications, update the cached item before anims
                 AppItems.ScrollIntoView(CachedItem);
+
+                if (AppWasModified == AppItemModificationType.Modified)
+                {
+                    AppItem item = null;
+                    foreach (var listitem in Globals.Settings.Apps)
+                    {
+                        if (listitem.ID == CachedItem.AppItem.ID)
+                        {
+                            item = listitem;
+                        }
+                    }
+
+                    if (item != null)
+                    {
+                        CachedItem.AppItem = item;
+                        CachedItem.AppName = item.AppName;
+                        CachedItem.IMAGEControl.Source = item.ImgSource;
+                        CachedItem.Width = 315;
+                        if (Launcher.IsAppLaunchAvailable(item.ExePath))
+                        {
+                            (CachedItem.Tag as AppItemControl).LabelText = "Open";
+                        }
+                        else
+                        {
+                            (CachedItem.Tag as AppItemControl).LabelText = "Info";
+                        }
+                    }
+                }
+                else if (AppWasModified == AppItemModificationType.Deleted)
+                {
+                    AppItems.Items.Remove(CachedItem);
+                }
 
                 //ConnectedAnimationService.GetForCurrentView().DefaultDuration = new TimeSpan(0, 0, 0, 4, 400);
                 var anim = ConnectedAnimationService.GetForCurrentView().GetAnimation("BackConnectedAnimation");
@@ -140,6 +181,9 @@ namespace PortableAppsManager.Pages
             if (Launcher.IsAppLaunchAvailable(control.AppItem.ExePath))
             {
                 control.PlayLaunchAnimationOnLabel();
+
+                launcher.Launch(control.AppItem);
+
                 await Task.Delay(1000);
                 control.StopLaunchAnimationOnLabel(true, 900);
             }

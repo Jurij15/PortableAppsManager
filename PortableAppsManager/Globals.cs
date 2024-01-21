@@ -11,6 +11,8 @@ namespace PortableAppsManager
 {
     public class Globals
     {
+        public static readonly string Version = "1.0.0 - DEV (21012024)";
+
         public static bool IsFirstTimeRun;
 
         public static Window m_window;

@@ -24,21 +24,31 @@ namespace PortableAppsManager.Classes
 
         public string LaunchArguments { get; set; } = ""; 
         public bool LaunchAsAdmin { get; set; } = false;
+        public bool UseShellExecute { get; set; } = false;
+
+
+        //PortableApps.com Properties
 
         /// <summary>
         /// PortableApps IsOpenSource variable
         /// </summary>
-        public bool IsOpenSource { get; set; }
+        public bool PortableApps_IsOpenSource { get; set; }
 
         /// <summary>
         /// PortableApps IsFreeware variable
         /// </summary>
-        public bool IsFreeware { get; set; }
+        public bool PortableApps_IsFreeware { get; set; }
+
+        public bool PortableApps_IsShareable { get; set; }
+
+        public bool PortableApps_IsCommercialUse { get; set; }
+
+        public string PortableApps_Homepage { get; set; }
 
         //portableapps apps
 
         /// <summary>
-        /// DO NOT CHANGE THIS, JUST A TEMPORARY VARIABLE
+        /// DO NOT CHANGE THIS, IT WILL BREAK SOME THINGS
         /// </summary>
         public bool Setup_IsPortableAppsCom { get; set; } = false;
 

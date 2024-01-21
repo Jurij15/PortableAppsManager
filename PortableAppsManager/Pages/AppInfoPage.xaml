@@ -8,6 +8,7 @@
     xmlns:local="using:PortableAppsManager.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:navigation="using:NavigationService"
+    xmlns:scontrols="using:CommunityToolkit.WinUI.Controls"
     navigation:PageProperties.AllowNavigationViewItemFocusWhenNavigatedToProperty="False"
     navigation:PageProperties.ClearNavigationProperty="False"
     navigation:PageProperties.IsHeaderVisibleProperty="False"
@@ -106,10 +107,10 @@
         <ScrollViewer Grid.Column="1" Margin="2">
             <Grid
                 x:Name="ContentGrid"
-                Margin="2"
+                Margin="4"
                 Visibility="Collapsed">
                 <Grid.ChildrenTransitions>
-                    <RepositionThemeTransition IsStaggeringEnabled="True"/>
+                    <RepositionThemeTransition IsStaggeringEnabled="True" />
                 </Grid.ChildrenTransitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -122,17 +123,144 @@
                 <InfoBar
                     x:Name="LaunchSuccessfulInfoBar"
                     Grid.Row="0"
+                    FontFamily="Segoe UI Variable Display"
                     IsOpen="False"
                     Message="App Launched succesfully"
                     Severity="Success" />
-                <controls:AppInfoHeaderedControl Header="Description">
+                <controls:AppInfoHeaderedControl
+                    Grid.Row="1"
+                    Margin="0,6,0,0"
+                    Header="Description">
                     <TextBlock
                         x:Name="AppDesc"
                         Grid.Row="4"
                         HorizontalAlignment="Left"
+                        FontFamily="Segoe UI Variable Display"
                         Style="{ThemeResource BodyTextBlockStyle}"
                         Visibility="Visible" />
                 </controls:AppInfoHeaderedControl>
+                <controls:AppInfoHeaderedControl
+                    Grid.Row="2"
+                    Margin="0,6,0,0"
+                    Header="Tags">
+                    <controls:AppInfoHeaderedControl.HeaderContent>
+                        <Button
+                            x:Name="AddTag"
+                            Margin="0,0,0,0"
+                            VerticalAlignment="Center"
+                            Background="Transparent"
+                            BorderBrush="Transparent">
+                            <FontIcon Glyph="&#xE710;" />
+                            <Button.Flyout>
+                                <Flyout x:Name="AddTagFlyout" ShouldConstrainToRootBounds="False">
+                                    <StackPanel Spacing="4">
+                                        <StackPanel Orientation="Horizontal" Spacing="4">
+                                            <TextBox
+                                                x:Name="NewTagNameBox"
+                                                MinWidth="200"
+                                                PlaceholderText="Tag Name" />
+                                            <Button
+                                                x:Name="ConfirmAddTagButton"
+                                                Click="ConfirmAddTagButton_Click"
+                                                Content="Add" />
+                                        </StackPanel>
+                                        <ScrollViewer>
+                                            <ListView
+                                                x:Name="AllTagsList"
+                                                MaxHeight="250"
+                                                DoubleTapped="AllTagsList_DoubleTapped"
+                                                IsDoubleTapEnabled="True"
+                                                ItemsSource="{x:Bind tagsService.GetAllTags()}" />
+                                        </ScrollViewer>
+                                        <TextBlock
+                                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                            Style="{ThemeResource CaptionTextBlockStyle}"
+                                            Text="Double-click to add tag" />
+                                    </StackPanel>
+                                </Flyout>
+                            </Button.Flyout>
+                        </Button>
+                    </controls:AppInfoHeaderedControl.HeaderContent>
+                    <GridView
+                        x:Name="TagsGrid"
+                        ItemsSource="{x:Bind item.Tags}"
+                        SelectionMode="None">
+                        <GridView.ItemContainerTransitions>
+                            <AddDeleteThemeTransition />
+                        </GridView.ItemContainerTransitions>
+                        <GridView.ItemTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <Button
+                                    Margin="2,-2,2,-2"
+                                    Content="{Binding}"
+                                    FontFamily="Segoe UI Variable Display">
+                                    <Button.Flyout>
+                                        <Flyout>
+                                            <StackPanel Spacing="4">
+                                                <Button
+                                                    x:Name="DeletTagBtn"
+                                                    Click="DeletTagBtn_Click"
+                                                    Content="Delete"
+                                                    Tag="{Binding}" />
+                                            </StackPanel>
+                                        </Flyout>
+                                    </Button.Flyout>
+                                </Button>
+                            </DataTemplate>
+                        </GridView.ItemTemplate>
+                    </GridView>
+                </controls:AppInfoHeaderedControl>
+                <controls:AppInfoHeaderedControl
+                    Grid.Row="3"
+                    Margin="0,6,0,0"
+                    Header="PortableApps.com Information">
+                    <StackPanel>
+                        <TextBlock Margin="0,4,0,2" Text="Display Version" />
+                        <TextBlock
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            IsTextSelectionEnabled="True"
+                            Text="{x:Bind item.PortableApps_DisplayVersion}" />
+                        <TextBlock Margin="0,4,0,2" Text="Package Version" />
+                        <TextBlock
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            IsTextSelectionEnabled="True"
+                            Text="{x:Bind item.PortableApps_PackageVersion}" />
+                        <TextBlock Margin="0,4,0,2" Text="Homepage" />
+                        <HyperlinkButton Content="Open Link" NavigateUri="{x:Bind item.PortableApps_Homepage}" />
+                        <TextBlock Margin="0,4,0,2" Text="Commercial Use" />
+                        <TextBlock
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            IsTextSelectionEnabled="True"
+                            Text="{x:Bind item.PortableApps_IsCommercialUse}" />
+                        <TextBlock Margin="0,4,0,2" Text="Freeware" />
+                        <TextBlock
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            IsTextSelectionEnabled="True"
+                            Text="{x:Bind item.PortableApps_IsFreeware}" />
+                        <TextBlock Margin="0,4,0,2" Text="Open Source" />
+                        <TextBlock
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            IsTextSelectionEnabled="True"
+                            Text="{x:Bind item.PortableApps_IsOpenSource}" />
+                        <TextBlock Margin="0,4,0,2" Text="Shareable" />
+                        <TextBlock
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            IsTextSelectionEnabled="True"
+                            Text="{x:Bind item.PortableApps_IsShareable}" />
+                    </StackPanel>
+                </controls:AppInfoHeaderedControl>
+                <scontrols:SettingsCard
+                    Grid.Row="4"
+                    Description="Edit Name, description, path and other properties"
+                    Header="Edit App"
+                    IsClickEnabled="True">
+                    <scontrols:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xE70F;" />
+                    </scontrols:SettingsCard.HeaderIcon>
+                    <scontrols:SettingsCard.ActionIcon>
+                        <FontIcon Glyph="&#xE8A7;" />
+                    </scontrols:SettingsCard.ActionIcon>
+                </scontrols:SettingsCard>
             </Grid>
         </ScrollViewer>
     </Grid>

@@ -17,7 +17,6 @@ namespace PortableAppsManager.Classes
         public string PortableAppsDirectory { get; set; }
 
         public List<AppItem> Apps = new List<AppItem>();
-        public List<string> Tags { get; set; }
 
         //FUNCTIONS
         public static void SaveSettings()
