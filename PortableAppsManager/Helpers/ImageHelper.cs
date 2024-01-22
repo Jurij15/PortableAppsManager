@@ -1,14 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
-using System.Text;
+using System.Reflection.PortableExecutable;
 using System.Threading.Tasks;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Imaging;
+using Newtonsoft.Json;
+using Windows.Graphics.Imaging;
 using Windows.Storage.Streams;
 using Microsoft.UI.Xaml.Media.Imaging;
-using Microsoft.UI.Xaml.Media;
-using System.Drawing.Imaging;
-using System.Drawing;
+using System.Runtime.InteropServices.WindowsRuntime;
+using PortableAppsManager.Classes;
+using static System.Net.Mime.MediaTypeNames;
+using PortableAppsManager.Enums;
 
 namespace PortableAppsManager.Helpers
 {
@@ -52,6 +58,66 @@ namespace PortableAppsManager.Helpers
 
                 return bitmapImage;
             }
+        }
+
+        public static ImageSource GetImageSource(AppItem Item)
+        {
+            ImageSource returnval = null;
+
+            if (Item != null)
+            {
+                if (Item.SourceType == Enums.AppImageSourceType.Executable)
+                {
+                    returnval = ImageHelper.ConvertIconToImageSource(System.Drawing.Icon.ExtractAssociatedIcon(Item.ExePath));
+                }
+                else if (Item.SourceType == Enums.AppImageSourceType.File && Item.AppImageSourcePath != null)
+                {
+                    if (File.Exists(Item.AppImageSourcePath))
+                    {
+                        BitmapImage bitmapImage = new BitmapImage();
+
+                        bitmapImage.UriSource = new System.Uri(Item.AppImageSourcePath);
+
+                        returnval = bitmapImage;
+                    }
+                }
+                else
+                {
+                    returnval = ImageHelper.ConvertIconToImageSource(System.Drawing.Icon.ExtractAssociatedIcon(Item.ExePath));
+                }
+            }
+
+            return returnval;
+        }
+
+        public static ImageSource GetImageSource(AppImageSourceType SourceType, string AppImageSourcePath, string ExePath)
+        {
+            ImageSource returnval = null;
+
+            if (SourceType != null && AppImageSourcePath != null && ExePath != null)
+            {
+                if (SourceType == Enums.AppImageSourceType.Executable)
+                {
+                    returnval = ImageHelper.ConvertIconToImageSource(System.Drawing.Icon.ExtractAssociatedIcon(ExePath));
+                }
+                else if (SourceType == Enums.AppImageSourceType.File && AppImageSourcePath != null)
+                {
+                    if (File.Exists(AppImageSourcePath))
+                    {
+                        BitmapImage bitmapImage = new BitmapImage();
+
+                        bitmapImage.UriSource = new System.Uri(AppImageSourcePath);
+
+                        returnval = bitmapImage;
+                    }
+                }
+                else
+                {
+                    returnval = ImageHelper.ConvertIconToImageSource(System.Drawing.Icon.ExtractAssociatedIcon(ExePath));
+                }
+            }
+
+            return returnval;
         }
     }
 }

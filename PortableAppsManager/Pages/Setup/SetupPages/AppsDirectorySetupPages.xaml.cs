@@ -31,6 +31,7 @@ using WinRT;
 using IniParser;
 using IniParser.Model;
 using Microsoft.UI.Xaml.Media.Imaging;
+using ABI.Windows.AI.MachineLearning;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -103,7 +104,17 @@ namespace PortableAppsManager.Pages.Setup.SetupPages
                     string res = Regex.Replace(n, @"Portable", "", RegexOptions.IgnoreCase);
                     item.AppName = res; 
                     item.ExePath = found.ExecutablePath;
-                    item.ImgSource = ImageHelper.ConvertIconToImageSource(System.Drawing.Icon.ExtractAssociatedIcon(found.ExecutablePath));
+                    item.Tags = new List<string>();
+
+                    //reset the portableapps variables
+                    item.PortableApps_IsShareable = false;
+                    item.PortableApps_IsFreeware = false;
+                    item.PortableApps_IsOpenSource = false;
+                    item.PortableApps_DisplayVersion = "";
+                    item.PortableApps_IsCommercialUse = false;
+                    item.PortableApps_Homepage = "https://portableapps.com/";
+                    item.PortableApps_PackageVersion = "";
+                    //item.ImgSource = ImageHelper.ConvertIconToImageSource(System.Drawing.Icon.ExtractAssociatedIcon(found.ExecutablePath));
                     if (File.Exists(Path.Combine(found.ExecutableParentDirectoryPath, "App", "AppInfo","appinfo.ini")))
                     {
                         //this is a PortableAppsApp, we can get as much info as possible
@@ -119,7 +130,6 @@ namespace PortableAppsManager.Pages.Setup.SetupPages
                             item.PortableApps_Homepage = "https://" + item.PortableApps_Homepage;
                         }
 
-                        item.Tags = new List<string>();
                         item.Tags.Add(data["Details"]["Category"]);
 
                         item.PortableApps_IsOpenSource = Convert.ToBoolean(data["License"]["OpenSource"]);
@@ -139,8 +149,19 @@ namespace PortableAppsManager.Pages.Setup.SetupPages
                             BitmapImage bitmapImage = new BitmapImage();
 
                             bitmapImage.UriSource = new System.Uri(Path.Combine(found.ExecutableParentDirectoryPath, "App", "AppInfo", "appicon_128.png"));
-
-                            //item.ImgSource = bitmapImage;
+                            item.AppImageSourcePath = Path.Combine(found.ExecutableParentDirectoryPath, "App", "AppInfo", "appicon_128.png");
+                            item.SourceType = Enums.AppImageSourceType.File;
+                        }
+                        else
+                        {
+                            item.SourceType = Enums.AppImageSourceType.Executable;
+                        }
+                    }
+                    if (item.Tags.Count == 0)
+                    {
+                        if (found.IsInGameDir)
+                        {
+                            item.Tags.Add("Games");
                         }
                     }
                     if (found.Source == Driller.DrillerFoundAppSource.PortableApps)
@@ -201,6 +222,8 @@ namespace PortableAppsManager.Pages.Setup.SetupPages
             }
 
             ShellSetupPage.RootSetupFrame.Navigate(typeof(OtherSettingsSetupPage), null, new SlideNavigationTransitionInfo() { Effect=SlideNavigationTransitionEffect.FromRight});
+
+            ConfigJson.SaveSettings();
         }
 
         private async void AddException_Click(object sender, RoutedEventArgs e)

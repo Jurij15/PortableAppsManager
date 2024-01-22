@@ -8,7 +8,9 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using PortableAppsManager.Classes;
 using PortableAppsManager.Core;
+using PortableAppsManager.Dialogs;
 using PortableAppsManager.Enums;
+using PortableAppsManager.Helpers;
 using PortableAppsManager.Interop;
 using PortableAppsManager.Services;
 using System;
@@ -73,10 +75,10 @@ namespace PortableAppsManager.Pages
             item = e.Parameter as AppItem;
 
             //comment these lines for a cool effect
-            AppIconImage.Source = item.ImgSource;
-            AppNameBlock.Text = item.AppName;
-            AuthorBox.Text = item.Author;
-            AppDesc.Text = item.Description;
+            //AppIconImage.Source = ImageHelper.GetImageSource(item);
+            //AppNameBlock.Text = item.AppName;
+            //AuthorBox.Text = item.Author;
+            //AppDesc.Text = item.Description;
 
             base.OnNavigatedTo(e);
 
@@ -137,19 +139,23 @@ namespace PortableAppsManager.Pages
         #region Anims
         private void Imganim_Completed(ConnectedAnimation sender, object args)
         {
-            AppIconImage.Source = item.ImgSource;
+            //AppIconImage.Source = ImageHelper.GetImageSource(item);
         }
         private void Anim_Completed(ConnectedAnimation sender, object args)
         {
-            AppInfoPane.Visibility = Visibility.Visible;
+            //AppInfoPane.Visibility = Visibility.Visible;
         }
 
         private async void Textanim_Completed(ConnectedAnimation sender, object args)
         {
-            AppNameBlock.Text = item.AppName;
+            //AppNameBlock.Text = item.AppName;
             //this is the last anim, show the page content
             await Task.Delay(50);
             ContentGrid.Visibility = Visibility.Visible;
+            if (!item.Setup_IsPortableAppsCom)
+            {
+                PortableAppsPane.Visibility = Visibility.Collapsed;
+            }
 
         }
         #endregion
@@ -223,15 +229,58 @@ namespace PortableAppsManager.Pages
             AddTagFlyout.Hide();
         }
 
+        private void TagsGrid_Loaded(object sender, RoutedEventArgs e)
+        {
+            TagsGrid.ItemsSource = item.Tags;
+        }
+
+        private void AllTagsList_Loaded(object sender, RoutedEventArgs e)
+        {
+            AllTagsList.ItemsSource = tagsService.GetAllTags();
+        }
+
         private void AllTagsList_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
         {
             string tag = AllTagsList.SelectedItem.ToString();
+            AllTagsList.ItemsSource = null;
+            AddTagFlyout.Hide();
 
             item.Tags.Add(tag);
-            TagsGrid.ItemsSource = null;
+            TagsGrid.ItemsSource = new List<string>();
             TagsGrid.ItemsSource = item.Tags;
 
-            AddTagFlyout.Hide();
+            ConfigJson.SaveSettings();
+        }
+
+        private async void EditAppBtn_Click(object sender, RoutedEventArgs e)
+        {
+            MenuFlyoutItem parent = sender as MenuFlyoutItem;
+            ContentDialog editdialog = DialogService.CreateBlankContentDialog(false);
+            EditAppDialogContent content = new EditAppDialogContent(item, editdialog);
+
+            editdialog.Content = content;
+            editdialog.UpdateLayout();
+
+            await editdialog.ShowAsync();
+            editdialog.UpdateLayout();
+
+            AppItem modified = content.ModifiedAppItem;
+
+            item = null;
+            item = modified;
+
+            foreach (var iitem in Globals.Settings.Apps)
+            {
+                if (iitem.ID == item.ID)
+                {
+                    Globals.Settings.Apps[Globals.Settings.Apps.IndexOf(iitem)] = modified;
+                    break;
+                }
+            }
+
+            AppWasModified = AppItemModificationType.Modified;
+
+            RefreshAppToUpdate.IsOpen = true;
         }
     }
 }

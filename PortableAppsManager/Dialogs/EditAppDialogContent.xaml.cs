@@ -47,6 +47,8 @@ namespace PortableAppsManager.Dialogs
         private void SaveBtn_Click(object sender, RoutedEventArgs e)
         {
             ParentDialog.Hide();
+
+            ConfigJson.SaveSettings();
         }
 
         private void Grid_Loaded(object sender, RoutedEventArgs e)

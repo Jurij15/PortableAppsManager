@@ -4,6 +4,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="using:PortableAppsManager.Helpers"
     xmlns:local="using:PortableAppsManager.Dialogs"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:scontrols="using:CommunityToolkit.WinUI.Controls"
@@ -104,7 +105,7 @@
                     VerticalAlignment="Top"
                     CornerRadius="4"
                     Visibility="Collapsed">
-                    <Image x:Name="AppIcon" Source="{x:Bind ModifiedAppItem.ImgSource}" />
+                    <Image x:Name="AppIcon" Source="{x:Bind helpers:ImageHelper.GetImageSource(ModifiedAppItem)}" />
                 </Border>
             </Grid>
             <Grid x:Name="BottomGrid" Grid.Row="2">

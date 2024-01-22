@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:classes="using:PortableAppsManager.Classes"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="using:PortableAppsManager.Helpers"
     xmlns:local="using:PortableAppsManager.Pages.Setup.SetupPages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:settings="using:CommunityToolkit.WinUI.Controls"
@@ -212,7 +213,7 @@
                                 Height="32"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Top"
-                                Source="{x:Bind ImgSource}" />
+                                Source="{x:Bind helpers:ImageHelper.GetImageSource(SourceType, AppImageSourcePath, ExePath)}" />
                             <TextBlock
                                 x:Name="AppNameBlock"
                                 Grid.Row="1"
@@ -375,7 +376,7 @@
                                 Height="32"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Top"
-                                Source="{x:Bind ImgSource}" />
+                                Source="{x:Bind helpers:ImageHelper.GetImageSource(SourceType, AppImageSourcePath, ExePath)}" />
                             <TextBlock
                                 x:Name="AppNameBlock"
                                 Grid.Row="1"

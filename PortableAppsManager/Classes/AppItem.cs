@@ -1,5 +1,7 @@
-﻿using Microsoft.UI.Xaml.Documents;
+﻿using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml.Media;
+using PortableAppsManager.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +12,7 @@ namespace PortableAppsManager.Classes
 {
     public class AppItem
     {
-        public string ID {  get; set; }
+        public string ID { get; set; }
 
         public string ExePath { get; set; } //
 
@@ -18,7 +20,10 @@ namespace PortableAppsManager.Classes
         public string Author { get; set; } = ""; //
         public string Description { get; set; } = ""; //
         public string Language { get; set; }
-        public ImageSource ImgSource { get; set; } //
+
+        public AppImageSourceType SourceType { get; set; } = AppImageSourceType.Executable;
+        public string AppImageSourcePath { get; set; } = null;
+        //public ImageSource ImgSource { get; set; } //removed because cannot be converted to json
 
         public List<string> Tags { get; set; } = new List<string>();
 
@@ -32,18 +37,18 @@ namespace PortableAppsManager.Classes
         /// <summary>
         /// PortableApps IsOpenSource variable
         /// </summary>
-        public bool PortableApps_IsOpenSource { get; set; }
+        public bool PortableApps_IsOpenSource { get; set; } = false;
 
         /// <summary>
         /// PortableApps IsFreeware variable
         /// </summary>
-        public bool PortableApps_IsFreeware { get; set; }
+        public bool PortableApps_IsFreeware { get; set; } = false;
 
-        public bool PortableApps_IsShareable { get; set; }
+        public bool PortableApps_IsShareable { get; set; } = false;
 
-        public bool PortableApps_IsCommercialUse { get; set; }
+        public bool PortableApps_IsCommercialUse { get; set; } = false;
 
-        public string PortableApps_Homepage { get; set; }
+        public string PortableApps_Homepage { get; set; } = "";
 
         //portableapps apps
 
@@ -55,11 +60,11 @@ namespace PortableAppsManager.Classes
         /// <summary>
         /// PortableApps Package Version
         /// </summary> 
-        public string PortableApps_PackageVersion { get; set; }
+        public string PortableApps_PackageVersion { get; set; } = "";
 
         /// <summary>
         /// PortableApps Display Version (idk what is the difference)
         /// </summary>
-        public string PortableApps_DisplayVersion { get; set; }
+        public string PortableApps_DisplayVersion { get; set; } = "";
     }
 }

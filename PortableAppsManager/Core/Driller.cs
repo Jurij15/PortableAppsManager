@@ -24,6 +24,7 @@ namespace PortableAppsManager.Core
             public DrillerFoundAppSource Source;
             public string ExecutableParentDirectoryPath { get; set; }
             public string ExecutablePath { get; set; }
+            public bool IsInGameDir { get; set; } = false;
         }
 
         private bool IsDirOnExceptionList(string Path, List<string> ExceptionsList)

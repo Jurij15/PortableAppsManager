@@ -21,7 +21,7 @@ namespace PortableAppsManager.Classes
         //FUNCTIONS
         public static void SaveSettings()
         {
-            var json = JsonConvert.SerializeObject(Globals.Settings);
+            var json = JsonConvert.SerializeObject(Globals.Settings, Formatting.Indented);
 
             if (!File.Exists(Globals.SettingsFile))
             {

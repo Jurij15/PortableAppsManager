@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:PortableAppsManager.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="using:PortableAppsManager.Helpers"
     xmlns:local="using:PortableAppsManager.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:navigation="using:NavigationService"
@@ -50,13 +51,15 @@
                     x:Name="AppIconImage"
                     Grid.Row="0"
                     Width="80"
-                    Height="80" />
+                    Height="80"
+                    Source="{x:Bind helpers:ImageHelper.GetImageSource(item), Mode=OneWay}" />
                 <TextBlock
                     x:Name="AppNameBlock"
                     Grid.Row="1"
                     HorizontalAlignment="Center"
                     FontFamily="Segoe UI Variable Display"
                     Style="{ThemeResource TitleTextBlockStyle}"
+                    Text="{x:Bind item.AppName, Mode=OneWay}"
                     TextTrimming="CharacterEllipsis"
                     TextWrapping="Wrap" />
                 <TextBlock
@@ -65,7 +68,8 @@
                     HorizontalAlignment="Center"
                     FontFamily="Segoe UI Variable Display"
                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                    Style="{ThemeResource CaptionTextBlockStyle}" />
+                    Style="{ThemeResource CaptionTextBlockStyle}"
+                    Text="{x:Bind item.Author, Mode=OneWay}" />
                 <Button
                     x:Name="LaunchButton"
                     Grid.Row="3"
@@ -102,6 +106,34 @@
                             Visibility="Collapsed" />
                     </Grid>
                 </Button>
+                <StackPanel
+                    Grid.Row="4"
+                    Margin="0,14,0,0"
+                    HorizontalAlignment="Center"
+                    Orientation="Horizontal"
+                    Spacing="8">
+                    <Button
+                        x:Name="EditAppBtn"
+                        Click="EditAppBtn_Click"
+                        ToolTipService.ToolTip="Edit App">
+                        <FontIcon Foreground="{ThemeResource TextFillColorSecondaryBrush}" Glyph="&#xE70F;" />
+                    </Button>
+                    <Button x:Name="RemoveAppBtn" ToolTipService.ToolTip="Remove App">
+                        <Button.Flyout>
+                            <Flyout>
+                                <StackPanel>
+                                    <TextBlock
+                                        Margin="0,0,0,12"
+                                        Style="{ThemeResource BaseTextBlockStyle}"
+                                        Text="App will be removed from the library. Do you want to continue?" />
+                                    <Button x:Name="RemoveAppBtnConfirm" Content="Yes" />
+                                </StackPanel>
+                            </Flyout>
+
+                        </Button.Flyout>
+                        <FontIcon Foreground="{ThemeResource TextFillColorSecondaryBrush}" Glyph="&#xE74D;" />
+                    </Button>
+                </StackPanel>
             </Grid>
         </Grid>
         <ScrollViewer Grid.Column="1" Margin="2">
@@ -127,6 +159,13 @@
                     IsOpen="False"
                     Message="App Launched succesfully"
                     Severity="Success" />
+                <InfoBar
+                    x:Name="RefreshAppToUpdate"
+                    Grid.Row="0"
+                    FontFamily="Segoe UI Variable Display"
+                    IsOpen="False"
+                    Message="Navigate back and select the app again to see the updates!"
+                    Severity="Warning" />
                 <controls:AppInfoHeaderedControl
                     Grid.Row="1"
                     Margin="0,6,0,0"
@@ -137,6 +176,7 @@
                         HorizontalAlignment="Left"
                         FontFamily="Segoe UI Variable Display"
                         Style="{ThemeResource BodyTextBlockStyle}"
+                        Text="{x:Bind item.Description, Mode=OneWay}"
                         Visibility="Visible" />
                 </controls:AppInfoHeaderedControl>
                 <controls:AppInfoHeaderedControl
@@ -170,7 +210,8 @@
                                                 MaxHeight="250"
                                                 DoubleTapped="AllTagsList_DoubleTapped"
                                                 IsDoubleTapEnabled="True"
-                                                ItemsSource="{x:Bind tagsService.GetAllTags()}" />
+                                                ItemsSource="{x:Bind tagsService.GetAllTags()}"
+                                                Loaded="AllTagsList_Loaded" />
                                         </ScrollViewer>
                                         <TextBlock
                                             Foreground="{ThemeResource TextFillColorSecondaryBrush}"
@@ -183,7 +224,7 @@
                     </controls:AppInfoHeaderedControl.HeaderContent>
                     <GridView
                         x:Name="TagsGrid"
-                        ItemsSource="{x:Bind item.Tags}"
+                        Loaded="TagsGrid_Loaded"
                         SelectionMode="None">
                         <GridView.ItemContainerTransitions>
                             <AddDeleteThemeTransition />
@@ -200,7 +241,7 @@
                                                 <Button
                                                     x:Name="DeletTagBtn"
                                                     Click="DeletTagBtn_Click"
-                                                    Content="Delete"
+                                                    Content="Remove {Binding} Tag"
                                                     Tag="{Binding}" />
                                             </StackPanel>
                                         </Flyout>
@@ -211,6 +252,7 @@
                     </GridView>
                 </controls:AppInfoHeaderedControl>
                 <controls:AppInfoHeaderedControl
+                    x:Name="PortableAppsPane"
                     Grid.Row="3"
                     Margin="0,6,0,0"
                     Header="PortableApps.com Information">
@@ -251,9 +293,11 @@
                 </controls:AppInfoHeaderedControl>
                 <scontrols:SettingsCard
                     Grid.Row="4"
+                    Margin="0,4,0,0"
                     Description="Edit Name, description, path and other properties"
                     Header="Edit App"
-                    IsClickEnabled="True">
+                    IsClickEnabled="True"
+                    Visibility="Collapsed">
                     <scontrols:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xE70F;" />
                     </scontrols:SettingsCard.HeaderIcon>

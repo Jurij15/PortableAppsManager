@@ -9,9 +9,9 @@ namespace PortableAppsManager.Services
 {
     public class TagsService
     {
-        public List<string> GetAllTags()
+        public HashSet<string> GetAllTags()
         {
-            List<string> tags = new List<string>();
+            HashSet<string> tags = new HashSet<string>();
 
             foreach (var item in Globals.Settings.Apps)
             {

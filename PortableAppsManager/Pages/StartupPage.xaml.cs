@@ -38,7 +38,7 @@ namespace PortableAppsManager.Pages
         {
             await Task.Delay(800); //delay of 250 ms
 
-            bool SetupNeeded = true;
+            bool SetupNeeded = Globals.IsFirstTimeRun;
             if (SetupNeeded)
             {
                 var anim = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("SetupImageAnim", LauncherImage);

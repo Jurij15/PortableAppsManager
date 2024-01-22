@@ -92,7 +92,7 @@ namespace PortableAppsManager.Pages
                     AppItemControl control = new AppItemControl();
                     control.AppItem = item;
                     control.AppName = item.AppName;
-                    control.IMAGEControl.Source = item.ImgSource;
+                    control.IMAGEControl.Source = ImageHelper.GetImageSource(item);
                     control.Width = 315;
                     if (Launcher.IsAppLaunchAvailable(item.ExePath))
                     {
@@ -107,6 +107,14 @@ namespace PortableAppsManager.Pages
 
                     control.PointerReleased += OnPointerReleased;
 
+                    foreach (var tag in item.Tags)
+                    {
+                        if (tag == "Games")
+                        {
+
+                        }
+                        continue;
+                    }
                     AppItems.Items.Add(control);
                 }
                 AppsItemsLoaded = true;
@@ -131,15 +139,15 @@ namespace PortableAppsManager.Pages
                     {
                         CachedItem.AppItem = item;
                         CachedItem.AppName = item.AppName;
-                        CachedItem.IMAGEControl.Source = item.ImgSource;
+                        CachedItem.IMAGEControl.Source = ImageHelper.GetImageSource(item);
                         CachedItem.Width = 315;
                         if (Launcher.IsAppLaunchAvailable(item.ExePath))
                         {
-                            (CachedItem.Tag as AppItemControl).LabelText = "Open";
+                            (CachedItem.APPLABEL.Tag as AppItemControl).LabelText = "Open";
                         }
                         else
                         {
-                            (CachedItem.Tag as AppItemControl).LabelText = "Info";
+                            (CachedItem.APPLABEL.Tag as AppItemControl).LabelText = "Info";
                         }
                     }
                 }

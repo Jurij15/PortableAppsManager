@@ -39,6 +39,7 @@ namespace PortableAppsManager.Pages
         private void MainFrame_Loaded(object sender, RoutedEventArgs e)
         {
             NavigationService.NavigationService.Initialize(MainNavigation, MainBreadcrum, MainFrame);
+            NavigationService.NavigationService.Navigate(typeof(HomePage), NavigationService.NavigationService.NavigateAnimationType.Entrance);
         }
     }
 }
