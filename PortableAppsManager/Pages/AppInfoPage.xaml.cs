@@ -282,5 +282,23 @@ namespace PortableAppsManager.Pages
 
             RefreshAppToUpdate.IsOpen = true;
         }
+
+        private void RemoveAppBtnConfirm_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (var app in Globals.Settings.Apps)
+            {
+                if (app.ID == item.ID)
+                {
+                    Globals.Settings.Apps.Remove(app);
+                    break;
+                }
+            }
+
+            ConfigJson.SaveSettings();
+
+            AppWasModified = AppItemModificationType.Deleted;
+
+            NavigationService.NavigationService.Navigate(typeof(AppsPage), NavigationService.NavigationService.NavigateAnimationType.SlideFromLeft);
+        }
     }
 }

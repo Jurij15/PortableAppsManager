@@ -41,7 +41,7 @@ namespace PortableAppsManager
             this.ExtendsContentIntoTitleBar = true;
             this.SetTitleBar(AppTitleBar);
 
-            this.SetWindowSize(1210, 665);
+            this.SetWindowSize(1100, 665);
         }
 
         private void RootFrame_Loaded(object sender, RoutedEventArgs e)

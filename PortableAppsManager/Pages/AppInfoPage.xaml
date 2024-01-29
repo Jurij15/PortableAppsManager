@@ -126,7 +126,10 @@
                                         Margin="0,0,0,12"
                                         Style="{ThemeResource BaseTextBlockStyle}"
                                         Text="App will be removed from the library. Do you want to continue?" />
-                                    <Button x:Name="RemoveAppBtnConfirm" Content="Yes" />
+                                    <Button
+                                        x:Name="RemoveAppBtnConfirm"
+                                        Click="RemoveAppBtnConfirm_Click"
+                                        Content="Yes" />
                                 </StackPanel>
                             </Flyout>
 
@@ -193,7 +196,10 @@
                             <FontIcon Glyph="&#xE710;" />
                             <Button.Flyout>
                                 <Flyout x:Name="AddTagFlyout" ShouldConstrainToRootBounds="False">
-                                    <StackPanel Spacing="4">
+                                    <Flyout.SystemBackdrop>
+                                        <MicaBackdrop />
+                                    </Flyout.SystemBackdrop>
+                                    <StackPanel Background="Transparent" Spacing="4">
                                         <StackPanel Orientation="Horizontal" Spacing="4">
                                             <TextBox
                                                 x:Name="NewTagNameBox"
