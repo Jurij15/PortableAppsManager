@@ -19,6 +19,9 @@
     <ScrollViewer>
         <Grid Margin="{StaticResource DefaultPageMargin}">
             <Grid Margin="16">
+                <Grid.ChildrenTransitions>
+                    <RepositionThemeTransition IsStaggeringEnabled="True" />
+                </Grid.ChildrenTransitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
@@ -50,16 +53,39 @@
                             Loaded="ThemeCombo_Loaded"
                             SelectionChanged="ThemeCombo_SelectionChanged" />
                     </settings:SettingsCard>
+                    <settings:SettingsCard Description="Show a notification when app launches" Header="Launch Notifications">
+                        <settings:SettingsCard.HeaderIcon>
+                            <FontIcon Glyph="&#xEC4F;" />
+                        </settings:SettingsCard.HeaderIcon>
+                    </settings:SettingsCard>
                 </StackPanel>
                 <TextBlock
                     Grid.Row="2"
+                    Margin="0,4,0,4"
+                    Style="{ThemeResource BodyStrongTextBlockStyle}"
+                    Text="Manage" />
+                <StackPanel Grid.Row="3" Spacing="4">
+                    <StackPanel.ChildrenTransitions>
+                        <RepositionThemeTransition />
+                    </StackPanel.ChildrenTransitions>
+                    <settings:SettingsExpander Header="Library Management">
+                        <settings:SettingsExpander.HeaderIcon>
+                            <FontIcon Glyph="&#xE8F1;" />
+                        </settings:SettingsExpander.HeaderIcon>
+                        <settings:SettingsExpander.Items>
+                            <settings:SettingsCard Header="Reset Library" />
+                        </settings:SettingsExpander.Items>
+                    </settings:SettingsExpander>
+                </StackPanel>
+                <TextBlock
+                    Grid.Row="4"
                     Margin="0,14,0,2"
                     Style="{ThemeResource BodyStrongTextBlockStyle}"
                     Text="About" />
                 <settings:SettingsExpander
                     x:Name="AboutManager"
-                    Grid.Row="3"
-                    Description="By JurijG"
+                    Grid.Row="5"
+                    Description="by JurijG"
                     Header="PortableAppsManager">
                     <settings:SettingsExpander.HeaderIcon>
                         <ImageIcon
@@ -76,6 +102,17 @@
                                 IsTextSelectionEnabled="True" />
                         </settings:SettingsCard>
                     </settings:SettingsExpander.Items>
+                    <settings:SettingsExpander.ItemsFooter>
+                        <settings:SettingsCard>
+                            <settings:SettingsCard.Header>
+                                <StackPanel Orientation="Horizontal" Spacing="4">
+                                    <HyperlinkButton Content="Source Code" />
+                                    <HyperlinkButton Content="PortableApps.com" />
+                                    <HyperlinkButton Content="Windows Community Toolkit" />
+                                </StackPanel>
+                            </settings:SettingsCard.Header>
+                        </settings:SettingsCard>
+                    </settings:SettingsExpander.ItemsFooter>
                 </settings:SettingsExpander>
             </Grid>
         </Grid>
