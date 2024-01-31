@@ -64,7 +64,7 @@ namespace PortableAppsManager.Helpers
         {
             ImageSource returnval = null;
 
-            if (Item != null)
+            if (Item != null && File.Exists(Item.ExePath))
             {
                 if (Item.SourceType == Enums.AppImageSourceType.Executable)
                 {

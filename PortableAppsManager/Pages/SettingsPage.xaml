@@ -53,15 +53,10 @@
                             Loaded="ThemeCombo_Loaded"
                             SelectionChanged="ThemeCombo_SelectionChanged" />
                     </settings:SettingsCard>
-                    <settings:SettingsCard Description="Show a notification when app launches" Header="Launch Notifications">
-                        <settings:SettingsCard.HeaderIcon>
-                            <FontIcon Glyph="&#xEC4F;" />
-                        </settings:SettingsCard.HeaderIcon>
-                    </settings:SettingsCard>
                 </StackPanel>
                 <TextBlock
                     Grid.Row="2"
-                    Margin="0,4,0,4"
+                    Margin="0,12,0,4"
                     Style="{ThemeResource BodyStrongTextBlockStyle}"
                     Text="Manage" />
                 <StackPanel Grid.Row="3" Spacing="4">

@@ -113,7 +113,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="lib\" />
-    <Folder Include="Managers\" />
+    <Folder Include="Pages\Settings\" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Fluent.Icons">

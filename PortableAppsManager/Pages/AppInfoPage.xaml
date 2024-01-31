@@ -79,6 +79,7 @@
                     HorizontalAlignment="Center"
                     Click="LaunchButton_Click"
                     FontFamily="Segoe UI Variable Display"
+                    Loaded="LaunchButton_Loaded"
                     Style="{ThemeResource AccentButtonStyle}">
                     <Grid HorizontalAlignment="Center">
                         <Grid.RowDefinitions>
@@ -169,6 +170,14 @@
                     IsOpen="False"
                     Message="Navigate back and select the app again to see the updates!"
                     Severity="Warning" />
+                <InfoBar
+                    x:Name="AppExeMissingInfoBar"
+                    Grid.Row="0"
+                    FontFamily="Segoe UI Variable Display"
+                    IsOpen="False"
+                    Title="Executable Missing" IsClosable="False"
+                    Message="Launching is disabled because program executable is missing!"
+                    Severity="Error" />
                 <controls:AppInfoHeaderedControl
                     Grid.Row="1"
                     Margin="0,6,0,0"

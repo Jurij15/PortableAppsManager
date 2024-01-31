@@ -300,5 +300,18 @@ namespace PortableAppsManager.Pages
 
             NavigationService.NavigationService.Navigate(typeof(AppsPage), NavigationService.NavigationService.NavigateAnimationType.SlideFromLeft);
         }
+
+        private void LaunchButton_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (!Launcher.IsAppLaunchAvailable(item.ExePath))
+            {
+                AppExeMissingInfoBar.IsOpen = true;
+                (sender as Button).IsEnabled = false;
+            }
+            else
+            {
+                AppExeMissingInfoBar.IsOpen = false;
+            }
+        }
     }
 }

@@ -233,7 +233,9 @@ namespace PortableAppsManager.Pages
         private async void Control_CardLabelBtn_Clicked(object sender, RoutedEventArgs e)
         {
             AppItemControl control = (sender as Button).Tag as AppItemControl;
-            if (Launcher.IsAppLaunchAvailable(control.AppItem.ExePath))
+
+            bool res = Launcher.IsAppLaunchAvailable(control.AppItem.ExePath);
+            if (res)
             {
                 control.PlayLaunchAnimationOnLabel();
 
@@ -242,17 +244,47 @@ namespace PortableAppsManager.Pages
                 await Task.Delay(1000);
                 control.StopLaunchAnimationOnLabel(true, 900);
             }
+            else if (!res)
+            {
+                ContentDialog dialog = DialogService.CreateBlankContentDialog(true);
+
+                dialog.Content = $"Executable Path: {control.AppItem.ExePath} \n";
+                dialog.Title = "Saved Program Information";
+
+                dialog.DefaultButton = ContentDialogButton.Close;
+                dialog.CloseButtonText = "Close";
+
+                dialog.PrimaryButtonText = "Show More";
+
+                dialog.PrimaryButtonClick += (o, i) =>
+                {
+                    dialog.Hide();
+                    NavigateToMoreDetails(control, true);
+                };
+
+                await dialog.ShowAsync();
+            }
             else
             {
                 //OnPointerReleased((sender as Button).Tag, null);
             }
         }
 
-        private async void OnPointerReleased(object sender, PointerRoutedEventArgs e)
+        private void OnPointerReleased(object sender, PointerRoutedEventArgs e)
         {
             AppItemControl source = sender as AppItemControl;
+            NavigateToMoreDetails(source, false);
+        }
 
-            ConnectedAnimationService.GetForCurrentView().DefaultDuration = new TimeSpan(0,0,0,0, 400);
+        private async void NavigateToMoreDetails(AppItemControl source, bool IgnoreMissingExe = false)
+        {
+            if (!Launcher.IsAppLaunchAvailable(source.AppItem.ExePath) && !IgnoreMissingExe)
+            {
+                DialogService.ShowSimpleDialog("Cannot find program executable. Please check the path or restart the app!", "OK", "Executable Missing");
+                return;
+            }
+
+            ConnectedAnimationService.GetForCurrentView().DefaultDuration = new TimeSpan(0, 0, 0, 0, 400);
             //ConnectedAnimationService.GetForCurrentView().DefaultDuration = new TimeSpan(0,0,0,4, 400);
 
             AppItems.ScrollIntoView(source);

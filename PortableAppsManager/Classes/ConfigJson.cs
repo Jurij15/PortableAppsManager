@@ -53,6 +53,7 @@ namespace PortableAppsManager.Classes
                             Globals.Settings = config;
                         }
                     }
+                    Globals.library = new Managers.LibraryManager(Globals.Settings.PortableAppsDirectory);
                 }
                 else
                 {
