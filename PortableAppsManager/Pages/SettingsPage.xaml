@@ -69,6 +69,12 @@
                         </settings:SettingsExpander.HeaderIcon>
                         <settings:SettingsExpander.Items>
                             <settings:SettingsCard Header="Reset Library" />
+                            <settings:SettingsCard
+                                x:Name="LibRescanCard"
+                                Click="LibRescanCard_Click"
+                                Description="Scan the library again for any added apps"
+                                Header="Rescan Library"
+                                IsClickEnabled="True" />
                         </settings:SettingsExpander.Items>
                     </settings:SettingsExpander>
                 </StackPanel>

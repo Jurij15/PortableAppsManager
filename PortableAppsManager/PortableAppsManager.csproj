@@ -24,6 +24,7 @@
     <None Remove="Pages\GamesPage.xaml" />
     <None Remove="Pages\HomePage.xaml" />
     <None Remove="Pages\SettingsPage.xaml" />
+    <None Remove="Pages\Settings\AppLibraryManagementPage.xaml" />
     <None Remove="Pages\Setup\SetupPages\AppsDirectorySetupPages.xaml" />
     <None Remove="Pages\Setup\SetupPages\OtherSettingsSetupPage.xaml" />
     <None Remove="Pages\Setup\ShellSetupPage.xaml" />
@@ -113,12 +114,16 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="lib\" />
-    <Folder Include="Pages\Settings\" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Fluent.Icons">
       <HintPath>lib\Fluent.Icons\Fluent.Icons.dll</HintPath>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\Settings\AppLibraryManagementPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Dialogs\AddAppDialog.xaml">

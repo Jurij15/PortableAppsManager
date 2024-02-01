@@ -32,21 +32,23 @@ using IniParser;
 using IniParser.Model;
 using Microsoft.UI.Xaml.Media.Imaging;
 using ABI.Windows.AI.MachineLearning;
-
+using PortableAppsManager.Managers;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace PortableAppsManager.Pages.Setup.SetupPages
+namespace PortableAppsManager.Pages.Settings
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class AppsDirectorySetupPages : Page
+    public sealed partial class AppLibraryManagementPage : Page
     {
         List<AppItem> PortableAppsApps { get; set; }
-        List<AppItem> OtherApps {  get; set; }
+        List<AppItem> OtherApps { get; set; }
 
         HashSet<string> AllTags;
+
+        LibraryManager manager;
 
         private void UpdateItemsSources()
         {
@@ -55,16 +57,6 @@ namespace PortableAppsManager.Pages.Setup.SetupPages
 
             OtherAppsGrid.ItemsSource = null;
             OtherAppsGrid.ItemsSource = OtherApps;
-        }
-        public AppsDirectorySetupPages()
-        {
-            this.InitializeComponent();
-            this.DataContext = this;
-
-            PortableAppsApps = new List<AppItem>();
-            OtherApps = new List<AppItem>();
-
-            AllTags = new HashSet<string>(){ "TEST"};
         }
 
         private List<string> GetAllExceptionsDirectories()
@@ -78,11 +70,33 @@ namespace PortableAppsManager.Pages.Setup.SetupPages
             return exceptions;
         }
 
+        public AppLibraryManagementPage()
+        {
+            this.InitializeComponent();
+            this.DataContext = this; 
+
+            manager = new LibraryManager(Globals.Settings.PortableAppsDirectory);
+        }
+
+        private async void AddException_Click(object sender, RoutedEventArgs e)
+        {
+            StorageFolder folder = await DialogService.OpenFolderPickerToSelectSingleFolder(Windows.Storage.Pickers.PickerViewMode.List);
+            string path = folder.Path;
+            //MessageBox.Show(path);
+
+            ExceptionItems.Items.Add(path);
+        }
+
+        private void ClearBtn_Click(object sender, RoutedEventArgs e)
+        {
+            ExceptionItems.Items.Clear();
+        }
+
         private async void ScanNowBtn_Click(object sender, RoutedEventArgs e)
         {
             (sender as Button).IsEnabled = false;
-            PickDirectoryCard.IsEnabled = false;
-            ScanNowCard.Description = "Scan in progress...";
+            ScanExpander.IsEnabled = false;
+            ScanExpander.Description = "Scan in progress...";
             ProgressRing r = new ProgressRing() { IsIndeterminate = true };
             r.Height = 20;
             r.Width = 20;
@@ -92,14 +106,10 @@ namespace PortableAppsManager.Pages.Setup.SetupPages
 
             //PortableAppsApps = new List<AppItem>();
             //OtherApps = new List<AppItem>();
-
-            Globals.Settings.PortableAppsDirectory = PathTextBox.Text;
-            ConfigJson.SaveSettings();
-
             try
             {
                 Driller d = new Driller();
-                List<Driller.DrillerFoundApp> foundapps = d.GetAllAppsInsideDirectory(PathTextBox.Text,GetAllExceptionsDirectories());
+                List<Driller.DrillerFoundApp> foundapps = manager.IndexLibrary(Globals.Settings.PortableAppsDirectory, GetAllExceptionsDirectories(), Convert.ToBoolean(IgnoreExistingAppsCheck.IsChecked));
                 foreach (var found in foundapps)
                 {
                     AppItem item = new AppItem();
@@ -114,7 +124,7 @@ namespace PortableAppsManager.Pages.Setup.SetupPages
                         item.Setup_IsPortableAppsCom = false;
                         OtherApps.Add(item);
                     }
-                    ScanNowCard.Description = $"Found {item.AppName}";
+                    ScanExpander.Description = $"Found {item.AppName}";
                 }
             }
             catch (Exception ex)
@@ -130,28 +140,16 @@ namespace PortableAppsManager.Pages.Setup.SetupPages
             AppsExpander.IsEnabled = true;
             AppsExpander.IsExpanded = true;
             await Task.Delay(100);
-            PrepGrid.Visibility = Visibility.Collapsed;
+            ScanExpander.Visibility = Visibility.Collapsed;
             PortableAppsComAppsGrid.SelectAll();
 
             othertext.Visibility = Visibility.Visible;
             portableappsppstext.Visibility = Visibility.Visible;
-            ContinueSetupCard.Visibility = Visibility.Visible;
+            SaveChangesBtn.Visibility = Visibility.Visible;
         }
 
-        private void PathTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        private void SaveChangesBtn_Click(object sender, RoutedEventArgs e)
         {
-            ScanNowCard.IsEnabled = true;
-        }
-
-        private async void PickPathBtn_Click(object sender, RoutedEventArgs e)
-        {
-            StorageFolder folder = await DialogService.OpenFolderPickerToSelectSingleFolder(Windows.Storage.Pickers.PickerViewMode.List);
-            PathTextBox.Text = folder.Path;
-        }
-
-        private void ContinueSetupCard_Click(object sender, RoutedEventArgs e)
-        {
-            Globals.Settings.Apps = new List<AppItem>();
             foreach (AppItem item in PortableAppsComAppsGrid.SelectedItems)
             {
                 Globals.Settings.Apps.Add(item);
@@ -161,23 +159,9 @@ namespace PortableAppsManager.Pages.Setup.SetupPages
                 Globals.Settings.Apps.Add(item);
             }
 
-            ShellSetupPage.RootSetupFrame.Navigate(typeof(OtherSettingsSetupPage), null, new SlideNavigationTransitionInfo() { Effect = SlideNavigationTransitionEffect.FromRight });
-
             ConfigJson.SaveSettings();
-        }
 
-        private async void AddException_Click(object sender, RoutedEventArgs e)
-        {
-            StorageFolder folder = await DialogService.OpenFolderPickerToSelectSingleFolder(Windows.Storage.Pickers.PickerViewMode.List);
-            string path = folder.Path;
-            //MessageBox.Show(path);
-
-            ExceptionItems.Items.Add(path);
-        }
-
-        private void ClearBtn_Click(object sender, RoutedEventArgs e)
-        {
-            ExceptionItems.Items.Clear();
+            NavigationService.NavigationService.Navigate(typeof(AppsPage), NavigationService.NavigationService.NavigateAnimationType.Entrance);
         }
 
         private AppItem GetAppItemFromID(string ID)
@@ -312,7 +296,7 @@ namespace PortableAppsManager.Pages.Setup.SetupPages
             sender.Text = string.Empty;
             sender.ItemsSource = null;
 
-            TargetListView.ItemsSource = null ;
+            TargetListView.ItemsSource = null;
             TargetListView.ItemsSource = AllTags;
 
             sender.Text = string.Empty;

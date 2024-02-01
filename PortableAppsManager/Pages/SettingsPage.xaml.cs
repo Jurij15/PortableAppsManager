@@ -6,6 +6,8 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using PortableAppsManager.Classes;
+using PortableAppsManager.Managers;
+using PortableAppsManager.Pages.Settings;
 using PortableAppsManager.Services;
 using System;
 using System.Collections.Generic;
@@ -61,6 +63,11 @@ namespace PortableAppsManager.Pages
         {
             Globals.Settings.Theme = (ElementTheme)ThemeCombo.SelectedIndex;
             ThemeService.ChangeTheme((ElementTheme)ThemeCombo.SelectedIndex);
+        }
+
+        private void LibRescanCard_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.NavigationService.Navigate(typeof(AppLibraryManagementPage), NavigationService.NavigationService.NavigateAnimationType.SlideFromLeft);
         }
     }
 }
