@@ -94,27 +94,24 @@ namespace PortableAppsManager.Helpers
         {
             ImageSource returnval = null;
 
-            if (SourceType != null && AppImageSourcePath != null && ExePath != null)
+            if (SourceType == Enums.AppImageSourceType.Executable)
             {
-                if (SourceType == Enums.AppImageSourceType.Executable)
+                returnval = ImageHelper.ConvertIconToImageSource(System.Drawing.Icon.ExtractAssociatedIcon(ExePath));
+            }
+            else if (SourceType == Enums.AppImageSourceType.File && AppImageSourcePath != null)
+            {
+                if (File.Exists(AppImageSourcePath))
                 {
-                    returnval = ImageHelper.ConvertIconToImageSource(System.Drawing.Icon.ExtractAssociatedIcon(ExePath));
-                }
-                else if (SourceType == Enums.AppImageSourceType.File && AppImageSourcePath != null)
-                {
-                    if (File.Exists(AppImageSourcePath))
-                    {
-                        BitmapImage bitmapImage = new BitmapImage();
+                    BitmapImage bitmapImage = new BitmapImage();
 
-                        bitmapImage.UriSource = new System.Uri(AppImageSourcePath);
+                    bitmapImage.UriSource = new System.Uri(AppImageSourcePath);
 
-                        returnval = bitmapImage;
-                    }
+                    returnval = bitmapImage;
                 }
-                else
-                {
-                    returnval = ImageHelper.ConvertIconToImageSource(System.Drawing.Icon.ExtractAssociatedIcon(ExePath));
-                }
+            }
+            else
+            {
+                returnval = ImageHelper.ConvertIconToImageSource(System.Drawing.Icon.ExtractAssociatedIcon(ExePath));
             }
 
             return returnval;

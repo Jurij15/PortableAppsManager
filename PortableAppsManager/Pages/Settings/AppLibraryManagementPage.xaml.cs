@@ -43,20 +43,16 @@ namespace PortableAppsManager.Pages.Settings
     /// </summary>
     public sealed partial class AppLibraryManagementPage : Page
     {
-        List<AppItem> PortableAppsApps { get; set; }
-        List<AppItem> OtherApps { get; set; }
-
+        List<AppItem> Apps { get; set; }
+        AppItem _selectedItem { get; set; }
         HashSet<string> AllTags;
 
         LibraryManager manager;
 
         private void UpdateItemsSources()
         {
-            PortableAppsComAppsGrid.ItemsSource = null;
-            PortableAppsComAppsGrid.ItemsSource = PortableAppsApps;
-
-            OtherAppsGrid.ItemsSource = null;
-            OtherAppsGrid.ItemsSource = OtherApps;
+            //AppList.ItemsSource = Apps;
+            //MessageBox.Show(Apps.Count.ToString());
         }
 
         private List<string> GetAllExceptionsDirectories()
@@ -73,8 +69,9 @@ namespace PortableAppsManager.Pages.Settings
         public AppLibraryManagementPage()
         {
             this.InitializeComponent();
-            this.DataContext = this; 
+            this.DataContext = this;
 
+            Apps = new List<AppItem>();
             manager = new LibraryManager(Globals.Settings.PortableAppsDirectory);
         }
 
@@ -104,27 +101,27 @@ namespace PortableAppsManager.Pages.Settings
 
             await Task.Delay(500);
 
-            //PortableAppsApps = new List<AppItem>();
-            //OtherApps = new List<AppItem>();
             try
             {
                 Driller d = new Driller();
-                List<Driller.DrillerFoundApp> foundapps = manager.IndexLibrary(Globals.Settings.PortableAppsDirectory, GetAllExceptionsDirectories(), Convert.ToBoolean(IgnoreExistingAppsCheck.IsChecked));
+                List<Driller.DrillerFoundApp> foundapps = d.GetAllAppsInsideDirectory(Globals.Settings.PortableAppsDirectory, GetAllExceptionsDirectories());
+                //List<Driller.DrillerFoundApp> foundapps = manager.IndexLibrary(Globals.Settings.PortableAppsDirectory, GetAllExceptionsDirectories(), Convert.ToBoolean(IgnoreExistingAppsCheck.IsChecked));
+                //MessageBox.Show(foundapps.Count.ToString());
                 foreach (var found in foundapps)
                 {
                     AppItem item = new AppItem();
-                    item = d.DrillerFoundAppToAppItem(found);
+                    item = item.DrillerFoundAppToAppItem(found);
                     if (found.Source == Driller.DrillerFoundAppSource.PortableApps)
                     {
                         item.Setup_IsPortableAppsCom = true;
-                        PortableAppsApps.Add(item);
                     }
                     else
                     {
                         item.Setup_IsPortableAppsCom = false;
-                        OtherApps.Add(item);
                     }
                     ScanExpander.Description = $"Found {item.AppName}";
+
+                    Apps.Add(item);
                 }
             }
             catch (Exception ex)
@@ -133,23 +130,19 @@ namespace PortableAppsManager.Pages.Settings
                 throw;
             }
 
-            await Task.Delay(10);
+            await Task.Delay(100);
 
             UpdateItemsSources();
 
-            AppsExpander.IsEnabled = true;
-            AppsExpander.IsExpanded = true;
-            await Task.Delay(100);
+            await Task.Delay(10);
+            AppsGrid.Visibility = Visibility.Visible;
             ScanExpander.Visibility = Visibility.Collapsed;
-            PortableAppsComAppsGrid.SelectAll();
-
-            othertext.Visibility = Visibility.Visible;
-            portableappsppstext.Visibility = Visibility.Visible;
             SaveChangesBtn.Visibility = Visibility.Visible;
         }
 
         private void SaveChangesBtn_Click(object sender, RoutedEventArgs e)
         {
+            /*
             foreach (AppItem item in PortableAppsComAppsGrid.SelectedItems)
             {
                 Globals.Settings.Apps.Add(item);
@@ -158,6 +151,7 @@ namespace PortableAppsManager.Pages.Settings
             {
                 Globals.Settings.Apps.Add(item);
             }
+            */
 
             ConfigJson.SaveSettings();
 
@@ -167,26 +161,12 @@ namespace PortableAppsManager.Pages.Settings
         private AppItem GetAppItemFromID(string ID)
         {
             AppItem ReturnAppItem = null;
-            bool IsInPortableApps = false;
-            foreach (var item in PortableAppsApps)
+            foreach (var item in Apps)
             {
                 if (item.ID == ID)
                 {
-                    IsInPortableApps = true;
                     ReturnAppItem = item;
                     break;
-                }
-            }
-
-            if (!IsInPortableApps)
-            {
-                foreach (var item in OtherApps)
-                {
-                    if (item.ID == ID)
-                    {
-                        ReturnAppItem = item;
-                        break;
-                    }
                 }
             }
 
@@ -195,29 +175,12 @@ namespace PortableAppsManager.Pages.Settings
 
         private void UpdateModifiedApp(AppItem App)
         {
-            bool IsInPortableApps = false;
-            foreach (var item in PortableAppsApps)
+            foreach (var item in Apps)
             {
                 if (item.ID == App.ID)
                 {
-                    IsInPortableApps = true;
-
-                    PortableAppsApps[PortableAppsApps.IndexOf(item)] = App;
+                    Apps[Apps.IndexOf(item)] = App;
                     break;
-                }
-            }
-
-            if (!IsInPortableApps)
-            {
-                foreach (var item in OtherApps)
-                {
-                    if (item.ID == App.ID)
-                    {
-                        IsInPortableApps = true;
-
-                        OtherApps[OtherApps.IndexOf(item)] = App;
-                        break;
-                    }
                 }
             }
 
@@ -242,22 +205,22 @@ namespace PortableAppsManager.Pages.Settings
 
         private void SelectAllInPortableApps_Click(object sender, RoutedEventArgs e)
         {
-            PortableAppsComAppsGrid.SelectAll();
+            //PortableAppsComAppsGrid.SelectAll();
         }
 
         private void SelectAllInOtherApps_Click(object sender, RoutedEventArgs e)
         {
-            OtherAppsGrid.SelectAll();
+            //OtherAppsGrid.SelectAll();
         }
 
         private void DeSelectAllInPortableApps_Click(object sender, RoutedEventArgs e)
         {
-            PortableAppsComAppsGrid.DeselectAll();
+            //PortableAppsComAppsGrid.DeselectAll();
         }
 
         private void DeSelectAllInOtherApps_Click(object sender, RoutedEventArgs e)
         {
-            OtherAppsGrid.DeselectAll();
+            //OtherAppsGrid.DeselectAll();
         }
 
         private void TagSearchBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
@@ -301,6 +264,47 @@ namespace PortableAppsManager.Pages.Settings
 
             sender.Text = string.Empty;
             sender.Text = string.Empty;
+        }
+
+        private void AppList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            _selectedItem = (sender as ListView).SelectedItem as AppItem;
+
+            //update the app display
+            AppImage.Source = ImageHelper.GetImageSource(_selectedItem);
+            AppNameBlock.Text = _selectedItem.AppName;
+            AppIncludedBtn.IsChecked = _selectedItem.TEMP_ISIncludedInSetup;
+        }
+
+        private void AppEditBtn_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void AppIncludedBtn_Click(object sender, RoutedEventArgs e)
+        {
+            bool selected = Convert.ToBoolean((sender as AppBarToggleButton).IsChecked);
+
+            _selectedItem.TEMP_ISIncludedInSetup = selected;
+
+            (AppList.SelectedItem as AppItem).TEMP_ISIncludedInSetup = selected;
+        }
+
+        private void AppItemCheck_Click(object sender, RoutedEventArgs e)
+        {
+            bool selected = Convert.ToBoolean((sender as CheckBox).IsChecked);
+
+            if (_selectedItem == null)
+            {
+                return;
+            }
+
+            if (((sender as CheckBox).Tag as AppItem).ID == _selectedItem.ID)
+            {
+                AppIncludedBtn.IsChecked = selected;
+            }
+
+            _selectedItem.TEMP_ISIncludedInSetup = selected;
         }
     }
 }

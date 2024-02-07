@@ -168,14 +168,15 @@
                     Grid.Row="0"
                     FontFamily="Segoe UI Variable Display"
                     IsOpen="False"
-                    Message="Navigate back and select the app again to see the updates!"
+                    Message="Navigate back and select the app again to apply changes!"
                     Severity="Warning" />
                 <InfoBar
                     x:Name="AppExeMissingInfoBar"
+                    Title="Executable Missing"
                     Grid.Row="0"
                     FontFamily="Segoe UI Variable Display"
+                    IsClosable="False"
                     IsOpen="False"
-                    Title="Executable Missing" IsClosable="False"
                     Message="Launching is disabled because program executable is missing!"
                     Severity="Error" />
                 <controls:AppInfoHeaderedControl
