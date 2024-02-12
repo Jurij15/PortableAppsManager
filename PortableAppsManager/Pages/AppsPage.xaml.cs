@@ -148,6 +148,18 @@ namespace PortableAppsManager.Pages
                     AppItems.Items.Add(control);
                 }
             }
+
+            if (CachedItem is not null)
+            {
+                foreach (AppItemControl item in AppItems.Items)
+                {
+                    if (item.AppItem.ID == CachedItem.AppItem.ID)
+                    {
+                        AppItems.ScrollIntoView(item, ScrollIntoViewAlignment.Default);
+                        break;
+                    }
+                }
+            }
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
