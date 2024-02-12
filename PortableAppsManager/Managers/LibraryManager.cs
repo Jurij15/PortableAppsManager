@@ -39,6 +39,8 @@ namespace PortableAppsManager.Managers
 
             var temp = _driller.GetAllAppsInsideDirectory(DirectoryPath, Exceptions);
 
+            drills = temp.ToList();
+
             return drills;
         }
 

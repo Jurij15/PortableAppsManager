@@ -350,6 +350,11 @@ namespace PortableAppsManager.Pages
             await adddialog.ShowAsync();
             adddialog.UpdateLayout();
 
+            if (!content.HasCanceledAddingApp)
+            {
+                Globals.library.AddAppToLibrary(content.ModifiedAppItem);
+            }
+
             LoadApps(null, null);
         }
 

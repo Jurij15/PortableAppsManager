@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using PortableAppsManager.Interop;
 using PortableAppsManager.Services;
 using System;
 using System.Collections.Generic;
@@ -29,6 +30,16 @@ namespace PortableAppsManager.Pages
             this.InitializeComponent();
 
             BackdropService.ChangeBackdrop(BackdropService.Backdrops.Mica);
+
+            if (Globals.Settings.PortableAppsDirectory is not null)
+            {
+                Globals.library = new Managers.LibraryManager(Globals.Settings.PortableAppsDirectory);
+            }
+            else
+            {
+                //it is null, bad
+                MessageBox.Show("PortableAppsDirectory is null", "Failed to initialize library");
+            }
         }
 
         private void NavigationViewControl_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)

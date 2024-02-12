@@ -16,9 +16,12 @@
     navigation:PageProperties.NavigationViewItemNameProperty="SettingsItem"
     navigation:PageProperties.PageTitleProperty="Settings"
     mc:Ignorable="d">
+    <Page.Resources>
+        <Thickness x:Key="DefaultSectionMargin">0,16,0,4</Thickness>
+    </Page.Resources>
     <ScrollViewer>
         <Grid Margin="{StaticResource DefaultPageMargin}">
-            <Grid Margin="16">
+            <Grid>
                 <Grid.ChildrenTransitions>
                     <RepositionThemeTransition IsStaggeringEnabled="True" />
                 </Grid.ChildrenTransitions>
@@ -39,7 +42,7 @@
                     Text="Personalization" />
                 <StackPanel Grid.Row="1" Spacing="4">
                     <StackPanel.ChildrenTransitions>
-                        <RepositionThemeTransition />
+                        <RepositionThemeTransition IsStaggeringEnabled="True" />
                     </StackPanel.ChildrenTransitions>
                     <settings:SettingsCard
                         x:Name="ThemeCard"
@@ -53,34 +56,42 @@
                             Loaded="ThemeCombo_Loaded"
                             SelectionChanged="ThemeCombo_SelectionChanged" />
                     </settings:SettingsCard>
+                    <settings:SettingsCard
+                        x:Name="BackdropCard"
+                        Description="Change App Backdrop"
+                        Header="Backdrop">
+                        <settings:SettingsCard.HeaderIcon>
+                            <FontIcon Glyph="&#xEB42;" />
+                        </settings:SettingsCard.HeaderIcon>
+                        <ComboBox
+                            x:Name="BackdropCombo"
+                            Loaded="BackdropCombo_Loaded"
+                            SelectionChanged="BackdropCombo_SelectionChanged" />
+                    </settings:SettingsCard>
                 </StackPanel>
                 <TextBlock
                     Grid.Row="2"
-                    Margin="0,12,0,4"
+                    Margin="{StaticResource DefaultSectionMargin}"
                     Style="{ThemeResource BodyStrongTextBlockStyle}"
                     Text="Manage" />
                 <StackPanel Grid.Row="3" Spacing="4">
                     <StackPanel.ChildrenTransitions>
-                        <RepositionThemeTransition />
+                        <RepositionThemeTransition IsStaggeringEnabled="True" />
                     </StackPanel.ChildrenTransitions>
-                    <settings:SettingsExpander Header="Library Management">
-                        <settings:SettingsExpander.HeaderIcon>
-                            <FontIcon Glyph="&#xE8F1;" />
-                        </settings:SettingsExpander.HeaderIcon>
-                        <settings:SettingsExpander.Items>
-                            <settings:SettingsCard Header="Reset Library" />
-                            <settings:SettingsCard
-                                x:Name="LibRescanCard"
-                                Click="LibRescanCard_Click"
-                                Description="Scan the library again for any added apps"
-                                Header="Rescan Library"
-                                IsClickEnabled="True" />
-                        </settings:SettingsExpander.Items>
-                    </settings:SettingsExpander>
+                    <settings:SettingsCard
+                        x:Name="LibRescanCard"
+                        Click="LibRescanCard_Click"
+                        Description="Scan the library again for any added apps"
+                        Header="Rescan Library"
+                        IsClickEnabled="True">
+                        <settings:SettingsCard.HeaderIcon>
+                            <FontIcon Glyph="&#xE72C;" />
+                        </settings:SettingsCard.HeaderIcon>
+                    </settings:SettingsCard>
                 </StackPanel>
                 <TextBlock
                     Grid.Row="4"
-                    Margin="0,14,0,2"
+                    Margin="{StaticResource DefaultSectionMargin}"
                     Style="{ThemeResource BodyStrongTextBlockStyle}"
                     Text="About" />
                 <settings:SettingsExpander

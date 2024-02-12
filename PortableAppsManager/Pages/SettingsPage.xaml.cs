@@ -69,5 +69,19 @@ namespace PortableAppsManager.Pages
         {
             NavigationService.NavigationService.Navigate(typeof(AppLibraryManagementPage), NavigationService.NavigationService.NavigateAnimationType.SlideFromLeft);
         }
+
+        private void BackdropCombo_Loaded(object sender, RoutedEventArgs e)
+        {
+            var _themeenumval = Enum.GetValues(typeof(BackdropService.Backdrops)).Cast<BackdropService.Backdrops>();
+            BackdropCombo.ItemsSource = _themeenumval;
+
+            BackdropCombo.SelectedIndex = (int)Globals.Settings.Backdrops;
+        }
+
+        private void BackdropCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Globals.Settings.Backdrops = (BackdropService.Backdrops)BackdropCombo.SelectedIndex;
+            BackdropService.ChangeBackdrop((BackdropService.Backdrops)BackdropCombo.SelectedIndex);
+        }
     }
 }

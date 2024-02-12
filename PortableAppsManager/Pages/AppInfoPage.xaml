@@ -254,10 +254,14 @@
                                     <Button.Flyout>
                                         <Flyout>
                                             <StackPanel Spacing="4">
+                                                <TextBlock
+                                                    Margin="0,0,0,12"
+                                                    Style="{ThemeResource CaptionTextBlockStyle}"
+                                                    Text="{Binding}" />
                                                 <Button
                                                     x:Name="DeletTagBtn"
                                                     Click="DeletTagBtn_Click"
-                                                    Content="Remove {Binding} Tag"
+                                                    Content="Remove Tag"
                                                     Tag="{Binding}" />
                                             </StackPanel>
                                         </Flyout>

@@ -12,7 +12,7 @@
                 <ResourceDictionary Source="ms-appx:///Styles/NavigationView.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <!--  Other app resources here  -->
-            <Thickness x:Key="DefaultPageMargin">25,12,25,12</Thickness>
+            <Thickness x:Key="DefaultPageMargin">25,16,25,16</Thickness>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

@@ -33,6 +33,7 @@ using IniParser.Model;
 using Microsoft.UI.Xaml.Media.Imaging;
 using ABI.Windows.AI.MachineLearning;
 using PortableAppsManager.Managers;
+using PortableAppsManager.Structs;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
@@ -43,16 +44,26 @@ namespace PortableAppsManager.Pages.Settings
     /// </summary>
     public sealed partial class AppLibraryManagementPage : Page
     {
+        private AppLibraryManagementPageNavigationParams NavigationParams;
         List<AppItem> Apps { get; set; }
         AppItem _selectedItem { get; set; }
         HashSet<string> AllTags;
 
-        LibraryManager manager;
+        TagsService tagsService;
 
-        private void UpdateItemsSources()
+        private void UpdateItemsSources(int newindex = 0, bool ScrollBack = true)
         {
-            //AppList.ItemsSource = Apps;
+            object currentobj = AppList.ContainerFromIndex(newindex);
+
+            AppList.ItemsSource = null;
+            AppList.ItemsSource = Apps;
+            AppList.SelectedIndex = newindex;
             //MessageBox.Show(Apps.Count.ToString());
+
+            if (ScrollBack)
+            {
+                AppList.ScrollIntoView(currentobj);
+            }
         }
 
         private List<string> GetAllExceptionsDirectories()
@@ -66,13 +77,28 @@ namespace PortableAppsManager.Pages.Settings
             return exceptions;
         }
 
+        #region Navigation Funcs
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            if (e.Parameter is not null)
+            {
+                NavigationParams = (AppLibraryManagementPageNavigationParams)e.Parameter;
+            }
+            else
+            {
+                NavigationParams = new AppLibraryManagementPageNavigationParams() { NavigateToWhenSaved = typeof(AppsPage)};
+            }
+            base.OnNavigatedTo(e);
+        }
+        #endregion
+
         public AppLibraryManagementPage()
         {
             this.InitializeComponent();
             this.DataContext = this;
 
             Apps = new List<AppItem>();
-            manager = new LibraryManager(Globals.Settings.PortableAppsDirectory);
+            tagsService = new TagsService();
         }
 
         private async void AddException_Click(object sender, RoutedEventArgs e)
@@ -103,10 +129,8 @@ namespace PortableAppsManager.Pages.Settings
 
             try
             {
-                Driller d = new Driller();
-                List<Driller.DrillerFoundApp> foundapps = d.GetAllAppsInsideDirectory(Globals.Settings.PortableAppsDirectory, GetAllExceptionsDirectories());
-                //List<Driller.DrillerFoundApp> foundapps = manager.IndexLibrary(Globals.Settings.PortableAppsDirectory, GetAllExceptionsDirectories(), Convert.ToBoolean(IgnoreExistingAppsCheck.IsChecked));
-                //MessageBox.Show(foundapps.Count.ToString());
+                List<Driller.DrillerFoundApp> foundapps = Globals.library.IndexLibrary(Globals.Settings.PortableAppsDirectory, GetAllExceptionsDirectories(), Convert.ToBoolean(IgnoreExistingAppsCheck.IsChecked));
+
                 foreach (var found in foundapps)
                 {
                     AppItem item = new AppItem();
@@ -137,61 +161,37 @@ namespace PortableAppsManager.Pages.Settings
             await Task.Delay(10);
             AppsGrid.Visibility = Visibility.Visible;
             ScanExpander.Visibility = Visibility.Collapsed;
-            SaveChangesBtn.Visibility = Visibility.Visible;
-        }
+            //SaveChangesBtn.Visibility = Visibility.Visible;
 
-        private void SaveChangesBtn_Click(object sender, RoutedEventArgs e)
-        {
-            /*
-            foreach (AppItem item in PortableAppsComAppsGrid.SelectedItems)
+            if (Apps.Count > 0)
             {
-                Globals.Settings.Apps.Add(item);
+                AppList.SelectedIndex = 0;
             }
-            foreach (AppItem item in OtherAppsGrid.SelectedItems)
-            {
-                Globals.Settings.Apps.Add(item);
-            }
-            */
-
-            ConfigJson.SaveSettings();
-
-            NavigationService.NavigationService.Navigate(typeof(AppsPage), NavigationService.NavigationService.NavigateAnimationType.Entrance);
-        }
-
-        private AppItem GetAppItemFromID(string ID)
-        {
-            AppItem ReturnAppItem = null;
-            foreach (var item in Apps)
-            {
-                if (item.ID == ID)
-                {
-                    ReturnAppItem = item;
-                    break;
-                }
-            }
-
-            return ReturnAppItem;
         }
 
         private void UpdateModifiedApp(AppItem App)
         {
+            int currentindex = 0;
             foreach (var item in Apps)
             {
                 if (item.ID == App.ID)
                 {
-                    Apps[Apps.IndexOf(item)] = App;
+                    int index = Apps.IndexOf(item);
+                    currentindex = index;
+                    Apps.RemoveAt(index);
+                    Apps.Insert(index, item);
                     break;
                 }
             }
 
-            UpdateItemsSources();
+            UpdateItemsSources(currentindex);
         }
 
         private async void EditAppInfo_Click(object sender, RoutedEventArgs e)
         {
-            MenuFlyoutItem parent = sender as MenuFlyoutItem;
+            AppBarButton parent = sender as AppBarButton;
             ContentDialog editdialog = DialogService.CreateBlankContentDialog(false);
-            EditAppDialogContent content = new EditAppDialogContent(GetAppItemFromID(parent.Tag.ToString()), editdialog);
+            EditAppDialogContent content = new EditAppDialogContent(_selectedItem, editdialog);
 
             editdialog.Content = content;
             editdialog.UpdateLayout();
@@ -203,91 +203,22 @@ namespace PortableAppsManager.Pages.Settings
             UpdateModifiedApp(modified);
         }
 
-        private void SelectAllInPortableApps_Click(object sender, RoutedEventArgs e)
-        {
-            //PortableAppsComAppsGrid.SelectAll();
-        }
-
-        private void SelectAllInOtherApps_Click(object sender, RoutedEventArgs e)
-        {
-            //OtherAppsGrid.SelectAll();
-        }
-
-        private void DeSelectAllInPortableApps_Click(object sender, RoutedEventArgs e)
-        {
-            //PortableAppsComAppsGrid.DeselectAll();
-        }
-
-        private void DeSelectAllInOtherApps_Click(object sender, RoutedEventArgs e)
-        {
-            //OtherAppsGrid.DeselectAll();
-        }
-
-        private void TagSearchBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
-        {
-            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
-            {
-                sender.ItemsSource = new List<string>() { $"Click to add {sender.Text}" };
-            }
-
-        }
-
-        private ListView TargetListView;
-        private void TagsList_Loaded(object sender, RoutedEventArgs e)
-        {
-            TargetListView = sender as ListView;
-            ((ListView)sender).ItemsSource = AllTags;
-        }
-
-        private void IDK_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
-        {
-            string content = (((ListView)sender).ItemsSource as IList)[((ListView)sender).SelectedIndex].ToString();
-
-            if (GetAppItemFromID((((ListView)sender).Tag as string)).Tags == null)
-            {
-                GetAppItemFromID((((ListView)sender).Tag as string)).Tags = new List<string>();
-            }
-            GetAppItemFromID((sender as ListView).Tag.ToString()).Tags.Add(content);
-            //MessageBox.Show(GetAppItemFromID((sender as ListView).Tag.ToString()).Tags.Count.ToString());
-            ((((sender as ListView).Parent as StackPanel).Parent as FlyoutPresenter).Parent as Popup).IsOpen = false;
-        }
-
-        private void TagSearchBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
-        {
-            AllTags.Add(sender.Text);
-            //MessageBox.Show(sender.Text);
-            sender.Text = string.Empty;
-            sender.ItemsSource = null;
-
-            TargetListView.ItemsSource = null;
-            TargetListView.ItemsSource = AllTags;
-
-            sender.Text = string.Empty;
-            sender.Text = string.Empty;
-        }
-
         private void AppList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             _selectedItem = (sender as ListView).SelectedItem as AppItem;
 
-            //update the app display
-            AppImage.Source = ImageHelper.GetImageSource(_selectedItem);
-            AppNameBlock.Text = _selectedItem.AppName;
-            AppIncludedBtn.IsChecked = _selectedItem.TEMP_ISIncludedInSetup;
-        }
+            if (_selectedItem is not null)
+            {
+                //update the app display
+                AppImage.Source = ImageHelper.GetImageSource(_selectedItem);
+                AppNameBlock.Text = _selectedItem.AppName;
 
-        private void AppEditBtn_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void AppIncludedBtn_Click(object sender, RoutedEventArgs e)
-        {
-            bool selected = Convert.ToBoolean((sender as AppBarToggleButton).IsChecked);
-
-            _selectedItem.TEMP_ISIncludedInSetup = selected;
-
-            (AppList.SelectedItem as AppItem).TEMP_ISIncludedInSetup = selected;
+                AppExePathBlock.Text = _selectedItem.ExePath;
+                AppAuthorBox.Text = _selectedItem.Author;
+                AppDescriptionBox.Text = _selectedItem.Description;
+                AppLanguageBox.Text = _selectedItem.Language;
+                AppLaunchAsAdminBox.Text = _selectedItem.LaunchAsAdmin.ToString();
+            }
         }
 
         private void AppItemCheck_Click(object sender, RoutedEventArgs e)
@@ -299,12 +230,121 @@ namespace PortableAppsManager.Pages.Settings
                 return;
             }
 
-            if (((sender as CheckBox).Tag as AppItem).ID == _selectedItem.ID)
+            _selectedItem.TEMP_ISIncludedInSetup = selected;
+        }
+
+        //tags things
+
+        private void DeletTagBtn_Click(object sender, RoutedEventArgs e)
+        {
+            _selectedItem.Tags.Remove((sender as Button).Tag.ToString());
+            TagsGrid.ItemsSource = null;
+            TagsGrid.ItemsSource = _selectedItem.Tags;
+        }
+
+        private void ConfirmAddTagButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(NewTagNameBox.Text) && !string.IsNullOrWhiteSpace(NewTagNameBox.Text))
             {
-                AppIncludedBtn.IsChecked = selected;
+                _selectedItem.Tags.Add(NewTagNameBox.Text);
+                TagsGrid.ItemsSource = null;
+                TagsGrid.ItemsSource = _selectedItem.Tags;
             }
 
-            _selectedItem.TEMP_ISIncludedInSetup = selected;
+            AddTagFlyout.Hide();
+        }
+
+        private void TagsGrid_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (_selectedItem is null)
+            {
+                return;
+            }
+            TagsGrid.ItemsSource = _selectedItem.Tags;
+        }
+
+        private void AllTagsList_Loaded(object sender, RoutedEventArgs e)
+        {
+            AllTagsList.ItemsSource = tagsService.GetAllTags();
+        }
+
+        private void AllTagsList_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            string tag = AllTagsList.SelectedItem.ToString();
+            AllTagsList.ItemsSource = null;
+            AddTagFlyout.Hide();
+
+            _selectedItem.Tags.Add(tag);
+            TagsGrid.ItemsSource = new List<string>();
+            TagsGrid.ItemsSource = _selectedItem.Tags;
+
+            ConfigJson.SaveSettings();
+        }
+
+        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (var item in Apps)
+            {
+                if (item.TEMP_ISIncludedInSetup)
+                {
+                   Globals.library.AddAppToLibrary(item);
+                }
+            }
+
+            if (NavigationParams.NavigationFrame is not null & NavigationParams.NavigationTransitionNfo is not null)
+            {
+                NavigationParams.NavigationFrame.Navigate(NavigationParams.NavigateToWhenSaved, null, NavigationParams.NavigationTransitionNfo);
+            }
+            else
+            {
+                NavigationService.NavigationService.Navigate(NavigationParams.NavigateToWhenSaved, NavigationService.NavigationService.NavigateAnimationType.Entrance);
+            }
+        }
+
+        private async void AddCustomAppBtn_Click(object sender, RoutedEventArgs e)
+        {
+            ContentDialog adddialog = DialogService.CreateBlankContentDialog(false);
+            AddAppDialog content = new AddAppDialog(adddialog);
+
+            adddialog.Content = content;
+            adddialog.UpdateLayout();
+
+            await adddialog.ShowAsync();
+            adddialog.UpdateLayout();
+
+            if (!content.HasCanceledAddingApp)
+            {
+                content.ModifiedAppItem.TEMP_ISIncludedInSetup = true;
+                Apps.Add(content.ModifiedAppItem);
+                Globals.library.AddAppToLibrary(content.ModifiedAppItem);
+            }
+
+            UpdateItemsSources(AppList.SelectedIndex);
+        }
+
+        private void UnselectAllBtn_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (var item in Apps)
+            {
+                item.TEMP_ISIncludedInSetup = false;
+            }
+
+            UpdateItemsSources(AppList.SelectedIndex);
+        }
+
+        private void SelectAllBtn_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (var item in Apps)
+            {
+                item.TEMP_ISIncludedInSetup = true;
+            }
+
+            UpdateItemsSources(AppList.SelectedIndex);
+        }
+
+        private void IgnoreExistingAppsCheck_Loaded(object sender, RoutedEventArgs e)
+        {
+            IgnoreExistingAppsCheck.IsChecked = NavigationParams.IgnoreAlreadyExisting;
         }
     }
 }

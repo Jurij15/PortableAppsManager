@@ -32,6 +32,8 @@ using IniParser;
 using IniParser.Model;
 using Microsoft.UI.Xaml.Media.Imaging;
 using ABI.Windows.AI.MachineLearning;
+using PortableAppsManager.Pages.Settings;
+using PortableAppsManager.Structs;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -43,104 +45,18 @@ namespace PortableAppsManager.Pages.Setup.SetupPages
     /// </summary>
     public sealed partial class AppsDirectorySetupPages : Page
     {
-        List<AppItem> PortableAppsApps { get; set; }
-        List<AppItem> OtherApps {  get; set; }
-
-        HashSet<string> AllTags;
-
-        private void UpdateItemsSources()
-        {
-            PortableAppsComAppsGrid.ItemsSource = null;
-            PortableAppsComAppsGrid.ItemsSource = PortableAppsApps;
-
-            OtherAppsGrid.ItemsSource = null;
-            OtherAppsGrid.ItemsSource = OtherApps;
-        }
         public AppsDirectorySetupPages()
         {
             this.InitializeComponent();
             this.DataContext = this;
-
-            PortableAppsApps = new List<AppItem>();
-            OtherApps = new List<AppItem>();
-
-            AllTags = new HashSet<string>(){ "TEST"};
-        }
-
-        private List<string> GetAllExceptionsDirectories()
-        {
-            List<string> exceptions = new List<string>();
-            foreach (var item in ExceptionItems.Items)
-            {
-                exceptions.Add(item.ToString());
-            }
-
-            return exceptions;
-        }
-
-        private async void ScanNowBtn_Click(object sender, RoutedEventArgs e)
-        {
-            (sender as Button).IsEnabled = false;
-            PickDirectoryCard.IsEnabled = false;
-            ScanNowCard.Description = "Scan in progress...";
-            ProgressRing r = new ProgressRing() { IsIndeterminate = true };
-            r.Height = 20;
-            r.Width = 20;
-            (sender as Button).Content = r;
-
-            await Task.Delay(500);
-
-            //PortableAppsApps = new List<AppItem>();
-            //OtherApps = new List<AppItem>();
-
-            Globals.Settings.PortableAppsDirectory = PathTextBox.Text;
-            ConfigJson.SaveSettings();
-
-            try
-            {
-                Driller d = new Driller();
-                List<Driller.DrillerFoundApp> foundapps = d.GetAllAppsInsideDirectory(PathTextBox.Text,GetAllExceptionsDirectories());
-                foreach (var found in foundapps)
-                {
-                    AppItem item = new AppItem();
-                    item = d.DrillerFoundAppToAppItem(found);
-                    if (found.Source == Driller.DrillerFoundAppSource.PortableApps)
-                    {
-                        item.Setup_IsPortableAppsCom = true;
-                        PortableAppsApps.Add(item);
-                    }
-                    else
-                    {
-                        item.Setup_IsPortableAppsCom = false;
-                        OtherApps.Add(item);
-                    }
-                    ScanNowCard.Description = $"Found {item.AppName}";
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-                throw;
-            }
-
-            await Task.Delay(10);
-
-            UpdateItemsSources();
-
-            AppsExpander.IsEnabled = true;
-            AppsExpander.IsExpanded = true;
-            await Task.Delay(100);
-            PrepGrid.Visibility = Visibility.Collapsed;
-            PortableAppsComAppsGrid.SelectAll();
-
-            othertext.Visibility = Visibility.Visible;
-            portableappsppstext.Visibility = Visibility.Visible;
-            ContinueSetupCard.Visibility = Visibility.Visible;
         }
 
         private void PathTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            ScanNowCard.IsEnabled = true;
+            if (Directory.Exists(PathTextBox.Text))
+            {
+                ContinueSetupCard.IsEnabled = true;
+            }
         }
 
         private async void PickPathBtn_Click(object sender, RoutedEventArgs e)
@@ -151,172 +67,10 @@ namespace PortableAppsManager.Pages.Setup.SetupPages
 
         private void ContinueSetupCard_Click(object sender, RoutedEventArgs e)
         {
-            Globals.Settings.Apps = new List<AppItem>();
-            foreach (AppItem item in PortableAppsComAppsGrid.SelectedItems)
-            {
-                Globals.Settings.Apps.Add(item);
-            }
-            foreach (AppItem item in OtherAppsGrid.SelectedItems)
-            {
-                Globals.Settings.Apps.Add(item);
-            }
+            Globals.Settings.PortableAppsDirectory = PathTextBox.Text;
+            Globals.library = new Managers.LibraryManager(Globals.Settings.PortableAppsDirectory);
 
-            ShellSetupPage.RootSetupFrame.Navigate(typeof(OtherSettingsSetupPage), null, new SlideNavigationTransitionInfo() { Effect = SlideNavigationTransitionEffect.FromRight });
-
-            ConfigJson.SaveSettings();
-        }
-
-        private async void AddException_Click(object sender, RoutedEventArgs e)
-        {
-            StorageFolder folder = await DialogService.OpenFolderPickerToSelectSingleFolder(Windows.Storage.Pickers.PickerViewMode.List);
-            string path = folder.Path;
-            //MessageBox.Show(path);
-
-            ExceptionItems.Items.Add(path);
-        }
-
-        private void ClearBtn_Click(object sender, RoutedEventArgs e)
-        {
-            ExceptionItems.Items.Clear();
-        }
-
-        private AppItem GetAppItemFromID(string ID)
-        {
-            AppItem ReturnAppItem = null;
-            bool IsInPortableApps = false;
-            foreach (var item in PortableAppsApps)
-            {
-                if (item.ID == ID)
-                {
-                    IsInPortableApps = true;
-                    ReturnAppItem = item;
-                    break;
-                }
-            }
-
-            if (!IsInPortableApps)
-            {
-                foreach (var item in OtherApps)
-                {
-                    if (item.ID == ID)
-                    {
-                        ReturnAppItem = item;
-                        break;
-                    }
-                }
-            }
-
-            return ReturnAppItem;
-        }
-
-        private void UpdateModifiedApp(AppItem App)
-        {
-            bool IsInPortableApps = false;
-            foreach (var item in PortableAppsApps)
-            {
-                if (item.ID == App.ID)
-                {
-                    IsInPortableApps = true;
-
-                    PortableAppsApps[PortableAppsApps.IndexOf(item)] = App;
-                    break;
-                }
-            }
-
-            if (!IsInPortableApps)
-            {
-                foreach (var item in OtherApps)
-                {
-                    if (item.ID == App.ID)
-                    {
-                        IsInPortableApps = true;
-
-                        OtherApps[OtherApps.IndexOf(item)] = App;
-                        break;
-                    }
-                }
-            }
-
-            UpdateItemsSources();
-        }
-
-        private async void EditAppInfo_Click(object sender, RoutedEventArgs e)
-        {
-            MenuFlyoutItem parent = sender as MenuFlyoutItem;
-            ContentDialog editdialog = DialogService.CreateBlankContentDialog(false);
-            EditAppDialogContent content = new EditAppDialogContent(GetAppItemFromID(parent.Tag.ToString()), editdialog);
-
-            editdialog.Content = content;
-            editdialog.UpdateLayout();
-
-            await editdialog.ShowAsync();
-            editdialog.UpdateLayout();
-
-            AppItem modified = content.ModifiedAppItem;
-            UpdateModifiedApp(modified);
-        }
-
-        private void SelectAllInPortableApps_Click(object sender, RoutedEventArgs e)
-        {
-            PortableAppsComAppsGrid.SelectAll();
-        }
-
-        private void SelectAllInOtherApps_Click(object sender, RoutedEventArgs e)
-        {
-            OtherAppsGrid.SelectAll();
-        }
-
-        private void DeSelectAllInPortableApps_Click(object sender, RoutedEventArgs e)
-        {
-            PortableAppsComAppsGrid.DeselectAll();
-        }
-
-        private void DeSelectAllInOtherApps_Click(object sender, RoutedEventArgs e)
-        {
-            OtherAppsGrid.DeselectAll();
-        }
-
-        private void TagSearchBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
-        {
-            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
-            {
-                sender.ItemsSource = new List<string>() { $"Click to add {sender.Text}" };
-            }
-
-        }
-
-        private ListView TargetListView;
-        private void TagsList_Loaded(object sender, RoutedEventArgs e)
-        {
-            TargetListView = sender as ListView;
-            ((ListView)sender).ItemsSource = AllTags;
-        }
-
-        private void IDK_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
-        {
-            string content = (((ListView)sender).ItemsSource as IList)[((ListView)sender).SelectedIndex].ToString();
-
-            if (GetAppItemFromID((((ListView)sender).Tag as string)).Tags == null)
-            {
-                GetAppItemFromID((((ListView)sender).Tag as string)).Tags = new List<string>();
-            }
-            GetAppItemFromID((sender as ListView).Tag.ToString()).Tags.Add(content);
-            //MessageBox.Show(GetAppItemFromID((sender as ListView).Tag.ToString()).Tags.Count.ToString());
-            ((((sender as ListView).Parent as StackPanel).Parent as FlyoutPresenter).Parent as Popup).IsOpen = false;
-        }
-
-        private void TagSearchBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
-        {
-            AllTags.Add(sender.Text);
-            //MessageBox.Show(sender.Text);
-            sender.Text = string.Empty;
-            sender.ItemsSource = null;
-
-            TargetListView.ItemsSource = null ;
-            TargetListView.ItemsSource = AllTags;
-
-            sender.Text = string.Empty;
-            sender.Text = string.Empty;
+            ShellSetupPage.RootSetupFrame.Navigate(typeof(AppLibraryManagementPage), new AppLibraryManagementPageNavigationParams() { NavigateToWhenSaved = typeof(OtherSettingsSetupPage), IgnoreAlreadyExisting = false, NavigationFrame = ShellSetupPage.RootSetupFrame, NavigationTransitionNfo = new SlideNavigationTransitionInfo() { Effect = SlideNavigationTransitionEffect.FromRight } }, new SlideNavigationTransitionInfo() { Effect = SlideNavigationTransitionEffect.FromRight });
         }
     }
 }

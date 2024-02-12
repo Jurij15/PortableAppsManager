@@ -28,7 +28,7 @@
         </NavigationView.Header>
         <NavigationView.Resources>
             <ResourceDictionary x:Name="MainNavigationDisableContentBackgroundDictionary">
-                <Thickness x:Key="NavigationViewHeaderMargin">25,12,0,0</Thickness>
+                <Thickness x:Key="NavigationViewHeaderMargin">25,16,0,0</Thickness>
                 <SolidColorBrush x:Key="NavigationViewContentGridBorderBrush" Color="{StaticResource LayerFillColorDefaultBrush}" />
                 <SolidColorBrush x:Key="NavigationViewContentBackground" Color="{StaticResource LayerFillColorDefaultBrush}" />
             </ResourceDictionary>

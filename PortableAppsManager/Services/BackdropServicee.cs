@@ -2,6 +2,7 @@
 using Microsoft.UI.Xaml.Media;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -35,16 +36,23 @@ namespace PortableAppsManager.Services
                     Microsoft.UI.Xaml.Media.MicaBackdrop backdropm = new MicaBackdrop();
                     backdropm.Kind = Microsoft.UI.Composition.SystemBackdrops.MicaKind.Base;
 
+                    (Globals.m_window.Content as Grid).Background = new SolidColorBrush(Microsoft.UI.Colors.Transparent);
+
                     Globals.m_window.SystemBackdrop = backdropm;
                     break;
                 case Backdrops.MicaAlt:
                     Microsoft.UI.Xaml.Media.MicaBackdrop backdropalt = new MicaBackdrop();
                     backdropalt.Kind = Microsoft.UI.Composition.SystemBackdrops.MicaKind.BaseAlt;
 
+                    (Globals.m_window.Content as Grid).Background = new SolidColorBrush(Microsoft.UI.Colors.Transparent);
+
                     Globals.m_window.SystemBackdrop = backdropalt;
                     break;
                 case Backdrops.Acrylic:
                     Microsoft.UI.Xaml.Media.DesktopAcrylicBackdrop backdropacry = new DesktopAcrylicBackdrop();
+
+                    (Globals.m_window.Content as Grid).Background = new SolidColorBrush(Microsoft.UI.Colors.Transparent);
+
                     Globals.m_window.SystemBackdrop = backdropacry;
                     break;
                 default:

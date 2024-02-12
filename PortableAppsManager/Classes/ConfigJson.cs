@@ -1,6 +1,7 @@
 ﻿using Microsoft.UI.Xaml;
 using Newtonsoft.Json;
 using PortableAppsManager.Interop;
+using PortableAppsManager.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,7 +13,8 @@ namespace PortableAppsManager.Classes
 {
     public class ConfigJson
     {
-        public ElementTheme Theme { get; set; }
+        public ElementTheme Theme { get; set; } = ElementTheme.Default;
+        public BackdropService.Backdrops Backdrops { get; set; } = BackdropService.Backdrops.Mica;
 
         public string PortableAppsDirectory { get; set; }
 

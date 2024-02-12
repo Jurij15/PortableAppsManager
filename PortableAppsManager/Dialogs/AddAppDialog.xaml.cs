@@ -34,6 +34,7 @@ namespace PortableAppsManager.Dialogs
         public ContentDialog ParentDialog { get; private set; }
         public string _title;
 
+        public bool HasCanceledAddingApp {  get; private set; }
         public AppItem ModifiedAppItem { get; private set; }
         public AddAppDialog(ContentDialog parent)
         {
@@ -46,16 +47,17 @@ namespace PortableAppsManager.Dialogs
 
         private void DialogCloseButton_Click(object sender, RoutedEventArgs e)
         {
+            HasCanceledAddingApp = true;
             ParentDialog.Hide();
         }
 
         private void SaveBtn_Click(object sender, RoutedEventArgs e)
         {
+            if (AppPathBox.Text is null or "")
+            {
+                HasCanceledAddingApp = true;
+            }
             ParentDialog.Hide();
-
-            Globals.Settings.Apps.Add(ModifiedAppItem);
-
-            ConfigJson.SaveSettings();
         }
 
         private void Grid_Loaded(object sender, RoutedEventArgs e)
