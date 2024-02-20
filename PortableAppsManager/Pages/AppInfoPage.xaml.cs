@@ -169,6 +169,18 @@ namespace PortableAppsManager.Pages
             tagsService = new TagsService();
         }
 
+        void UpdateAppPinState()
+        {
+            if (item.PinToHome)
+            {
+                PinningIcon.Glyph = "\uE735";
+            }
+            else
+            {
+                PinningIcon.Glyph = "\uE734";
+            }
+        }
+
         void Initialize()
         {
             if (item != null)
@@ -312,6 +324,27 @@ namespace PortableAppsManager.Pages
             {
                 AppExeMissingInfoBar.IsOpen = false;
             }
+        }
+
+        private void AppOptionsPane_Loaded(object sender, RoutedEventArgs e)
+        {
+            UpdateAppPinState();
+        }
+
+        private void PinAppButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (item.PinToHome)
+            {
+                item.PinToHome = false;
+            }
+            else
+            {
+                item.PinToHome = true;
+            }
+
+            Globals.library.UpdateApp(item);
+
+            UpdateAppPinState();
         }
     }
 }

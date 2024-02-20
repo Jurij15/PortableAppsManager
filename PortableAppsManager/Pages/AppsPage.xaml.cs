@@ -26,6 +26,7 @@ using System.Threading.Tasks;
 using PortableAppsManager.Enums;
 using Microsoft.UI;
 using PortableAppsManager.Dialogs;
+using CommunityToolkit.WinUI.UI.Triggers;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -69,7 +70,7 @@ namespace PortableAppsManager.Pages
             tags = new TagsService();
         }
 
-        private bool IsItemInArray(string item, string[] array)
+        private bool IsItemInArray(string item, HashSet<string> array)
         {
             foreach (var element in array)
             {
@@ -131,18 +132,25 @@ namespace PortableAppsManager.Pages
 
                 if (Tags != null)
                 {
+                    int containingTags = 0;
                     foreach (var tag in item.Tags)
                     {
-                        foreach (var ttag in Tags)
+                        if (IsItemInArray(tag, Tags))
                         {
-                            if (ttag == tag)
-                            {
-                                ShouldAddApp = false;
-                            }
+                            containingTags++;
                         }
                     }
+
+                    if (containingTags > 0)
+                    {
+                        ShouldAddApp = true;
+                    }
+                    else
+                    {
+                        ShouldAddApp = false;
+                    }
                 }
-                
+
                 if (ShouldAddApp)
                 {
                     AppItems.Items.Add(control);
@@ -239,6 +247,7 @@ namespace PortableAppsManager.Pages
             }
 
             await Task.Delay(70);
+
             LoadApps(null, "");
         }
 
@@ -370,14 +379,42 @@ namespace PortableAppsManager.Pages
             LoadApps(null, null);
         }
 
-        /*
-        private void SearchBox_SuggestionRequested(CommunityToolkit.WinUI.Controls.RichSuggestBox sender, CommunityToolkit.WinUI.Controls.SuggestionRequestedEventArgs args)
+        private void TagsCombo_Loaded(object sender, RoutedEventArgs e)
         {
-            if (args.Prefix == "#")
-            {
-                sender.ItemsSource = tags.GetAllTags().Where(x => x.Contains(args.QueryText!, StringComparison.OrdinalIgnoreCase));
-            }
+            TagsCombo.ItemsSource = tags.GetAllTags();
         }
-        */
+
+        private void TagsCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ClearSortBtn.Visibility = Visibility.Visible;
+            try
+            {
+                if (TagsCombo.SelectedItem.ToString() is null | TagsCombo.SelectedItem.ToString() is "")
+                {
+                    return;
+                }
+            }
+            catch (Exception)
+            {
+                return;
+            }
+           
+            LoadApps(new HashSet<string>() { TagsCombo.SelectedItem.ToString() }, null);
+        }
+
+        private void ClearSortBtn_Click(object sender, RoutedEventArgs e)
+        {
+            TagsCombo.SelectedItem = null;
+            TagsCombo.ItemsSource = null;
+            TagsCombo.SelectedItem = null;
+            TagsCombo_Loaded(null, null);
+            TagsCombo.SelectedItem = null;
+            TagsCombo.Text = "";
+
+            //reload apps again
+            LoadApps(null, null);
+
+            ClearSortBtn.Visibility = Visibility.Collapsed;
+        }
     }
 }

@@ -27,12 +27,14 @@
         <settings:SettingsExpander
             x:Name="ScanExpander"
             Grid.Row="0"
+            FontFamily="Segoe UI Variable Display"
             Header="Scan"
             IsExpanded="True">
             <Button
                 x:Name="ScanNowBtn"
                 Click="ScanNowBtn_Click"
                 Content="Start Scan"
+                FontFamily="Segoe UI Variable Display"
                 Style="{ThemeResource AccentButtonStyle}" />
             <settings:SettingsExpander.Items>
                 <settings:SettingsCard x:Name="ScanOptions" Header="Scan Options">
@@ -40,23 +42,27 @@
                         <FontIcon Glyph="&#xE773;" />
                     </settings:SettingsCard.HeaderIcon>
                     <StackPanel Orientation="Horizontal" Spacing="4">
-                        <Button x:Name="ExceptionsBtn">
+                        <Button x:Name="ExceptionsBtn" FontFamily="Segoe UI Variable Display">
                             <FontIcon Glyph="&#xE712;" />
                             <Button.Flyout>
                                 <Flyout x:Name="ExceptionsFlyout">
                                     <StackPanel Orientation="Vertical" Spacing="2">
-                                        <TextBlock Style="{ThemeResource BodyStrongTextBlockStyle}" Text="List of exceptions:" />
+                                        <TextBlock
+                                            FontFamily="Segoe UI Variable Display"
+                                            Style="{ThemeResource BodyStrongTextBlockStyle}"
+                                            Text="List of exceptions:" />
                                         <ListView x:Name="ExceptionItems" />
                                         <StackPanel Orientation="Horizontal" Spacing="2">
                                             <Button x:Name="AddException" Click="AddException_Click">
                                                 <StackPanel Spacing="2">
-                                                    <TextBlock Text="Add" />
+                                                    <TextBlock FontFamily="Segoe UI Variable Display" Text="Add" />
                                                 </StackPanel>
                                             </Button>
                                             <Button
                                                 x:Name="ClearBtn"
                                                 Click="ClearBtn_Click"
-                                                Content="Clear" />
+                                                Content="Clear"
+                                                FontFamily="Segoe UI Variable Display" />
                                         </StackPanel>
                                     </StackPanel>
                                 </Flyout>
@@ -64,7 +70,7 @@
                         </Button>
                         <CheckBox
                             x:Name="IgnoreExistingAppsCheck"
-                            Content="Unselect already added apps"
+                            Content="Ignore already added apps"
                             Loaded="IgnoreExistingAppsCheck_Loaded" />
                     </StackPanel>
                 </settings:SettingsCard>
@@ -92,6 +98,7 @@
                     <AppBarButton
                         x:Name="SaveButton"
                         Click="SaveButton_Click"
+                        FontFamily="Segoe UI Variable Display"
                         Label="Save">
                         <AppBarButton.Icon>
                             <FontIcon Glyph="&#xE74E;" />
@@ -101,6 +108,7 @@
                     <AppBarButton
                         x:Name="AddCustomAppBtn"
                         Click="AddCustomAppBtn_Click"
+                        FontFamily="Segoe UI Variable Display"
                         Label="Add Custom App">
                         <AppBarButton.Icon>
                             <FontIcon Glyph="&#xE710;" />
@@ -110,6 +118,7 @@
                     <AppBarButton
                         x:Name="UnselectAllBtn"
                         Click="UnselectAllBtn_Click"
+                        FontFamily="Segoe UI Variable Display"
                         Label="Deselect All">
                         <AppBarButton.Icon>
                             <FontIcon Glyph="&#xE8E6;" />
@@ -118,6 +127,7 @@
                     <AppBarButton
                         x:Name="SelectAllBtn"
                         Click="SelectAllBtn_Click"
+                        FontFamily="Segoe UI Variable Display"
                         Label="Select All">
                         <AppBarButton.Icon>
                             <FontIcon Glyph="&#xE8B3;" />
@@ -138,24 +148,55 @@
                             <Grid Margin="2">
                                 <ToolTipService.ToolTip>
                                     <StackPanel Spacing="4">
-                                        <TextBlock Text="Executable Path" />
+                                        <TextBlock FontFamily="Segoe UI Variable Display" Text="Executable Path" />
                                         <TextBlock
                                             Margin="0,0,0,4"
+                                            FontFamily="Segoe UI Variable Display"
                                             Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                             LineHeight="18"
                                             Text="{x:Bind ExePath, Mode=OneWay}"
                                             TextTrimming="CharacterEllipsis"
                                             TextWrapping="Wrap" />
-                                        <TextBlock Margin="0,4,0,2" Text="App Name" />
-                                        <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{x:Bind AppName, Mode=OneWay}" />
-                                        <TextBlock Margin="0,4,0,2" Text="Author" />
-                                        <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{x:Bind Author, Mode=OneWay}" />
-                                        <TextBlock Margin="0,4,0,2" Text="Description" />
-                                        <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{x:Bind Description, Mode=OneWay}" />
-                                        <TextBlock Margin="0,4,0,2" Text="Language" />
-                                        <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{x:Bind Language, Mode=OneWay}" />
-                                        <TextBlock Margin="0,4,0,2" Text="Launch As Admin" />
-                                        <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{x:Bind LaunchAsAdmin.ToString(), Mode=OneWay}" />
+                                        <TextBlock
+                                            Margin="0,4,0,2"
+                                            FontFamily="Segoe UI Variable Display"
+                                            Text="App Name" />
+                                        <TextBlock
+                                            FontFamily="Segoe UI Variable Display"
+                                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                            Text="{x:Bind AppName, Mode=OneWay}" />
+                                        <TextBlock
+                                            Margin="0,4,0,2"
+                                            FontFamily="Segoe UI Variable Display"
+                                            Text="Author" />
+                                        <TextBlock
+                                            FontFamily="Segoe UI Variable Display"
+                                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                            Text="{x:Bind Author, Mode=OneWay}" />
+                                        <TextBlock
+                                            Margin="0,4,0,2"
+                                            FontFamily="Segoe UI Variable Display"
+                                            Text="Description" />
+                                        <TextBlock
+                                            FontFamily="Segoe UI Variable Display"
+                                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                            Text="{x:Bind Description, Mode=OneWay}" />
+                                        <TextBlock
+                                            Margin="0,4,0,2"
+                                            FontFamily="Segoe UI Variable Display"
+                                            Text="Language" />
+                                        <TextBlock
+                                            FontFamily="Segoe UI Variable Display"
+                                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                            Text="{x:Bind Language, Mode=OneWay}" />
+                                        <TextBlock
+                                            Margin="0,4,0,2"
+                                            FontFamily="Segoe UI Variable Display"
+                                            Text="Launch As Admin" />
+                                        <TextBlock
+                                            FontFamily="Segoe UI Variable Display"
+                                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                            Text="{x:Bind LaunchAsAdmin.ToString(), Mode=OneWay}" />
                                     </StackPanel>
                                 </ToolTipService.ToolTip>
                                 <Grid.ColumnDefinitions>
@@ -174,6 +215,7 @@
                                     Spacing="2">
                                     <TextBlock Style="{ThemeResource BodyStrongTextBlockStyle}" Text="{x:Bind AppName, Mode=OneWay}" />
                                     <TextBlock
+                                        FontFamily="Segoe UI Variable Display"
                                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                         Style="{ThemeResource CaptionTextBlockStyle}"
                                         Text="PortableApps.com Detected"
@@ -187,6 +229,7 @@
                                     VerticalAlignment="Top"
                                     Click="AppItemCheck_Click"
                                     Content=" "
+                                    FontFamily="Segoe UI Variable Display"
                                     IsChecked="{x:Bind TEMP_ISIncludedInSetup, Mode=TwoWay}"
                                     Tag="{x:Bind}"
                                     ToolTipService.ToolTip="App included" />
@@ -231,6 +274,7 @@
                         Margin="0,4,0,4"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
+                        FontFamily="Segoe UI Variable Display"
                         Style="{ThemeResource SubtitleTextBlockStyle}" />
 
                     <Grid
@@ -251,6 +295,7 @@
                             HorizontalAlignment="Left"
                             VerticalAlignment="Top"
                             Click="EditAppInfo_Click"
+                            FontFamily="Segoe UI Variable Display"
                             Label="Edit">
                             <AppBarButton.Icon>
                                 <FontIcon Glyph="&#xE70F;" />
@@ -258,32 +303,49 @@
                         </AppBarButton>
                     </Grid>
                     <StackPanel Grid.Row="3" Spacing="4">
-                        <TextBlock Text="Executable Path" />
+                        <TextBlock FontFamily="Segoe UI Variable Display" Text="Executable Path" />
                         <TextBlock
                             x:Name="AppExePathBlock"
                             Margin="0,0,0,4"
+                            FontFamily="Segoe UI Variable Display"
                             Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                             LineHeight="18"
                             TextTrimming="CharacterEllipsis"
                             TextWrapping="Wrap" />
-                        <TextBlock Margin="0,4,0,2" Text="Author" />
-                        <TextBlock x:Name="AppAuthorBox" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                        <TextBlock Margin="0,4,0,2" Text="Description" />
-                        <TextBlock x:Name="AppDescriptionBox" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                         <TextBlock
                             Margin="0,4,0,2"
+                            FontFamily="Segoe UI Variable Display"
+                            Text="Author" />
+                        <TextBlock
+                            x:Name="AppAuthorBox"
+                            FontFamily="Segoe UI Variable Display"
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                        <TextBlock
+                            Margin="0,4,0,2"
+                            FontFamily="Segoe UI Variable Display"
+                            Text="Description" />
+                        <TextBlock
+                            x:Name="AppDescriptionBox"
+                            FontFamily="Segoe UI Variable Display"
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                        <TextBlock
+                            Margin="0,4,0,2"
+                            FontFamily="Segoe UI Variable Display"
                             Text="Language"
                             Visibility="Collapsed" />
                         <TextBlock
                             x:Name="AppLanguageBox"
+                            FontFamily="Segoe UI Variable Display"
                             Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                             Visibility="Collapsed" />
                         <TextBlock
                             Margin="0,4,0,2"
+                            FontFamily="Segoe UI Variable Display"
                             Text="Launch As Admin"
                             Visibility="Collapsed" />
                         <TextBlock
                             x:Name="AppLaunchAsAdminBox"
+                            FontFamily="Segoe UI Variable Display"
                             Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                             Visibility="Collapsed" />
                     </StackPanel>
@@ -297,8 +359,11 @@
                     IsExpanded="True">
                     <Expander.Header>
                         <StackPanel Orientation="Horizontal" Spacing="8">
-                            <TextBlock VerticalAlignment="Center" Text="Tags" />
-                            <Button x:Name="AddTagButton">
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                FontFamily="Segoe UI Variable Display"
+                                Text="Tags" />
+                            <Button x:Name="AddTagButton" FontFamily="Segoe UI Variable Display">
                                 <FontIcon Glyph="&#xE710;" />
                                 <Button.Flyout>
                                     <Flyout x:Name="AddTagFlyout" ShouldConstrainToRootBounds="False">
@@ -310,6 +375,7 @@
                                                 <TextBox
                                                     x:Name="NewTagNameBox"
                                                     MinWidth="200"
+                                                    FontFamily="Segoe UI Variable Display"
                                                     PlaceholderText="Tag Name" />
                                                 <Button
                                                     x:Name="ConfirmAddTagButton"
@@ -326,6 +392,7 @@
                                                     Loaded="AllTagsList_Loaded" />
                                             </ScrollViewer>
                                             <TextBlock
+                                                FontFamily="Segoe UI Variable Display"
                                                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                                 Style="{ThemeResource CaptionTextBlockStyle}"
                                                 Text="Double-click to add tag" />
@@ -351,6 +418,7 @@
                                                 <StackPanel Spacing="4">
                                                     <TextBlock
                                                         Margin="0,0,0,12"
+                                                        FontFamily="Segoe UI Variable Display"
                                                         Style="{ThemeResource CaptionTextBlockStyle}"
                                                         Text="{Binding}" />
                                                     <Button

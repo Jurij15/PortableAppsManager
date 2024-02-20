@@ -106,11 +106,26 @@
                 </Button.Flyout>
             </Button>
         </Grid>
-        <Grid Grid.Row="1" Margin="0,4,0,4">
-            <ComboBox SelectedIndex="0" Visibility="Collapsed">
-                <ComboBoxItem Content="Test" />
-            </ComboBox>
-        </Grid>
+        <StackPanel
+            Grid.Row="1"
+            Margin="0,6,0,6"
+            Orientation="Horizontal"
+            Spacing="6">
+            <StackPanel.ChildrenTransitions>
+                <RepositionThemeTransition IsStaggeringEnabled="False" />
+            </StackPanel.ChildrenTransitions>
+            <HyperlinkButton
+                x:Name="ClearSortBtn"
+                Click="ClearSortBtn_Click"
+                Content="Clear"
+                Visibility="Collapsed" />
+            <ComboBox
+                x:Name="TagsCombo"
+                IsEditable="True"
+                Loaded="TagsCombo_Loaded"
+                PlaceholderText="All Tags"
+                SelectionChanged="TagsCombo_SelectionChanged" />
+        </StackPanel>
         <GridView
             x:Name="AppItems"
             Grid.Row="2"

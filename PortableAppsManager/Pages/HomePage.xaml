@@ -6,6 +6,7 @@
     xmlns:classes="using:PortableAppsManager.Classes"
     xmlns:controls="using:PortableAppsManager.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="using:PortableAppsManager.Helpers"
     xmlns:local="using:PortableAppsManager.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:navigation="using:NavigationService"
@@ -26,21 +27,29 @@
             </Grid.RowDefinitions>
             <StackPanel
                 x:Name="PinnedAppsRootPanel"
-                Grid.Row="0" Margin="2,12,0,0"
+                Grid.Row="0"
+                Margin="2,12,0,2"
                 Spacing="4">
-                <TextBlock Style="{ThemeResource BodyStrongTextBlockStyle}" Text="Pinned Apps" />
+                <TextBlock
+                    Margin="0,0,0,2"
+                    Style="{ThemeResource BodyStrongTextBlockStyle}"
+                    Text="Pinned Apps" />
                 <GridView
                     x:Name="PinnedAppsPanel"
-                    Loaded="PinnedAppsPanel_Loaded">
+                    Loaded="PinnedAppsPanel_Loaded"
+                    SelectionChanged="PinnedAppsPanel_SelectionChanged"
+                    SelectionMode="Single">
                     <GridView.ItemTemplate>
                         <DataTemplate x:DataType="classes:AppItem">
                             <Grid
                                 Width="170"
                                 MaxHeight="150"
                                 Margin="2"
-                                Padding="24"
+                                Padding="14"
                                 Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" PointerReleased="Grid_PointerPressed">
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                CornerRadius="6"
+                                PointerReleased="Grid_PointerPressed">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
@@ -50,13 +59,15 @@
                                 <Image
                                     x:Name="AppIcon"
                                     Grid.Row="0"
-                                    Width="32"
-                                    Height="32"
+                                    Width="48"
+                                    Height="48"
                                     HorizontalAlignment="Center"
-                                    VerticalAlignment="Top" />
+                                    VerticalAlignment="Top"
+                                    Source="{x:Bind helpers:ImageHelper.GetImageSource(SourceType, AppImageSourcePath, ExePath)}" />
                                 <TextBlock
                                     x:Name="AppNameBlock"
                                     Grid.Row="1"
+                                    Margin="0,2,0,0"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
                                     FontFamily="Segoe UI Variable Display"

@@ -47,24 +47,28 @@
                     <settings:SettingsCard
                         x:Name="ThemeCard"
                         Description="Change App Theme"
+                        FontFamily="Segoe UI Variable Display"
                         Header="Theme">
                         <settings:SettingsCard.HeaderIcon>
                             <FontIcon Glyph="&#xE771;" />
                         </settings:SettingsCard.HeaderIcon>
                         <ComboBox
                             x:Name="ThemeCombo"
+                            FontFamily="Segoe UI Variable Display"
                             Loaded="ThemeCombo_Loaded"
                             SelectionChanged="ThemeCombo_SelectionChanged" />
                     </settings:SettingsCard>
                     <settings:SettingsCard
                         x:Name="BackdropCard"
                         Description="Change App Backdrop"
+                        FontFamily="Segoe UI Variable Display"
                         Header="Backdrop">
                         <settings:SettingsCard.HeaderIcon>
                             <FontIcon Glyph="&#xEB42;" />
                         </settings:SettingsCard.HeaderIcon>
                         <ComboBox
                             x:Name="BackdropCombo"
+                            FontFamily="Segoe UI Variable Display"
                             Loaded="BackdropCombo_Loaded"
                             SelectionChanged="BackdropCombo_SelectionChanged" />
                     </settings:SettingsCard>
@@ -82,6 +86,7 @@
                         x:Name="LibRescanCard"
                         Click="LibRescanCard_Click"
                         Description="Scan the library again for any added apps"
+                        FontFamily="Segoe UI Variable Display"
                         Header="Rescan Library"
                         IsClickEnabled="True">
                         <settings:SettingsCard.HeaderIcon>
@@ -98,6 +103,7 @@
                     x:Name="AboutManager"
                     Grid.Row="5"
                     Description="by JurijG"
+                    FontFamily="Segoe UI Variable Display"
                     Header="PortableAppsManager">
                     <settings:SettingsExpander.HeaderIcon>
                         <ImageIcon
@@ -110,6 +116,7 @@
                         <settings:SettingsCard Header="Version">
                             <TextBlock
                                 x:Name="VersionBlock"
+                                FontFamily="Segoe UI Variable Display"
                                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                 IsTextSelectionEnabled="True" />
                         </settings:SettingsCard>
@@ -118,9 +125,9 @@
                         <settings:SettingsCard>
                             <settings:SettingsCard.Header>
                                 <StackPanel Orientation="Horizontal" Spacing="4">
-                                    <HyperlinkButton Content="Source Code" />
-                                    <HyperlinkButton Content="PortableApps.com" />
-                                    <HyperlinkButton Content="Windows Community Toolkit" />
+                                    <HyperlinkButton Content="Source Code" FontFamily="Segoe UI Variable Display" />
+                                    <HyperlinkButton Content="PortableApps.com" FontFamily="Segoe UI Variable Display" />
+                                    <HyperlinkButton Content="Windows Community Toolkit" FontFamily="Segoe UI Variable Display" />
                                 </StackPanel>
                             </settings:SettingsCard.Header>
                         </settings:SettingsCard>

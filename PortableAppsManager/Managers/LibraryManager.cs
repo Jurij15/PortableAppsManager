@@ -63,5 +63,37 @@ namespace PortableAppsManager.Managers
 
             ConfigJson.SaveSettings();
         }
+
+        public void UpdateApp(AppItem ModifiedAppItem)
+        {
+            foreach (var app in Globals.Settings.Apps)
+            {
+                if (app.ID == ModifiedAppItem.ID)
+                {
+                    int index = Globals.Settings.Apps.IndexOf(app);
+                    RemoveAppFromLibrary(ModifiedAppItem);
+
+                    Globals.Settings.Apps.Insert(index, ModifiedAppItem);
+                    break;
+                }
+            }
+
+            ConfigJson.SaveSettings();
+        }
+
+        public List<AppItem> GetPinnedApps()
+        {
+            List<AppItem> apps = new List<AppItem>();
+
+            foreach (var item in Globals.Settings.Apps)
+            {
+                if (item.PinToHome)
+                {
+                    apps.Add(item);
+                }
+            }
+
+            return apps;
+        }
     }
 }

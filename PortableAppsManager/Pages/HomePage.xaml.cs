@@ -1,3 +1,4 @@
+using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -39,17 +40,17 @@ namespace PortableAppsManager.Pages
 
         private void PinnedAppsPanel_Loaded(object sender, RoutedEventArgs e)
         {
-            PinnedApps.Add(new AppItem() { AppName = "App1" });
-            PinnedApps.Add(new AppItem() { AppName = "App2" });
-            PinnedApps.Add(new AppItem() { AppName = "App3" });
-            PinnedApps.Add(new AppItem() { AppName = "App4" });
-
+            PinnedApps = Globals.library.GetPinnedApps();
             PinnedAppsPanel.ItemsSource = PinnedApps;
         }
 
         private void Grid_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
-            MessageBox.Show("PointerReleased on template!", "Debug");
+        }
+
+        private void PinnedAppsPanel_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            PinnedAppsPanel.DeselectAll();
         }
     }
 }

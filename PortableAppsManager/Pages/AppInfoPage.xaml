@@ -159,6 +159,7 @@
                 <InfoBar
                     x:Name="LaunchSuccessfulInfoBar"
                     Grid.Row="0"
+                    Margin="0,0,0,6"
                     FontFamily="Segoe UI Variable Display"
                     IsOpen="False"
                     Message="App Launched succesfully"
@@ -166,6 +167,7 @@
                 <InfoBar
                     x:Name="RefreshAppToUpdate"
                     Grid.Row="0"
+                    Margin="0,0,0,6"
                     FontFamily="Segoe UI Variable Display"
                     IsOpen="False"
                     Message="Navigate back and select the app again to apply changes!"
@@ -174,15 +176,13 @@
                     x:Name="AppExeMissingInfoBar"
                     Title="Executable Missing"
                     Grid.Row="0"
+                    Margin="0,0,0,6"
                     FontFamily="Segoe UI Variable Display"
                     IsClosable="False"
                     IsOpen="False"
                     Message="Launching is disabled because program executable is missing!"
                     Severity="Error" />
-                <controls:AppInfoHeaderedControl
-                    Grid.Row="1"
-                    Margin="0,6,0,0"
-                    Header="Description">
+                <controls:AppInfoHeaderedControl Grid.Row="1" Header="Description">
                     <TextBlock
                         x:Name="AppDesc"
                         Grid.Row="4"
@@ -272,8 +272,30 @@
                     </GridView>
                 </controls:AppInfoHeaderedControl>
                 <controls:AppInfoHeaderedControl
-                    x:Name="PortableAppsPane"
+                    x:Name="AppOptionsPane"
                     Grid.Row="3"
+                    Margin="0,6,0,0"
+                    Header="App Options"
+                    Loaded="AppOptionsPane_Loaded">
+                    <StackPanel Orientation="Horizontal" Spacing="4">
+                        <StackPanel.ChildrenTransitions>
+                            <RepositionThemeTransition IsStaggeringEnabled="False" />
+                        </StackPanel.ChildrenTransitions>
+                        <Button x:Name="UpdateAppButton" ToolTipService.ToolTip="Update">
+                            <StackPanel Orientation="Horizontal" Spacing="2">
+                                <FontIcon Glyph="&#xE898;" />
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="PinAppButton" ToolTipService.ToolTip="Pin To Home" Click="PinAppButton_Click">
+                            <StackPanel Orientation="Horizontal" Spacing="2">
+                                <FontIcon x:Name="PinningIcon" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </controls:AppInfoHeaderedControl>
+                <controls:AppInfoHeaderedControl
+                    x:Name="PortableAppsPane"
+                    Grid.Row="4"
                     Margin="0,6,0,0"
                     Header="PortableApps.com Information">
                     <StackPanel>
