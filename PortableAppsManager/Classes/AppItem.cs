@@ -13,6 +13,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.IO;
 using static PortableAppsManager.Core.Driller;
+using Serilog;
 
 namespace PortableAppsManager.Classes
 {
@@ -77,6 +78,7 @@ namespace PortableAppsManager.Classes
 
         public AppItem DrillerFoundAppToAppItem(DrillerFoundApp found)
         {
+            
             AppItem item = new AppItem();
             item.ID = Guid.NewGuid().ToString();
             string n = Path.GetFileNameWithoutExtension(found.ExecutablePath);
@@ -84,6 +86,9 @@ namespace PortableAppsManager.Classes
             item.AppName = res;
             item.ExePath = found.ExecutablePath;
             item.Tags = new List<string>();
+
+            Log.Verbose($"App Name: {item.AppName}");
+            Log.Verbose($"App ExePath: {item.ExePath}");
 
             //reset the portableapps variables
             item.PortableApps_IsShareable = false;
@@ -146,6 +151,7 @@ namespace PortableAppsManager.Classes
                 }
             }
 
+            
             return item;
         }
     }

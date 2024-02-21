@@ -4,6 +4,7 @@ using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml.Media.Animation;
 using PortableAppsManager.Helpers;
 using PortableAppsManager.Interop;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -25,10 +26,12 @@ namespace PortableAppsManager.Core
         { 
             DirectoryPath = DirPath;
             Exceptions = exceptions;
+            Log.Verbose($"Scanner Loaded, DirectoryPath: {DirectoryPath}, Exceptions count: {exceptions.Count.ToString()}");
         }
 
         private bool IsDirOnExceptionList(string Path)
         {
+            
             bool returnVal = false;
             foreach (var item in Exceptions)
             {
@@ -43,12 +46,16 @@ namespace PortableAppsManager.Core
 
         public List<Driller.DrillerFoundApp> ScanDirectory()
         {
+            
             FoundAppList = new List<Driller.DrillerFoundApp> ();
 
+            Log.Verbose("Scanning directories");
             foreach (var item in Directory.GetDirectories(DirectoryPath))
             {
+                Log.Verbose($"directory found: {item}");
                 if (IsDirOnExceptionList(item))
                 {
+                    Log.Verbose($"directory {item} is on ExecptionList, skipping");
                     continue;
                 }
                 else
@@ -57,6 +64,9 @@ namespace PortableAppsManager.Core
                 }
             }
 
+            Log.Verbose($"found {FoundAppList.Count} apps in {Directory.GetDirectories(DirectoryPath, "*", SearchOption.AllDirectories).Count()} directories");
+
+            Log.Verbose("organizing array");
             List<Driller.DrillerFoundApp> organizedlist = new List<DrillerFoundApp>();
             List<Driller.DrillerFoundApp> originals = FoundAppList;
             //check he array for portableappps
@@ -89,12 +99,14 @@ namespace PortableAppsManager.Core
             //clear to save memory
             originals.Clear();
 
+            
             return FoundAppList;
         }
 
         //maybe make it multithreaded/ async in some way, it could hang the ui thread
         private void DirectoryFound(string DirectoryPath)
         {
+            Log.Verbose("DirectoryFound: " + DirectoryPath);
             //first, lets get all files in directory
             //if it is NOT portableapps, scan it for every single exe and add it to a list
             if (!IsPortableAppsDir(DirectoryPath))

@@ -293,8 +293,8 @@ namespace PortableAppsManager.Pages
             */
 
             Globals.library.UpdateApp(item);
-
-            AppWasModified = AppItemModificationType.Modified;
+            Bindings.Update();
+            //AppWasModified = AppItemModificationType.Modified;
 
             RefreshAppToUpdate.IsOpen = true;
         }

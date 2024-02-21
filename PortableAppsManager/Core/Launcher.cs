@@ -1,5 +1,6 @@
 ﻿using PortableAppsManager.Classes;
 using PortableAppsManager.Services;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -17,18 +18,21 @@ namespace PortableAppsManager.Core
         public Launcher(AppItem a) 
         { 
             App = a;
+            Log.Verbose($"loaded Launcher with ExePath: {App.ExePath}");
         }
         public Launcher() { }
 
         #region Static Functions
         public static bool IsAppLaunchAvailable(string ExecutablePath)
         {
+            
             return File.Exists(ExecutablePath);
         }
         #endregion
 
         public void Launch(AppItem a, bool UseShellExecute = false) 
         {
+            
             try
             {
                 Process process = new Process();
@@ -55,10 +59,13 @@ namespace PortableAppsManager.Core
             {
                 throw;
             }
+
+            
         }
 
         public void Launch(bool UseShellExecute = false)
         {
+            
             try
             {
                 Process process = new Process();
@@ -85,6 +92,8 @@ namespace PortableAppsManager.Core
             {
                 throw;
             }
+
+            
         }
     }
 }
