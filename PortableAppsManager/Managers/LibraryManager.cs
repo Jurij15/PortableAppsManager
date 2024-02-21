@@ -25,7 +25,7 @@ namespace PortableAppsManager.Managers
             return Globals.Settings.Apps;
         }
 
-        public List<Driller.DrillerFoundApp> IndexLibrary(string DirectoryPath, List<string> Exceptions, bool IgnoreExisting = false)
+        public List<Driller.DrillerFoundApp> TopLevelIndexLibrary(string DirectoryPath, List<string> Exceptions, bool IgnoreExisting = false)
         {
             List<Driller.DrillerFoundApp> drills = new List<Driller.DrillerFoundApp> ();
 
@@ -38,6 +38,27 @@ namespace PortableAppsManager.Managers
             }
 
             var temp = _driller.GetAllAppsInsideDirectory(DirectoryPath, Exceptions);
+
+            drills = temp.ToList();
+
+            return drills;
+        }
+
+        public List<Driller.DrillerFoundApp> IndexLibrary(string DirectoryPath, List<string> Exceptions, bool IgnoreExisting = false)
+        {
+            Scanner _scanner;
+            List<Driller.DrillerFoundApp> drills = new List<Driller.DrillerFoundApp>();
+
+            if (IgnoreExisting)
+            {
+                foreach (var item in Globals.Settings.Apps)
+                {
+                    Exceptions.Add(Path.GetDirectoryName(item.ExePath));
+                }
+            }
+
+            _scanner = new Scanner(DirectoryPath, Exceptions);
+            var temp = _scanner.ScanDirectory();
 
             drills = temp.ToList();
 

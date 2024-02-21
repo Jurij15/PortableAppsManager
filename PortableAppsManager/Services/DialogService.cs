@@ -24,7 +24,7 @@ namespace PortableAppsManager.Services
 
             dialog.DefaultButton = ContentDialogButton.Close;
 
-            dialog.ShowAsync();
+            await dialog.ShowAsync();
         }
 
         public static ContentDialog CreateBlankContentDialog(bool SetDefaultStyle)

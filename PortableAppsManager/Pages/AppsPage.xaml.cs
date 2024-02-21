@@ -42,7 +42,7 @@ namespace PortableAppsManager.Pages
         TagsService tags;
         bool AppsItemsLoaded = false;
 
-        List<string> _currentTags;
+        List<string> _currentTags = new List<string>();
 
         public class DisplayApp
         {

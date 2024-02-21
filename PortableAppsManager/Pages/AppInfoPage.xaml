@@ -294,6 +294,57 @@
                                 <FontIcon x:Name="PinningIcon" />
                             </StackPanel>
                         </Button>
+
+                        <Button x:Name="myButton" Visibility="Collapsed">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Grid>
+                                        <Grid>
+                                            <TextBlock
+                                                x:Name="label"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                Opacity="0"
+                                                Text="My Label">
+                                                <TextBlock.RenderTransform>
+                                                    <TranslateTransform X="-50" />
+                                                </TextBlock.RenderTransform>
+                                            </TextBlock>
+                                            <!--  Replace this with your icon  -->
+                                            <SymbolIcon
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Symbol="Accept" />
+                                        </Grid>
+                                        <VisualStateManager.VisualStateGroups>
+                                            <VisualStateGroup x:Name="CommonStates">
+                                                <VisualState x:Name="Normal">
+                                                    <Storyboard>
+                                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="label" Storyboard.TargetProperty="Opacity">
+                                                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="0" />
+                                                        </ObjectAnimationUsingKeyFrames>
+                                                    </Storyboard>
+                                                </VisualState>
+                                                <VisualState x:Name="PointerOver">
+                                                    <Storyboard>
+                                                        <DoubleAnimation
+                                                            Storyboard.TargetName="label"
+                                                            Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+                                                            From="-50"
+                                                            To="0"
+                                                            Duration="0:0:0.3" />
+                                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="label" Storyboard.TargetProperty="Opacity">
+                                                            <EasingDoubleKeyFrame KeyTime="0" Value="0" />
+                                                            <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1" />
+                                                        </DoubleAnimationUsingKeyFrames>
+                                                    </Storyboard>
+                                                </VisualState>
+                                            </VisualStateGroup>
+                                        </VisualStateManager.VisualStateGroups>
+                                    </Grid>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
                     </StackPanel>
                 </controls:AppInfoHeaderedControl>
                 <controls:AppInfoHeaderedControl
