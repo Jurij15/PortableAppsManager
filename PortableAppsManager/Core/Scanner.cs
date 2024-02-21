@@ -82,14 +82,13 @@ namespace PortableAppsManager.Core
             {
                 organizedlist.Add(item);
             }
-            MessageBox.Show(originals.Count.ToString(), organizedlist.Count.ToString());
+
             FoundAppList = null;
             FoundAppList = organizedlist;
 
             //clear to save memory
             originals.Clear();
 
-            MessageBox.Show(FoundAppList.Count.ToString());
             return FoundAppList;
         }
 

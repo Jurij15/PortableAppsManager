@@ -88,6 +88,7 @@
             <Grid Grid.Column="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <CommandBar
@@ -134,9 +135,18 @@
                         </AppBarButton.Icon>
                     </AppBarButton>
                 </CommandBar>
+                <AutoSuggestBox
+                    x:Name="SearchBox"
+                    Grid.Row="1"
+                    Margin="0,2,0,2"
+                    FontFamily="Segoe UI Variable Display"
+                    PlaceholderText="Search for Executable name"
+                    QueryIcon="Find"
+                    SuggestionChosen="SearchBox_SuggestionChosen"
+                    TextChanged="SearchBox_TextChanged" />
                 <ListView
                     x:Name="AppList"
-                    Grid.Row="1"
+                    Grid.Row="2"
                     Grid.Column="0"
                     ScrollViewer.VerticalScrollBarVisibility="Visible"
                     SelectionChanged="AppList_SelectionChanged">

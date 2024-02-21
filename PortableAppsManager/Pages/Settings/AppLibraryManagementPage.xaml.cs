@@ -346,5 +346,45 @@ namespace PortableAppsManager.Pages.Settings
         {
             IgnoreExistingAppsCheck.IsChecked = NavigationParams.IgnoreAlreadyExisting;
         }
+
+        private void SearchBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
+            // Since selecting an item will also change the text,
+            // only listen to changes caused by user entering text.
+            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+            {
+                var suitableItems = new List<string>();
+                foreach (var app in Apps)
+                {
+                    if (Path.GetFileNameWithoutExtension(app.ExePath).ToLower().Contains(sender.Text))
+                    {
+                        suitableItems.Add(Path.GetFileNameWithoutExtension(app.ExePath));
+                    }
+                }
+                if (suitableItems.Count == 0)
+                {
+                    suitableItems.Add("No results found");
+                }
+                sender.ItemsSource = suitableItems;
+            }
+        }
+
+        private void SearchBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
+        {
+            if (args.SelectedItem.ToString() == "No results found")
+            {
+                return;
+            }
+
+            foreach (var app in Apps)
+            {
+                if (Path.GetFileNameWithoutExtension(app.ExePath) == sender.Text)
+                {
+                    AppList.ScrollIntoView(app);
+                    AppList.SelectedIndex = Apps.IndexOf(app); 
+                    break;
+                }
+            }
+        }
     }
 }
