@@ -281,6 +281,7 @@ namespace PortableAppsManager.Pages
             item = null;
             item = modified;
 
+            /*
             foreach (var iitem in Globals.Settings.Apps)
             {
                 if (iitem.ID == item.ID)
@@ -289,6 +290,9 @@ namespace PortableAppsManager.Pages
                     break;
                 }
             }
+            */
+
+            Globals.library.UpdateApp(item);
 
             AppWasModified = AppItemModificationType.Modified;
 
@@ -297,16 +301,7 @@ namespace PortableAppsManager.Pages
 
         private void RemoveAppBtnConfirm_Click(object sender, RoutedEventArgs e)
         {
-            foreach (var app in Globals.Settings.Apps)
-            {
-                if (app.ID == item.ID)
-                {
-                    Globals.Settings.Apps.Remove(app);
-                    break;
-                }
-            }
-
-            ConfigJson.SaveSettings();
+            Globals.library.RemoveAppFromLibrary(item);
 
             AppWasModified = AppItemModificationType.Deleted;
 

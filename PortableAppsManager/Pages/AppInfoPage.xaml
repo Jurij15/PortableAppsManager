@@ -286,7 +286,10 @@
                                 <FontIcon Glyph="&#xE898;" />
                             </StackPanel>
                         </Button>
-                        <Button x:Name="PinAppButton" ToolTipService.ToolTip="Pin To Home" Click="PinAppButton_Click">
+                        <Button
+                            x:Name="PinAppButton"
+                            Click="PinAppButton_Click"
+                            ToolTipService.ToolTip="Pin To Home">
                             <StackPanel Orientation="Horizontal" Spacing="2">
                                 <FontIcon x:Name="PinningIcon" />
                             </StackPanel>

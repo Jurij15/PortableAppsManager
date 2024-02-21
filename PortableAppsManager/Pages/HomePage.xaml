@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:classes="using:PortableAppsManager.Classes"
     xmlns:controls="using:PortableAppsManager.Controls"
+    xmlns:core="using:PortableAppsManager.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:helpers="using:PortableAppsManager.Helpers"
     xmlns:local="using:PortableAppsManager.Pages"
@@ -39,48 +40,69 @@
                     Loaded="PinnedAppsPanel_Loaded"
                     SelectionChanged="PinnedAppsPanel_SelectionChanged"
                     SelectionMode="Single">
+                    <GridView.ItemContainerTransitions>
+                        <AddDeleteThemeTransition />
+                    </GridView.ItemContainerTransitions>
                     <GridView.ItemTemplate>
                         <DataTemplate x:DataType="classes:AppItem">
-                            <Grid
-                                Width="170"
-                                MaxHeight="150"
-                                Margin="2"
-                                Padding="14"
-                                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                                CornerRadius="6"
-                                PointerReleased="Grid_PointerPressed">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-                                <Image
-                                    x:Name="AppIcon"
-                                    Grid.Row="0"
-                                    Width="48"
-                                    Height="48"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Top"
-                                    Source="{x:Bind helpers:ImageHelper.GetImageSource(SourceType, AppImageSourcePath, ExePath)}" />
-                                <TextBlock
-                                    x:Name="AppNameBlock"
-                                    Grid.Row="1"
-                                    Margin="0,2,0,0"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    FontFamily="Segoe UI Variable Display"
-                                    Style="{ThemeResource BodyStrongTextBlockStyle}"
-                                    Text="{x:Bind AppName}"
-                                    TextTrimming="CharacterEllipsis"
-                                    TextWrapping="WrapWholeWords" />
-                                <GridView Grid.Row="2">
-                                    <GridView.ItemTemplate>
-                                        <DataTemplate />
-                                    </GridView.ItemTemplate>
-                                </GridView>
-                            </Grid>
+                            <ContentControl IsEnabled="{x:Bind core:Launcher.IsAppLaunchAvailable(ExePath)}">
+                                <Grid
+                                    Width="170"
+                                    MaxHeight="150"
+                                    Margin="2"
+                                    Padding="14"
+                                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                    CornerRadius="6"
+                                    PointerReleased="Grid_PointerPressed"
+                                    RightTapped="Grid_RightTapped"
+                                    Tag="{x:Bind}">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <StackPanel
+                                        Grid.Row="0"
+                                        Width="48"
+                                        Height="48"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Top">
+                                        <StackPanel.ChildrenTransitions>
+                                            <PopupThemeTransition />
+                                        </StackPanel.ChildrenTransitions>
+                                        <Image
+                                            x:Name="AppIcon"
+                                            Source="{x:Bind helpers:ImageHelper.GetImageSource(SourceType, AppImageSourcePath, ExePath)}"
+                                            Visibility="Visible" />
+                                        <ProgressRing
+                                            x:Name="LaunchingRing"
+                                            MinWidth="32"
+                                            MinHeight="32"
+                                            HorizontalAlignment="Stretch"
+                                            VerticalAlignment="Stretch"
+                                            IsIndeterminate="True"
+                                            Tag="{x:Bind}" />
+                                    </StackPanel>
+                                    <TextBlock
+                                        x:Name="AppNameBlock"
+                                        Grid.Row="1"
+                                        Margin="0,2,0,0"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        FontFamily="Segoe UI Variable Display"
+                                        Style="{ThemeResource BodyStrongTextBlockStyle}"
+                                        Text="{x:Bind AppName}"
+                                        TextTrimming="CharacterEllipsis"
+                                        TextWrapping="WrapWholeWords" />
+                                    <GridView Grid.Row="2">
+                                        <GridView.ItemTemplate>
+                                            <DataTemplate />
+                                        </GridView.ItemTemplate>
+                                    </GridView>
+                                </Grid>
+                            </ContentControl>
                         </DataTemplate>
                     </GridView.ItemTemplate>
                 </GridView>

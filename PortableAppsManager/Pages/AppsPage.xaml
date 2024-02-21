@@ -131,5 +131,25 @@
             Grid.Row="2"
             Loaded="AppItems_Loaded"
             SelectionMode="None" />
+        <Grid
+            x:Name="LoadingGrid"
+            Grid.Row="2"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <ProgressRing
+                Grid.Row="0"
+                HorizontalAlignment="Center"
+                IsIndeterminate="True" />
+            <TextBlock
+                Grid.Row="1"
+                HorizontalAlignment="Center"
+                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                Style="{ThemeResource BodyStrongTextBlockStyle}"
+                Text="Loading..." Margin="0,4,0,0"/>
+        </Grid>
     </Grid>
 </Page>

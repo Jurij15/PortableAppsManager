@@ -85,7 +85,11 @@ namespace PortableAppsManager.Pages
         private void LoadApps(HashSet<string> Tags, string ContainingName)
         {
             AppItems.Items.Clear();
-            foreach (var item in Globals.Settings.Apps)
+
+            AppItems.Visibility = Visibility.Collapsed;
+            LoadingGrid.Visibility = Visibility.Visible;
+
+            foreach (var item in Globals.library.GetAllApps())
             {
                 bool ShouldAddApp = true;
                 AppItemControl control = new AppItemControl();
@@ -168,6 +172,9 @@ namespace PortableAppsManager.Pages
                     }
                 }
             }
+
+            AppItems.Visibility = Visibility.Visible;
+            LoadingGrid.Visibility = Visibility.Collapsed;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -192,7 +199,7 @@ namespace PortableAppsManager.Pages
             if (AppWasModified == AppItemModificationType.Modified)
             {
                 AppItem item = null;
-                foreach (var listitem in Globals.Settings.Apps)
+                foreach (var listitem in Globals.library.GetAllApps())
                 {
                     if (listitem.ID == CachedItem.AppItem.ID)
                     {
