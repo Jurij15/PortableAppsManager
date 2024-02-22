@@ -144,7 +144,8 @@ namespace PortableAppsManager.Pages
 
         private async void UsagePercentageGauge_Loaded(object sender, RoutedEventArgs e)
         {
-            _totalDiskSize = StorageHelper.BytesToHumanReadable(storageService.GetDriveTotalSpaceAsync(Globals.Settings.PortableAppsDirectory));
+            //why am i doing it this way
+            _totalDiskSize = StorageHelper.BytesToHumanReadable(await storageService.GetRemainingDiskQuota());
 
             long dirSize = await Task.Run(() => storageService.GetDirSize(new DirectoryInfo( Globals.Settings.PortableAppsDirectory)));
 
@@ -152,10 +153,15 @@ namespace PortableAppsManager.Pages
 
             //MessageBox.Show(Convert.ToInt32(percentageUsed).ToString(), storageService.GetDriveTotalSpaceAsync(Globals.Settings.PortableAppsDirectory).ToString());
 
-            UsagePercentageGauge.Maximum = 100;
-            UsagePercentageGauge.Value = Convert.ToInt32(percentageUsed);
+            UsagePercentageGauge.Maximum = StorageHelper.BytesToGB(Globals.Settings.MaxDiskUsageBytes);
+            UsagePercentageGauge.Value = StorageHelper.BytesToGB((Globals.Settings.MaxDiskUsageBytes - await storageService.GetRemainingDiskQuota()));
 
             _totalFolderSize = StorageHelper.BytesToHumanReadable(Convert.ToInt64(dirSize));
+
+            if (await storageService.IsDirQuotaReached())
+            {
+                LimitReached.Visibility = Visibility.Visible;
+            }
 
             Bindings.Update();
         }

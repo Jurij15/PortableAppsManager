@@ -149,7 +149,8 @@
                     <settings:SettingsExpander
                         Description="Import or export settings backup"
                         FontFamily="Segoe UI Variable Display"
-                        Header="Manage backups">
+                        Header="Manage backups"
+                        IsEnabled="False">
                         <settings:SettingsExpander.HeaderIcon>
                             <FontIcon Glyph="&#xE777;" />
                         </settings:SettingsExpander.HeaderIcon>
@@ -199,9 +200,22 @@
                         <settings:SettingsCard>
                             <settings:SettingsCard.Header>
                                 <StackPanel Orientation="Horizontal" Spacing="4">
-                                    <HyperlinkButton Content="Source Code" FontFamily="Segoe UI Variable Display" />
-                                    <HyperlinkButton Content="PortableApps.com" FontFamily="Segoe UI Variable Display" />
-                                    <HyperlinkButton Content="Windows Community Toolkit" FontFamily="Segoe UI Variable Display" />
+                                    <HyperlinkButton
+                                        Content="Source Code"
+                                        FontFamily="Segoe UI Variable Display"
+                                        NavigateUri="https://github.com/Jurij15/PortableAppsManager" />
+                                    <HyperlinkButton
+                                        Content="PortableApps.com"
+                                        FontFamily="Segoe UI Variable Display"
+                                        NavigateUri="https://portableapps.com/apps" />
+                                    <HyperlinkButton
+                                        Content="Windows Community Toolkit"
+                                        FontFamily="Segoe UI Variable Display"
+                                        NavigateUri="https://github.com/CommunityToolkit/Windows" />
+                                    <HyperlinkButton
+                                        Content="Report a Bug"
+                                        FontFamily="Segoe UI Variable Display"
+                                        NavigateUri="https://github.com/Jurij15/PortableAppsManager/issues/new" />
                                 </StackPanel>
                             </settings:SettingsCard.Header>
                         </settings:SettingsCard>

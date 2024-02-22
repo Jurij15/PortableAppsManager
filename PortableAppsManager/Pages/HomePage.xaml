@@ -131,15 +131,25 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <toolkit:RadialGauge
-                            x:Name="UsagePercentageGauge"
-                            MaxWidth="120"
-                            MaxHeight="120"
-                            FontSize="48"
-                            IsInteractive="False"
-                            Loaded="UsagePercentageGauge_Loaded"
-                            NeedleLength="0"
-                            TickLength="0" />
+                        <StackPanel Grid.Column="0">
+                            <toolkit:RadialGauge
+                                x:Name="UsagePercentageGauge"
+                                Grid.Column="0"
+                                MaxWidth="120"
+                                MaxHeight="120"
+                                FontSize="48"
+                                IsInteractive="False"
+                                Loaded="UsagePercentageGauge_Loaded"
+                                NeedleLength="0"
+                                TickLength="0" />
+                            <TextBlock
+                                Grid.Column="0"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Bottom"
+                                Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                                Style="{ThemeResource CaptionTextBlockStyle}"
+                                Text="Quota Usage In GB" />
+                        </StackPanel>
                         <StackPanel Grid.Column="1" Margin="8">
                             <TextBlock
                                 Margin="0,4,0,2"
@@ -152,11 +162,17 @@
                             <TextBlock
                                 Margin="0,4,0,2"
                                 FontFamily="Segoe UI Variable Display"
-                                Text="Total Disk Size" />
+                                Text="Remaining Quota" />
                             <TextBlock
                                 FontFamily="Segoe UI Variable Display"
                                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                 Text="{x:Bind _totalDiskSize, Mode=OneWay}" />
+                            <TextBlock
+                                x:Name="LimitReached"
+                                FontFamily="Segoe UI Variable Display"
+                                Foreground="{ThemeResource SystemFillColorCriticalBrush}"
+                                Text="Quota Limit Reached"
+                                Visibility="Collapsed" />
                             <TextBlock
                                 Margin="0,8,0,2"
                                 FontFamily="Segoe UI Variable Display"

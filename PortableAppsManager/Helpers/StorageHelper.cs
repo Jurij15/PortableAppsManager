@@ -30,5 +30,29 @@ namespace PortableAppsManager.Helpers
                 return $"{bytes} bytes";
             }
         }
+
+        public static double BytesToGB(long bytes)
+        {
+            const double bytesInGB = 1024 * 1024 * 1024;
+            return (double)bytes / bytesInGB;
+        }
+
+        public static long GBToBytes(double gigabytes)
+        {
+            const long bytesInGB = 1024 * 1024 * 1024;
+            return (long)(gigabytes * bytesInGB);
+        }
+
+        public static double BytesToMB(long bytes)
+        {
+            const double bytesInMB = 1024 * 1024;
+            return (double)bytes / bytesInMB;
+        }
+
+        //just because of xaml folder view in storagepage
+        public static string BytesToMBString(long bytes)
+        {
+            return Convert.ToInt32(BytesToMB(bytes)).ToString() + " MB";
+        }
     }
 }

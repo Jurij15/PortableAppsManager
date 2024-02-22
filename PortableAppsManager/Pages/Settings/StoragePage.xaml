@@ -10,6 +10,7 @@
     xmlns:local="using:PortableAppsManager.Pages.Settings"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:navigation="using:NavigationService"
+    xmlns:services="using:PortableAppsManager.Services"
     xmlns:settings="using:CommunityToolkit.WinUI.Controls"
     xmlns:toolkit="using:CommunityToolkit.WinUI.Controls"
     xmlns:ui="using:CommunityToolkit.WinUI"
@@ -20,6 +21,9 @@
     mc:Ignorable="d">
     <ScrollView>
         <Grid Margin="{StaticResource DefaultPageMargin}">
+            <Grid.ChildrenTransitions>
+                <RepositionThemeTransition IsStaggeringEnabled="False" />
+            </Grid.ChildrenTransitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -27,15 +31,16 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <Grid Grid.Row="0">
+            <InfoBar
+                x:Name="QuotaReachedInfoBar"
+                Title="Quota Reached"
+                Margin="4,4,4,0"
+                IsClosable="False"
+                IsOpen="False"
+                Message="You reached disk usage quota you set. Clear some space or change quota."
+                Severity="Error" />
+            <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
@@ -45,7 +50,8 @@
                     Margin="4"
                     Padding="12"
                     Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                    CornerRadius="6">
+                    CornerRadius="6"
+                    Spacing="2">
                     <toolkit:RadialGauge
                         x:Name="UsagePercentageGauge"
                         MaxWidth="200"
@@ -56,6 +62,11 @@
                         NeedleLength="0"
                         TickLength="0"
                         ToolTipService.ToolTip="Storage usage percentage" />
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                        Style="{ThemeResource CaptionTextBlockStyle}"
+                        Text="Library disk usage percentage" />
                 </StackPanel>
                 <Grid
                     Grid.Column="1"
@@ -119,8 +130,134 @@
                                 Text="{x:Bind _useddiskspace, Mode=OneWay}" />
                         </StackPanel>
                         <AppBarSeparator Grid.Column="1" />
+                        <Grid Grid.Column="2">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <StackPanel Grid.Row="0" Margin="12,0,0,0">
+                                <TextBlock
+                                    Margin="0,4,0,2"
+                                    FontFamily="Segoe UI Variable Display"
+                                    Text="Disk Usage Quota" />
+                                <TextBlock
+                                    FontFamily="Segoe UI Variable Display"
+                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                    Text="{x:Bind _currentdiskusagequota, Mode=OneWay}" />
+                                <TextBlock
+                                    Margin="0,4,0,2"
+                                    FontFamily="Segoe UI Variable Display"
+                                    Text="Remaining Quota" />
+                                <TextBlock
+                                    FontFamily="Segoe UI Variable Display"
+                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                    Text="{x:Bind _remainingquota, Mode=OneWay}" />
+                                <TextBlock
+                                    Margin="0,4,0,2"
+                                    FontFamily="Segoe UI Variable Display"
+                                    Text="Used Quota" />
+                                <TextBlock
+                                    FontFamily="Segoe UI Variable Display"
+                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                    Text="{x:Bind _usedquota, Mode=OneWay}" />
+                            </StackPanel>
+                            <StackPanel
+                                Grid.Row="1"
+                                HorizontalAlignment="Center"
+                                Orientation="Horizontal"
+                                Spacing="4">
+                                <Button
+                                    x:Name="ModifyDiskUsageQuota"
+                                    Grid.Column="0"
+                                    Content="Modify Disk Quota">
+                                    <Button.Flyout>
+                                        <Flyout x:Name="ModifyDiskUsageQuotaFlyout" ShouldConstrainToRootBounds="False">
+                                            <StackPanel x:Name="ModifyDiskUsageQuotaFlyoutPanel" Spacing="4">
+                                                <TextBlock Style="{ThemeResource CaptionTextBlockStyle}" Text="Modify Disk Usage Quota" />
+                                                <Slider
+                                                    x:Name="ModifyQuotaSlider"
+                                                    Width="200"
+                                                    Loaded="ModifyQuotaSlider_Loaded"
+                                                    ValueChanged="ModifyQuotaSlider_ValueChanged"
+                                                    Visibility="Visible" />
+                                                <NumberBox
+                                                    x:Name="ModifyQuotaBox"
+                                                    HorizontalAlignment="Center"
+                                                    Loaded="ModifyQuotaBox_Loaded"
+                                                    ValueChanged="ModifyQuotaBox_ValueChanged" />
+                                                <TextBlock
+                                                    HorizontalAlignment="Center"
+                                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                    Style="{ThemeResource CaptionTextBlockStyle}"
+                                                    Text="* All values are provided in GB" />
+                                            </StackPanel>
+                                        </Flyout>
+                                    </Button.Flyout>
+                                </Button>
+                                <Button
+                                    x:Name="WhatsThisBtn"
+                                    Grid.Column="1"
+                                    HorizontalAlignment="Stretch"
+                                    Click="WhatsThisBtn_Click"
+                                    Content="What's This?" />
+                                <TeachingTip
+                                    x:Name="WhatsThisTip"
+                                    Title="Disk Usage Quota"
+                                    Subtitle="Enter the maximum amount of GB that can be used. Once filled, you'll receive a notification.">
+                                    <TeachingTip.IconSource>
+                                        <FontIconSource Glyph="&#xE897;" />
+                                    </TeachingTip.IconSource>
+                                </TeachingTip>
+                            </StackPanel>
+                        </Grid>
                     </Grid>
                 </Grid>
+            </Grid>
+            <Grid x:Name="FolderViewRootGrid" Grid.Row="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock
+                    Grid.Row="0"
+                    Margin="4,4,0,2"
+                    Style="{ThemeResource BodyStrongTextBlockStyle}"
+                    Text="Folder View" />
+                <GridView
+                    Grid.Row="1"
+                    ItemsSource="{x:Bind storageDirectorySizes}"
+                    SelectionMode="None">
+                    <GridView.ItemTemplate>
+                        <DataTemplate x:DataType="services:StorageDirectorySize">
+                            <StackPanel
+                                MinWidth="180"
+                                MinHeight="140"
+                                MaxWidth="180"
+                                MaxHeight="140"
+                                Padding="12"
+                                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                Spacing="2">
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                    Style="{ThemeResource BodyTextBlockStyle}"
+                                    Text="{x:Bind helpers:StorageHelper.BytesToMBString(SizeInBytes)}" />
+                                <ProgressBar
+                                    Width="130"
+                                    HorizontalAlignment="Center"
+                                    Maximum="{x:Bind helpers:StorageHelper.BytesToMB(TotalParentDirectorySizeInBytes)}"
+                                    Value="{x:Bind helpers:StorageHelper.BytesToMB(SizeInBytes)}" />
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                    Style="{ThemeResource BodyTextBlockStyle}"
+                                    Text="{x:Bind Path}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </GridView.ItemTemplate>
+                </GridView>
             </Grid>
         </Grid>
     </ScrollView>
