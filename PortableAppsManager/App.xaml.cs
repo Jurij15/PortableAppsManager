@@ -39,7 +39,7 @@ namespace PortableAppsManager
         {
             this.InitializeComponent();
 
-            bool ShowConsole = true; //get the variable somehow
+            bool ShowConsole = false; //get the variable somehow
             if (ShowConsole)
             {
                 ConsoleInterop.SetupConsole();

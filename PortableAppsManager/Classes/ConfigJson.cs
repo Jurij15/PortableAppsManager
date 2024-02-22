@@ -19,6 +19,9 @@ namespace PortableAppsManager.Classes
         public ElementTheme Theme { get; set; } = ElementTheme.Default;
         public BackdropService.Backdrops Backdrops { get; set; } = BackdropService.Backdrops.Mica;
 
+        public bool ShowDescriptionCard { get; set; } =true;
+        public bool ShowPortableAppsComCard { get; set; } =true;
+
         public string PortableAppsDirectory { get; set; }
 
         public List<AppItem> Apps = new List<AppItem>();

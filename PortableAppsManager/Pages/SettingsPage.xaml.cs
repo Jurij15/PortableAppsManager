@@ -83,5 +83,44 @@ namespace PortableAppsManager.Pages
             Globals.Settings.Backdrops = (BackdropService.Backdrops)BackdropCombo.SelectedIndex;
             BackdropService.ChangeBackdrop((BackdropService.Backdrops)BackdropCombo.SelectedIndex);
         }
+
+        private void Grid_Loaded(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ShowDescriptionCard_Checked(object sender, RoutedEventArgs e)
+        {
+            Globals.Settings.ShowDescriptionCard = Convert.ToBoolean((sender as CheckBox).IsChecked);
+            ConfigJson.SaveSettings();
+        }
+
+        private void ShowDescriptionCard_Unchecked(object sender, RoutedEventArgs e)
+        {
+            Globals.Settings.ShowDescriptionCard = Convert.ToBoolean((sender as CheckBox).IsChecked);
+            ConfigJson.SaveSettings();
+        }
+
+        private void ShowPortableAppsCard_Checked(object sender, RoutedEventArgs e)
+        {
+            Globals.Settings.ShowPortableAppsComCard = Convert.ToBoolean((sender as CheckBox).IsChecked);
+            ConfigJson.SaveSettings();
+        }
+
+        private void ShowPortableAppsCard_Unchecked(object sender, RoutedEventArgs e)
+        {
+            Globals.Settings.ShowPortableAppsComCard = Convert.ToBoolean((sender as CheckBox).IsChecked);
+            ConfigJson.SaveSettings();
+        }
+
+        private void ShowDescriptionCard_Loaded(object sender, RoutedEventArgs e)
+        {
+            (sender as CheckBox).IsChecked = Globals.Settings.ShowDescriptionCard;
+        }
+
+        private void ShowPortableAppsCard_Loaded(object sender, RoutedEventArgs e)
+        {
+            (sender as CheckBox).IsChecked = Globals.Settings.ShowPortableAppsComCard;
+        }
     }
 }

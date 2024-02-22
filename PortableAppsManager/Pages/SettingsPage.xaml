@@ -21,7 +21,7 @@
     </Page.Resources>
     <ScrollViewer>
         <Grid Margin="{StaticResource DefaultPageMargin}">
-            <Grid>
+            <Grid Loaded="Grid_Loaded">
                 <Grid.ChildrenTransitions>
                     <RepositionThemeTransition IsStaggeringEnabled="True" />
                 </Grid.ChildrenTransitions>
@@ -71,6 +71,37 @@
                             FontFamily="Segoe UI Variable Display"
                             Loaded="BackdropCombo_Loaded"
                             SelectionChanged="BackdropCombo_SelectionChanged" />
+                    </settings:SettingsCard>
+                    <settings:SettingsCard
+                        x:Name="CardsToShotOnAppInfoPage"
+                        Description="Cards to show when looking at app info"
+                        FontFamily="Segoe UI Variable Display"
+                        Header="Visible Cards">
+                        <settings:SettingsCard.HeaderIcon>
+                            <FontIcon Glyph="&#xF407;" />
+                        </settings:SettingsCard.HeaderIcon>
+                        <DropDownButton x:Name="EditDropDownCardsToShotOnAppInfoPageButton" Content="Edit">
+                            <DropDownButton.Flyout>
+                                <Flyout x:Name="CardsToShowOnAppInfoPageFlyout">
+                                    <StackPanel Spacing="2">
+                                        <CheckBox
+                                            x:Name="ShowDescriptionCard"
+                                            Checked="ShowDescriptionCard_Checked"
+                                            Content="Description"
+                                            FontFamily="Segoe UI Variable Display"
+                                            Loaded="ShowDescriptionCard_Loaded"
+                                            Unchecked="ShowDescriptionCard_Unchecked" />
+                                        <CheckBox
+                                            x:Name="ShowPortableAppsCard"
+                                            Checked="ShowPortableAppsCard_Checked"
+                                            Content="PortableApps.com Info"
+                                            FontFamily="Segoe UI Variable Display"
+                                            Loaded="ShowPortableAppsCard_Loaded"
+                                            Unchecked="ShowPortableAppsCard_Unchecked" />
+                                    </StackPanel>
+                                </Flyout>
+                            </DropDownButton.Flyout>
+                        </DropDownButton>
                     </settings:SettingsCard>
                 </StackPanel>
                 <TextBlock

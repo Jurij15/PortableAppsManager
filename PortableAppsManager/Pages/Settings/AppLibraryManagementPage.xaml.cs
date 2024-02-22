@@ -115,22 +115,10 @@ namespace PortableAppsManager.Pages.Settings
             ExceptionItems.Items.Clear();
         }
 
-        private async void ScanNowBtn_Click(object sender, RoutedEventArgs e)
+        private void LoadApps(List<Driller.DrillerFoundApp> foundapps)
         {
-            (sender as Button).IsEnabled = false;
-            ScanExpander.IsEnabled = false;
-            ScanExpander.Description = "Scan in progress...";
-            ProgressRing r = new ProgressRing() { IsIndeterminate = true };
-            r.Height = 20;
-            r.Width = 20;
-            (sender as Button).Content = r;
-
-            await Task.Delay(500);
-
-            try
+            DispatcherQueue.TryEnqueue(() =>
             {
-                List<Driller.DrillerFoundApp> foundapps = Globals.library.IndexLibrary(Globals.Settings.PortableAppsDirectory, GetAllExceptionsDirectories(), Convert.ToBoolean(IgnoreExistingAppsCheck.IsChecked));
-
                 foreach (var found in foundapps)
                 {
                     AppItem item = new AppItem();
@@ -143,10 +131,34 @@ namespace PortableAppsManager.Pages.Settings
                     {
                         item.Setup_IsPortableAppsCom = false;
                     }
-                    ScanExpander.Description = $"Found {item.AppName}";
 
                     Apps.Add(item);
                 }
+            });
+        }
+
+        private async void ScanNowBtn_Click(object sender, RoutedEventArgs e)
+        {
+            (sender as Button).IsEnabled = false;
+            ScanExpander.IsEnabled = false;
+            ScanExpander.Description = "Scan in progress...";
+            ProgressRing r = new ProgressRing() { IsIndeterminate = true };
+            r.Height = 20;
+            r.Width = 20;
+            //(sender as Button).Content = r;
+
+            await Task.Delay(500);
+
+            try
+            {
+
+                List<Driller.DrillerFoundApp> foundapps = await Globals.library.IndexLibrary(Globals.Settings.PortableAppsDirectory, GetAllExceptionsDirectories(), Convert.ToBoolean(IgnoreExistingAppsCheck.IsChecked), ScannerStarting, ScannerDirectoryChanged);
+
+                ScannerValuesCard.Description = "Preparing...";
+                ScanneerDirectoriesProgress.IsIndeterminate =true;
+                ProgressText.Visibility = Visibility.Collapsed;
+
+                await Task.Run(() => LoadApps(foundapps));
             }
             catch (Exception ex)
             {
@@ -154,19 +166,41 @@ namespace PortableAppsManager.Pages.Settings
                 throw;
             }
 
-            await Task.Delay(100);
+            await Task.Delay(2000);//waiting a moment seems to help reduce scrolling lag
 
             UpdateItemsSources();
 
             await Task.Delay(10);
             AppsGrid.Visibility = Visibility.Visible;
             ScanExpander.Visibility = Visibility.Collapsed;
-            //SaveChangesBtn.Visibility = Visibility.Visible;
+            ProgressText.Visibility = Visibility.Visible;
 
             if (Apps.Count > 0)
             {
                 AppList.SelectedIndex = 0;
             }
+        }
+
+        private async void ScannerStarting(int e)
+        {
+            ScanOptions.Visibility = Visibility.Collapsed;
+            ScannerValuesCard.Visibility = Visibility.Visible;
+            ScanneerDirectoriesProgress.Maximum = e;
+            ScanneerDirectoriesProgress.Width = 130;
+
+            TotalDirectoryNumberBlock.Text = e.ToString();
+
+            await Task.Delay(100);
+        }
+
+        private async void ScannerDirectoryChanged(Scanner.ScannerDirectoryChangedEventArgs e)
+        {
+            ScannerValuesCard.Description = e.CurrentDirectory;
+            ScanneerDirectoriesProgress.Value = e.ScannedDirsTotal;
+
+            CurrentDirectoryNumberBlock.Text = e.ScannedDirsTotal.ToString();
+
+            await Task.Delay(50);
         }
 
         private void UpdateModifiedApp(AppItem App)
@@ -356,7 +390,7 @@ namespace PortableAppsManager.Pages.Settings
                 var suitableItems = new List<string>();
                 foreach (var app in Apps)
                 {
-                    if (Path.GetFileNameWithoutExtension(app.ExePath).ToLower().Contains(sender.Text))
+                    if (Path.GetFileNameWithoutExtension(app.ExePath).ToLower().Contains(sender.Text.ToLower()))
                     {
                         suitableItems.Add(Path.GetFileNameWithoutExtension(app.ExePath));
                     }
@@ -369,18 +403,20 @@ namespace PortableAppsManager.Pages.Settings
             }
         }
 
-        private void SearchBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
+        private async void SearchBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
         {
             if (args.SelectedItem.ToString() == "No results found")
             {
                 return;
             }
 
+            await Task.Delay(50); //delay the load, so that the suggestion is written to the sender
+
             foreach (var app in Apps)
             {
                 if (Path.GetFileNameWithoutExtension(app.ExePath) == sender.Text)
                 {
-                    AppList.ScrollIntoView(app);
+                    AppList.ScrollIntoView(app, ScrollIntoViewAlignment.Leading);
                     AppList.SelectedIndex = Apps.IndexOf(app); 
                     break;
                 }

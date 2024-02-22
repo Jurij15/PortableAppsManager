@@ -74,6 +74,37 @@
                             Loaded="IgnoreExistingAppsCheck_Loaded" />
                     </StackPanel>
                 </settings:SettingsCard>
+                <settings:SettingsCard x:Name="ScannerValuesCard" Visibility="Collapsed">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <ProgressBar x:Name="ScanneerDirectoriesProgress" Grid.Row="0" />
+                        <StackPanel
+                            x:Name="ProgressText"
+                            Grid.Row="1"
+                            Margin="0,2,0,0"
+                            HorizontalAlignment="Center"
+                            Orientation="Horizontal"
+                            Spacing="2">
+                            <TextBlock
+                                x:Name="CurrentDirectoryNumberBlock"
+                                VerticalAlignment="Center"
+                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                Style="{ThemeResource CaptionTextBlockStyle}" />
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                Text=" of " />
+                            <TextBlock
+                                x:Name="TotalDirectoryNumberBlock"
+                                VerticalAlignment="Center"
+                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                Style="{ThemeResource CaptionTextBlockStyle}" />
+                        </StackPanel>
+                    </Grid>
+                </settings:SettingsCard>
             </settings:SettingsExpander.Items>
         </settings:SettingsExpander>
 
@@ -138,7 +169,7 @@
                 <AutoSuggestBox
                     x:Name="SearchBox"
                     Grid.Row="1"
-                    Margin="0,2,0,2"
+                    Margin="4,2,4,4"
                     FontFamily="Segoe UI Variable Display"
                     PlaceholderText="Search for Executable name"
                     QueryIcon="Find"
@@ -256,110 +287,123 @@
                 <Grid.ChildrenTransitions>
                     <RepositionThemeTransition IsStaggeringEnabled="False" />
                 </Grid.ChildrenTransitions>
-                <Grid
+                <ScrollViewer
                     Grid.Row="0"
                     Padding="12"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch"
                     Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                     CornerRadius="8">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <Image
-                        x:Name="AppImage"
-                        Grid.Row="0"
-                        Width="85"
-                        Height="85"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Top" />
-                    <TextBlock
-                        x:Name="AppNameBlock"
-                        Grid.Row="1"
-                        Margin="0,4,0,4"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Top"
-                        FontFamily="Segoe UI Variable Display"
-                        Style="{ThemeResource SubtitleTextBlockStyle}" />
-
-                    <Grid
-                        Grid.Row="2"
-                        Margin="0,4,0,0"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Top">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <AppBarButton
-                            x:Name="AppEditBtn"
-                            Grid.Column="1"
-                            Margin="0,0,2,4"
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Image
+                            x:Name="AppImage"
+                            Grid.Row="0"
+                            Width="85"
+                            Height="85"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top" />
+                        <TextBlock
+                            x:Name="AppNameBlock"
+                            Grid.Row="1"
+                            Margin="0,4,0,4"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Top"
-                            Click="EditAppInfo_Click"
                             FontFamily="Segoe UI Variable Display"
-                            Label="Edit">
-                            <AppBarButton.Icon>
-                                <FontIcon Glyph="&#xE70F;" />
-                            </AppBarButton.Icon>
-                        </AppBarButton>
+                            Style="{ThemeResource SubtitleTextBlockStyle}" />
+
+                        <Grid
+                            Grid.Row="2"
+                            Margin="0,4,0,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <AppBarButton
+                                x:Name="AppEditBtn"
+                                Grid.Column="1"
+                                Margin="0,0,2,4"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Top"
+                                Click="EditAppInfo_Click"
+                                FontFamily="Segoe UI Variable Display"
+                                Label="Edit">
+                                <AppBarButton.Icon>
+                                    <FontIcon Glyph="&#xE70F;" />
+                                </AppBarButton.Icon>
+                            </AppBarButton>
+                            <AppBarButton
+                                x:Name="OpenDirectoryButton"
+                                Grid.Column="2"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Top"
+                                FontFamily="Segoe UI Variable Display"
+                                Label="Open In Explorer">
+                                <AppBarButton.Icon>
+                                    <FontIcon Glyph="&#xE8DA;" />
+                                </AppBarButton.Icon>
+                            </AppBarButton>
+                        </Grid>
+                        <StackPanel Grid.Row="3" Spacing="4">
+                            <TextBlock FontFamily="Segoe UI Variable Display" Text="Executable Path" />
+                            <TextBlock
+                                x:Name="AppExePathBlock"
+                                Margin="0,0,0,4"
+                                FontFamily="Segoe UI Variable Display"
+                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                LineHeight="18"
+                                TextTrimming="CharacterEllipsis"
+                                TextWrapping="Wrap" />
+                            <TextBlock
+                                Margin="0,4,0,2"
+                                FontFamily="Segoe UI Variable Display"
+                                Text="Author" />
+                            <TextBlock
+                                x:Name="AppAuthorBox"
+                                FontFamily="Segoe UI Variable Display"
+                                Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            <TextBlock
+                                Margin="0,4,0,2"
+                                FontFamily="Segoe UI Variable Display"
+                                Text="Description" />
+                            <TextBlock
+                                x:Name="AppDescriptionBox"
+                                FontFamily="Segoe UI Variable Display"
+                                Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            <TextBlock
+                                Margin="0,4,0,2"
+                                FontFamily="Segoe UI Variable Display"
+                                Text="Language"
+                                Visibility="Collapsed" />
+                            <TextBlock
+                                x:Name="AppLanguageBox"
+                                FontFamily="Segoe UI Variable Display"
+                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                Visibility="Collapsed" />
+                            <TextBlock
+                                Margin="0,4,0,2"
+                                FontFamily="Segoe UI Variable Display"
+                                Text="Launch As Admin"
+                                Visibility="Collapsed" />
+                            <TextBlock
+                                x:Name="AppLaunchAsAdminBox"
+                                FontFamily="Segoe UI Variable Display"
+                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                Visibility="Collapsed" />
+                        </StackPanel>
                     </Grid>
-                    <StackPanel Grid.Row="3" Spacing="4">
-                        <TextBlock FontFamily="Segoe UI Variable Display" Text="Executable Path" />
-                        <TextBlock
-                            x:Name="AppExePathBlock"
-                            Margin="0,0,0,4"
-                            FontFamily="Segoe UI Variable Display"
-                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                            LineHeight="18"
-                            TextTrimming="CharacterEllipsis"
-                            TextWrapping="Wrap" />
-                        <TextBlock
-                            Margin="0,4,0,2"
-                            FontFamily="Segoe UI Variable Display"
-                            Text="Author" />
-                        <TextBlock
-                            x:Name="AppAuthorBox"
-                            FontFamily="Segoe UI Variable Display"
-                            Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                        <TextBlock
-                            Margin="0,4,0,2"
-                            FontFamily="Segoe UI Variable Display"
-                            Text="Description" />
-                        <TextBlock
-                            x:Name="AppDescriptionBox"
-                            FontFamily="Segoe UI Variable Display"
-                            Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                        <TextBlock
-                            Margin="0,4,0,2"
-                            FontFamily="Segoe UI Variable Display"
-                            Text="Language"
-                            Visibility="Collapsed" />
-                        <TextBlock
-                            x:Name="AppLanguageBox"
-                            FontFamily="Segoe UI Variable Display"
-                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                            Visibility="Collapsed" />
-                        <TextBlock
-                            Margin="0,4,0,2"
-                            FontFamily="Segoe UI Variable Display"
-                            Text="Launch As Admin"
-                            Visibility="Collapsed" />
-                        <TextBlock
-                            x:Name="AppLaunchAsAdminBox"
-                            FontFamily="Segoe UI Variable Display"
-                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                            Visibility="Collapsed" />
-                    </StackPanel>
-                </Grid>
+                </ScrollViewer>
                 <Expander
                     x:Name="TagsExpander"
                     Grid.Row="1"

@@ -7,7 +7,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.UserDataTasks;
 using Windows.Gaming.Input.ForceFeedback;
+using Windows.System;
 
 namespace PortableAppsManager.Managers
 {
@@ -44,9 +46,9 @@ namespace PortableAppsManager.Managers
             return drills;
         }
 
-        public List<Driller.DrillerFoundApp> IndexLibrary(string DirectoryPath, List<string> Exceptions, bool IgnoreExisting = false)
+        public Scanner _scanner;
+        public async Task<List<Driller.DrillerFoundApp>> IndexLibrary(string DirectoryPath, List<string> Exceptions, bool IgnoreExisting, Action<int> ScannerStartingEvent, Action<Scanner.ScannerDirectoryChangedEventArgs> ScannerDirChangedEvent)
         {
-            Scanner _scanner;
             List<Driller.DrillerFoundApp> drills = new List<Driller.DrillerFoundApp>();
 
             if (IgnoreExisting)
@@ -58,7 +60,17 @@ namespace PortableAppsManager.Managers
             }
 
             _scanner = new Scanner(DirectoryPath, Exceptions);
-            var temp = _scanner.ScanDirectory();
+
+            _scanner.ScannerStarting += (s, e) =>
+            {
+                ScannerStartingEvent(e);
+            };
+            _scanner.ScannerDirectoryChanged += (s, e) =>
+            {
+                ScannerDirChangedEvent(e);
+            };
+
+            List<Driller.DrillerFoundApp> temp = await _scanner.ScanDirectory();
 
             drills = temp.ToList();
 

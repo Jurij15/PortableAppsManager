@@ -165,14 +165,6 @@
                     Message="App Launched succesfully"
                     Severity="Success" />
                 <InfoBar
-                    x:Name="RefreshAppToUpdate"
-                    Grid.Row="0"
-                    Margin="0,0,0,6"
-                    FontFamily="Segoe UI Variable Display"
-                    IsOpen="False"
-                    Message="Navigate back and select the app again to apply changes!"
-                    Severity="Warning" />
-                <InfoBar
                     x:Name="AppExeMissingInfoBar"
                     Title="Executable Missing"
                     Grid.Row="0"
@@ -182,7 +174,10 @@
                     IsOpen="False"
                     Message="Launching is disabled because program executable is missing!"
                     Severity="Error" />
-                <controls:AppInfoHeaderedControl Grid.Row="1" Header="Description">
+                <controls:AppInfoHeaderedControl
+                    x:Name="DescriptionPane"
+                    Grid.Row="1"
+                    Header="Description">
                     <TextBlock
                         x:Name="AppDesc"
                         Grid.Row="4"

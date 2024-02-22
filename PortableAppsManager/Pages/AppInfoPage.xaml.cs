@@ -80,6 +80,15 @@ namespace PortableAppsManager.Pages
             //AuthorBox.Text = item.Author;
             //AppDesc.Text = item.Description;
 
+            if (!Globals.Settings.ShowDescriptionCard)
+            {
+                DescriptionPane.Visibility = Visibility.Collapsed;
+            }
+            if (!Globals.Settings.ShowPortableAppsComCard)
+            {
+                PortableAppsPane.Visibility = Visibility.Collapsed;
+            }
+
             base.OnNavigatedTo(e);
 
             NavigationService.NavigationService.ChangeBreadcrumbVisibility(false);
@@ -295,8 +304,6 @@ namespace PortableAppsManager.Pages
             Globals.library.UpdateApp(item);
             Bindings.Update();
             //AppWasModified = AppItemModificationType.Modified;
-
-            RefreshAppToUpdate.IsOpen = true;
         }
 
         private void RemoveAppBtnConfirm_Click(object sender, RoutedEventArgs e)
