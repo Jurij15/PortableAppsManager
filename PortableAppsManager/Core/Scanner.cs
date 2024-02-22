@@ -61,6 +61,11 @@ namespace PortableAppsManager.Core
 
             int TotalDirctories = Directory.GetDirectories(DirectoryPath, "*", SearchOption.AllDirectories).Count();
 
+            if (Exceptions != null)
+            {
+                TotalDirctories = TotalDirctories - Exceptions.Count;
+            }
+
             dispatcherQueue.TryEnqueue(() =>
             {
                 ScannerStarting.Invoke("", TotalDirctories);

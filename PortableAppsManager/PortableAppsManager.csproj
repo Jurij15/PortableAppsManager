@@ -12,6 +12,8 @@
     <EnableMsixTooling>true</EnableMsixTooling>
 	<UseRIDGraph>True</UseRIDGraph>
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
+    <ApplicationIcon>Assets\Package.ico</ApplicationIcon>
+    <PackageIcon>Package.png</PackageIcon>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Assets\Package.svg" />
@@ -121,6 +123,12 @@
     <Reference Include="Fluent.Icons">
       <HintPath>lib\Fluent.Icons\Fluent.Icons.dll</HintPath>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Assets\Package.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\Settings\StoragePage.xaml">
