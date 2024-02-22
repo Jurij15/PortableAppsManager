@@ -25,6 +25,7 @@
     <None Remove="Pages\HomePage.xaml" />
     <None Remove="Pages\SettingsPage.xaml" />
     <None Remove="Pages\Settings\AppLibraryManagementPage.xaml" />
+    <None Remove="Pages\Settings\StoragePage.xaml" />
     <None Remove="Pages\Setup\SetupPages\AppsDirectorySetupPages.xaml" />
     <None Remove="Pages\Setup\SetupPages\OtherSettingsSetupPage.xaml" />
     <None Remove="Pages\Setup\ShellSetupPage.xaml" />
@@ -49,6 +50,7 @@
     <PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.0.240109" />
     <PackageReference Include="CommunityToolkit.WinUI.Controls.HeaderedControls" Version="8.0.240109" />
     <PackageReference Include="CommunityToolkit.WinUI.Controls.MetadataControl" Version="8.0.240109" />
+    <PackageReference Include="CommunityToolkit.WinUI.Controls.RadialGauge" Version="8.0.240109" />
     <PackageReference Include="CommunityToolkit.WinUI.Controls.RichSuggestBox" Version="8.0.240109" />
     <PackageReference Include="CommunityToolkit.WinUI.Controls.Segmented" Version="8.0.240109" />
     <PackageReference Include="CommunityToolkit.WinUI.Controls.SettingsControls" Version="8.0.240109" />
@@ -119,6 +121,11 @@
     <Reference Include="Fluent.Icons">
       <HintPath>lib\Fluent.Icons\Fluent.Icons.dll</HintPath>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\Settings\StoragePage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\Settings\AppLibraryManagementPage.xaml">

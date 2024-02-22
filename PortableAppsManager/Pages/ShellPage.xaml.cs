@@ -29,8 +29,6 @@ namespace PortableAppsManager.Pages
         {
             this.InitializeComponent();
 
-            BackdropService.ChangeBackdrop(BackdropService.Backdrops.Mica);
-
             if (Globals.Settings.PortableAppsDirectory is not null)
             {
                 Globals.library = new Managers.LibraryManager(Globals.Settings.PortableAppsDirectory);

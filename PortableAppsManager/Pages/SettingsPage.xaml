@@ -19,7 +19,7 @@
     <Page.Resources>
         <Thickness x:Key="DefaultSectionMargin">0,16,0,4</Thickness>
     </Page.Resources>
-    <ScrollViewer>
+    <ScrollView x:Name="Scroller">
         <Grid Margin="{StaticResource DefaultPageMargin}">
             <Grid Loaded="Grid_Loaded">
                 <Grid.ChildrenTransitions>
@@ -80,9 +80,9 @@
                         <settings:SettingsCard.HeaderIcon>
                             <FontIcon Glyph="&#xF407;" />
                         </settings:SettingsCard.HeaderIcon>
-                        <DropDownButton x:Name="EditDropDownCardsToShotOnAppInfoPageButton" Content="Edit">
+                        <DropDownButton x:Name="EditDropDownCardsToShotOnAppInfoPageButton" Content="Edit Cards">
                             <DropDownButton.Flyout>
-                                <Flyout x:Name="CardsToShowOnAppInfoPageFlyout">
+                                <Flyout x:Name="CardsToShowOnAppInfoPageFlyout" ShouldConstrainToRootBounds="False">
                                     <StackPanel Spacing="2">
                                         <CheckBox
                                             x:Name="ShowDescriptionCard"
@@ -124,16 +124,59 @@
                             <FontIcon Glyph="&#xE72C;" />
                         </settings:SettingsCard.HeaderIcon>
                     </settings:SettingsCard>
+                    <settings:SettingsCard
+                        x:Name="LibraryStorageCard"
+                        Click="LibraryStorageCard_Click"
+                        Description="Check and manage library storage"
+                        FontFamily="Segoe UI Variable Display"
+                        Header="Storage"
+                        IsClickEnabled="True"
+                        Visibility="Visible">
+                        <settings:SettingsCard.HeaderIcon>
+                            <FontIcon Glyph="&#xE958;" />
+                        </settings:SettingsCard.HeaderIcon>
+                    </settings:SettingsCard>
                 </StackPanel>
                 <TextBlock
                     Grid.Row="4"
                     Margin="{StaticResource DefaultSectionMargin}"
                     Style="{ThemeResource BodyStrongTextBlockStyle}"
+                    Text="Backups" />
+                <StackPanel Grid.Row="5" Spacing="4">
+                    <StackPanel.ChildrenTransitions>
+                        <RepositionThemeTransition IsStaggeringEnabled="True" />
+                    </StackPanel.ChildrenTransitions>
+                    <settings:SettingsExpander
+                        Description="Import or export settings backup"
+                        FontFamily="Segoe UI Variable Display"
+                        Header="Manage backups">
+                        <settings:SettingsExpander.HeaderIcon>
+                            <FontIcon Glyph="&#xE777;" />
+                        </settings:SettingsExpander.HeaderIcon>
+                        <settings:SettingsExpander.Items>
+                            <settings:SettingsCard
+                                x:Name="ExportBackupCard"
+                                Description="Export settings backup"
+                                FontFamily="Segoe UI Variable Display"
+                                Header="Export backup" />
+                            <settings:SettingsCard
+                                x:Name="ImportBackupCard"
+                                Description="Import settings backup"
+                                FontFamily="Segoe UI Variable Display"
+                                Header="Import backup" />
+                        </settings:SettingsExpander.Items>
+                    </settings:SettingsExpander>
+                </StackPanel>
+                <TextBlock
+                    Grid.Row="6"
+                    Margin="{StaticResource DefaultSectionMargin}"
+                    Style="{ThemeResource BodyStrongTextBlockStyle}"
                     Text="About" />
                 <settings:SettingsExpander
                     x:Name="AboutManager"
-                    Grid.Row="5"
+                    Grid.Row="7"
                     Description="by JurijG"
+                    Expanded="AboutManager_Expanded"
                     FontFamily="Segoe UI Variable Display"
                     Header="PortableAppsManager">
                     <settings:SettingsExpander.HeaderIcon>
@@ -166,5 +209,5 @@
                 </settings:SettingsExpander>
             </Grid>
         </Grid>
-    </ScrollViewer>
+    </ScrollView>
 </Page>

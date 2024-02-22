@@ -59,8 +59,6 @@ namespace PortableAppsManager.Pages.Setup
         public StartupSetupPage()
         {
             this.InitializeComponent();
-
-            BackdropService.ChangeBackdrop(BackdropService.Backdrops.Mica);
         }
 
         private async void LogoImage_Loaded(object sender, RoutedEventArgs e)

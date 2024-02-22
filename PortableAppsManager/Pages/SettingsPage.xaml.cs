@@ -62,6 +62,7 @@ namespace PortableAppsManager.Pages
         private void ThemeCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Globals.Settings.Theme = (ElementTheme)ThemeCombo.SelectedIndex;
+            ConfigJson.SaveSettings();
             ThemeService.ChangeTheme((ElementTheme)ThemeCombo.SelectedIndex);
         }
 
@@ -82,6 +83,8 @@ namespace PortableAppsManager.Pages
         {
             Globals.Settings.Backdrops = (BackdropService.Backdrops)BackdropCombo.SelectedIndex;
             BackdropService.ChangeBackdrop((BackdropService.Backdrops)BackdropCombo.SelectedIndex);
+
+            ConfigJson.SaveSettings();
         }
 
         private void Grid_Loaded(object sender, RoutedEventArgs e)
@@ -121,6 +124,15 @@ namespace PortableAppsManager.Pages
         private void ShowPortableAppsCard_Loaded(object sender, RoutedEventArgs e)
         {
             (sender as CheckBox).IsChecked = Globals.Settings.ShowPortableAppsComCard;
+        }
+
+        private void AboutManager_Expanded(object sender, EventArgs e)
+        {
+        }
+
+        private void LibraryStorageCard_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.NavigationService.Navigate(typeof(StoragePage), NavigationService.NavigationService.NavigateAnimationType.SlideFromLeft);
         }
     }
 }

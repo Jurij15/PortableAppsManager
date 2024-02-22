@@ -47,12 +47,13 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <Image
-                    x:Name="AppIconImage"
+                <Border
                     Grid.Row="0"
                     Width="80"
                     Height="80"
-                    Source="{x:Bind helpers:ImageHelper.GetImageSource(item), Mode=OneWay}" />
+                    CornerRadius="8">
+                    <Image x:Name="AppIconImage" Source="{x:Bind helpers:ImageHelper.GetImageSource(item), Mode=OneWay}" />
+                </Border>
                 <TextBlock
                     x:Name="AppNameBlock"
                     Grid.Row="1"

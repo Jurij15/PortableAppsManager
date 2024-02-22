@@ -11,6 +11,7 @@
     xmlns:local="using:PortableAppsManager.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:navigation="using:NavigationService"
+    xmlns:toolkit="using:CommunityToolkit.WinUI.Controls"
     navigation:PageProperties.AllowNavigationViewItemFocusWhenNavigatedToProperty="True"
     navigation:PageProperties.ClearNavigationProperty="True"
     navigation:PageProperties.IsHeaderVisibleProperty="True"
@@ -105,6 +106,64 @@
                             </ContentControl>
                         </DataTemplate>
                     </GridView.ItemTemplate>
+                </GridView>
+            </StackPanel>
+            <StackPanel
+                x:Name="SpaceUsedRootPanel"
+                Grid.Row="1"
+                Margin="2,12,0,2"
+                Spacing="4">
+                <TextBlock
+                    Margin="0,0,0,2"
+                    Style="{ThemeResource BodyStrongTextBlockStyle}"
+                    Text="Storage Usage" />
+                <GridView
+                    x:Name="SpacePanel"
+                    SelectionChanged="PinnedAppsPanel_SelectionChanged"
+                    SelectionMode="Single">
+                    <Grid
+                        Padding="12"
+                        HorizontalAlignment="Left"
+                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        CornerRadius="6"
+                        PointerReleased="Grid_PointerReleased">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <toolkit:RadialGauge
+                            x:Name="UsagePercentageGauge"
+                            MaxWidth="120"
+                            MaxHeight="120"
+                            FontSize="48"
+                            IsInteractive="False"
+                            Loaded="UsagePercentageGauge_Loaded"
+                            NeedleLength="0"
+                            TickLength="0" />
+                        <StackPanel Grid.Column="1" Margin="8">
+                            <TextBlock
+                                Margin="0,4,0,2"
+                                FontFamily="Segoe UI Variable Display"
+                                Text="Total Folder Size" />
+                            <TextBlock
+                                FontFamily="Segoe UI Variable Display"
+                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                Text="{x:Bind _totalFolderSize, Mode=OneWay}" />
+                            <TextBlock
+                                Margin="0,4,0,2"
+                                FontFamily="Segoe UI Variable Display"
+                                Text="Total Disk Size" />
+                            <TextBlock
+                                FontFamily="Segoe UI Variable Display"
+                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                Text="{x:Bind _totalDiskSize, Mode=OneWay}" />
+                            <TextBlock
+                                Margin="0,8,0,2"
+                                FontFamily="Segoe UI Variable Display"
+                                Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                                Text="Click here for more information" />
+                        </StackPanel>
+                    </Grid>
                 </GridView>
             </StackPanel>
         </Grid>

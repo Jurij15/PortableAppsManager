@@ -35,7 +35,7 @@ namespace PortableAppsManager
         {
             this.InitializeComponent();
 
-            this.SystemBackdrop = new MicaBackdrop();
+            //this.SystemBackdrop = new MicaBackdrop();
             this.Title = "Portable Apps Manager";
 
             this.ExtendsContentIntoTitleBar = true;

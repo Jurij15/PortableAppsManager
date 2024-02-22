@@ -20,6 +20,7 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using System.Text.RegularExpressions;
 using Windows.Devices.Power;
+using PortableAppsManager.Services;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -68,6 +69,9 @@ namespace PortableAppsManager
             Log.Verbose("MainWindow Activated");
 
             Globals.m_window = m_window;
+
+            ThemeService.ChangeTheme(Globals.Settings.Theme);
+            BackdropService.ChangeBackdrop(Globals.Settings.Backdrops);
         }
 
         private Window m_window;

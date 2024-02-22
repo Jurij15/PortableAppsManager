@@ -30,8 +30,6 @@ namespace PortableAppsManager.Pages
         public StartupPage()
         {
             this.InitializeComponent();
-
-            BackdropService.ChangeBackdrop(BackdropService.Backdrops.Mica);
         }
 
         private async void Grid_Loaded(object sender, RoutedEventArgs e)
