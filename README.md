@@ -1,5 +1,5 @@
 # PortableAppsManager
-Update, launch and manage your portable applications with a simple, Microsoft Store-like interface.
+Launch, update and manage your portable applications with a simple, Microsoft Store-like interface.
 - Works best with apps from [PortableApps.com](https://portableapps.com/apps)
 
 # Features
@@ -9,3 +9,7 @@ Update, launch and manage your portable applications with a simple, Microsoft St
 - Check total storage usage of your library and specific app usage
 - Make storage quota for your library
 - Tag your apps
+
+# To-Do
+- Games Page
+- Updating
