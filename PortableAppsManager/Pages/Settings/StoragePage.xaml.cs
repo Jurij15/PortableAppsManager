@@ -112,8 +112,7 @@ namespace PortableAppsManager.Pages.Settings
 
             Bindings.Update();
 
-            //seperate this one, as it takes a VERY long time
-            _useddiskspace = StorageHelper.BytesToHumanReadable(Convert.ToInt64(await Task.Run(() => storageService.CalculateUsedDiskSpaceAsync(Path.GetPathRoot(Globals.Settings.PortableAppsDirectory)))));
+            _useddiskspace = StorageHelper.BytesToHumanReadable(Convert.ToInt64(storageService.GetDriveTotalSpaceAsync(Globals.Settings.PortableAppsDirectory) - Convert.ToInt64(storageService.GetTotalFreeDriveSpace(Path.GetPathRoot(Globals.Settings.PortableAppsDirectory)))));
 
             Bindings.Update();
 
