@@ -134,7 +134,8 @@
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
                             Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                            CornerRadius="6">
+                            CornerRadius="6"
+                            Visibility="Collapsed">
                             <TextBlock
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"

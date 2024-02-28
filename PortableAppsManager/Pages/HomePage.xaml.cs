@@ -233,7 +233,7 @@ namespace PortableAppsManager.Pages
         private void Grid_PointerReleased(object sender, PointerRoutedEventArgs e)
         {
             NavigationService.NavigationService.Navigate(typeof(SettingsPage), NavigationService.NavigationService.NavigateAnimationType.Entrance); 
-            NavigationService.NavigationService.Navigate(typeof(StoragePage), NavigationService.NavigationService.NavigateAnimationType.SlideFromLeft);
+            NavigationService.NavigationService.Navigate(typeof(StoragePage), NavigationService.NavigationService.NavigateAnimationType.Entrance);
         }
     }
 }

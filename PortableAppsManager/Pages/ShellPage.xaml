@@ -9,6 +9,7 @@
     xmlns:navigation="using:NavigationService"
     xmlns:navigationcontrols="using:NavigationService.Controls"
     xmlns:pages="using:PortableAppsManager.Pages"
+    xmlns:settingspages="using:PortableAppsManager.Pages.Settings"
     mc:Ignorable="d">
 
     <NavigationView
@@ -59,6 +60,15 @@
                 Content="Games">
                 <NavigationViewItem.Icon>
                     <FontIcon Glyph="&#xE7FC;" />
+                </NavigationViewItem.Icon>
+            </NavigationViewItem>
+            <NavigationViewItem
+                x:Name="StorageItem"
+                navigation:NavigationProperties.NavigateAnimationTypeProperty="Entrance"
+                navigation:NavigationProperties.TargetPageTypePropertyProperty="settingspages:StoragePage"
+                Content="Storage">
+                <NavigationViewItem.Icon>
+                    <FontIcon Glyph="&#xE958;" />
                 </NavigationViewItem.Icon>
             </NavigationViewItem>
         </NavigationView.MenuItems>
