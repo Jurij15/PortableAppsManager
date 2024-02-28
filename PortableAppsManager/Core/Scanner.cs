@@ -152,6 +152,8 @@ namespace PortableAppsManager.Core
                 ScannerDirectoryChanged.Invoke("", new ScannerDirectoryChangedEventArgs(ScannedDirectoriesCount, DirectoryPath)); ;
             });
 
+            bool IsPortableAppsCom = false;
+
             //first, lets get all files in directory
             //if it is NOT portableapps, scan it for every single exe and add it to a list
             if (!IsPortableAppsDir(DirectoryPath))
@@ -172,6 +174,7 @@ namespace PortableAppsManager.Core
             //if it is portableapps, great, lets get the exe and add it to a list
             else
             {
+                IsPortableAppsCom = true;
                 foreach (var exe in Directory.GetFiles(DirectoryPath))
                 {
                     if (Path.GetExtension(Path.GetFileName(exe)) == ".exe")
@@ -190,17 +193,21 @@ namespace PortableAppsManager.Core
             }
 
             ScannedDirectoriesCount++;
-            //now, just get directories and call the function recursively
-            foreach (var item in Directory.GetDirectories(DirectoryPath))
+
+            if (!IsPortableAppsCom)
             {
-                //skip the directory if it is on exceptions
-                if (IsDirOnExceptionList(item))
+                //now, just get directories and call the function recursively
+                foreach (var item in Directory.GetDirectories(DirectoryPath))
                 {
-                    continue;
-                }
-                else
-                {
-                    await Task.Run(() => DirectoryFound(item));
+                    //skip the directory if it is on exceptions
+                    if (IsDirOnExceptionList(item))
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        await Task.Run(() => DirectoryFound(item));
+                    }
                 }
             }
         }
