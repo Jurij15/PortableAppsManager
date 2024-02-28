@@ -38,6 +38,7 @@
                     Text="Pinned Apps" />
                 <GridView
                     x:Name="PinnedAppsPanel"
+                    ItemsSource="{x:Bind PinnedApps, Mode=OneWay}"
                     Loaded="PinnedAppsPanel_Loaded"
                     SelectionChanged="PinnedAppsPanel_SelectionChanged"
                     SelectionMode="Single">
@@ -46,7 +47,7 @@
                     </GridView.ItemContainerTransitions>
                     <GridView.ItemTemplate>
                         <DataTemplate x:DataType="classes:AppItem">
-                            <ContentControl IsEnabled="{x:Bind core:Launcher.IsAppLaunchAvailable(ExePath)}">
+                            <ContentControl PointerPressed="Grid_PointerPressed">
                                 <Grid
                                     Width="170"
                                     MaxHeight="150"
@@ -55,8 +56,7 @@
                                     Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                                     CornerRadius="6"
-                                    PointerReleased="Grid_PointerPressed"
-                                    RightTapped="Grid_RightTapped"
+                                    PointerReleased="DGrid_PointerReleased"
                                     Tag="{x:Bind}">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />
@@ -84,7 +84,8 @@
                                             HorizontalAlignment="Stretch"
                                             VerticalAlignment="Stretch"
                                             IsIndeterminate="True"
-                                            Tag="{x:Bind}" />
+                                            Tag="{x:Bind}"
+                                            Visibility="Collapsed" />
                                     </StackPanel>
                                     <TextBlock
                                         x:Name="AppNameBlock"
@@ -121,64 +122,85 @@
                     x:Name="SpacePanel"
                     SelectionChanged="PinnedAppsPanel_SelectionChanged"
                     SelectionMode="Single">
-                    <Grid
-                        Padding="12"
-                        HorizontalAlignment="Left"
-                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                        CornerRadius="6"
-                        PointerReleased="Grid_PointerReleased">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <StackPanel Grid.Column="0">
-                            <toolkit:RadialGauge
-                                x:Name="UsagePercentageGauge"
-                                Grid.Column="0"
-                                MaxWidth="120"
-                                MaxHeight="120"
-                                FontSize="48"
-                                IsInteractive="False"
-                                Loaded="UsagePercentageGauge_Loaded"
-                                NeedleLength="0"
-                                TickLength="0" />
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <StackPanel
+                            x:Name="DiskInfoNotFound"
+                            Grid.Row="0"
+                            Padding="12"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                            CornerRadius="6">
                             <TextBlock
-                                Grid.Column="0"
                                 HorizontalAlignment="Center"
-                                VerticalAlignment="Bottom"
-                                Foreground="{ThemeResource TextFillColorTertiaryBrush}"
-                                Style="{ThemeResource CaptionTextBlockStyle}"
-                                Text="Quota Usage In GB" />
+                                VerticalAlignment="Center"
+                                Text="Directory not found" />
                         </StackPanel>
-                        <StackPanel Grid.Column="1" Margin="8">
-                            <TextBlock
-                                Margin="0,4,0,2"
-                                FontFamily="Segoe UI Variable Display"
-                                Text="Total Folder Size" />
-                            <TextBlock
-                                FontFamily="Segoe UI Variable Display"
-                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                Text="{x:Bind _totalFolderSize, Mode=OneWay}" />
-                            <TextBlock
-                                Margin="0,4,0,2"
-                                FontFamily="Segoe UI Variable Display"
-                                Text="Remaining Quota" />
-                            <TextBlock
-                                FontFamily="Segoe UI Variable Display"
-                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                Text="{x:Bind _totalDiskSize, Mode=OneWay}" />
-                            <TextBlock
-                                x:Name="LimitReached"
-                                FontFamily="Segoe UI Variable Display"
-                                Foreground="{ThemeResource SystemFillColorCriticalBrush}"
-                                Text="Quota Limit Reached"
-                                Visibility="Collapsed" />
-                            <TextBlock
-                                Margin="0,8,0,2"
-                                FontFamily="Segoe UI Variable Display"
-                                Foreground="{ThemeResource TextFillColorTertiaryBrush}"
-                                Text="Click here for more information" />
-                        </StackPanel>
+                        <Grid
+                            x:Name="DiskInfoGrid"
+                            Grid.Row="1"
+                            Padding="12"
+                            HorizontalAlignment="Left"
+                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                            CornerRadius="6"
+                            PointerReleased="Grid_PointerReleased">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <toolkit:RadialGauge
+                                    x:Name="UsagePercentageGauge"
+                                    Grid.Column="0"
+                                    MaxWidth="120"
+                                    MaxHeight="120"
+                                    FontSize="48"
+                                    IsInteractive="False"
+                                    Loaded="UsagePercentageGauge_Loaded"
+                                    NeedleLength="0"
+                                    TickLength="0" />
+                                <TextBlock
+                                    Grid.Column="0"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Bottom"
+                                    Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                                    Style="{ThemeResource CaptionTextBlockStyle}"
+                                    Text="Quota Usage In GB" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Margin="8">
+                                <TextBlock
+                                    Margin="0,4,0,2"
+                                    FontFamily="Segoe UI Variable Display"
+                                    Text="Total Folder Size" />
+                                <TextBlock
+                                    FontFamily="Segoe UI Variable Display"
+                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                    Text="{x:Bind _totalFolderSize, Mode=OneWay}" />
+                                <TextBlock
+                                    Margin="0,4,0,2"
+                                    FontFamily="Segoe UI Variable Display"
+                                    Text="Remaining Quota" />
+                                <TextBlock
+                                    FontFamily="Segoe UI Variable Display"
+                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                    Text="{x:Bind _totalDiskSize, Mode=OneWay}" />
+                                <TextBlock
+                                    x:Name="LimitReached"
+                                    FontFamily="Segoe UI Variable Display"
+                                    Foreground="{ThemeResource SystemFillColorCriticalBrush}"
+                                    Text="Quota Limit Reached"
+                                    Visibility="Collapsed" />
+                                <TextBlock
+                                    Margin="0,8,0,2"
+                                    FontFamily="Segoe UI Variable Display"
+                                    Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                                    Text="Click here for more information" />
+                            </StackPanel>
+                        </Grid>
                     </Grid>
                 </GridView>
             </StackPanel>

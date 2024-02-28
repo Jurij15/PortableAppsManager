@@ -23,7 +23,7 @@
         <Grid Margin="{StaticResource DefaultPageMargin}">
             <Grid Loaded="Grid_Loaded">
                 <Grid.ChildrenTransitions>
-                    <RepositionThemeTransition IsStaggeringEnabled="True" />
+                    <RepositionThemeTransition x:Name="DefaultTransition" IsStaggeringEnabled="True" />
                 </Grid.ChildrenTransitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -179,7 +179,8 @@
                     Description="by JurijG"
                     Expanded="AboutManager_Expanded"
                     FontFamily="Segoe UI Variable Display"
-                    Header="PortableAppsManager">
+                    Header="PortableAppsManager"
+                    Loaded="AboutManager_Loaded">
                     <settings:SettingsExpander.HeaderIcon>
                         <ImageIcon
                             Grid.Column="0"

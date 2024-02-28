@@ -12,6 +12,7 @@ using PortableAppsManager.Helpers;
 using PortableAppsManager.Interop;
 using PortableAppsManager.Pages.Settings;
 using PortableAppsManager.Services;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -53,15 +54,52 @@ namespace PortableAppsManager.Pages
         private void PinnedAppsPanel_Loaded(object sender, RoutedEventArgs e)
         {
             PinnedApps = Globals.library.GetPinnedApps();
-            PinnedAppsPanel.ItemsSource = PinnedApps;
+
+            Bindings.Update();
+        }
+
+
+        private void Grid_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            Log.Verbose("HomePage: Grid_PointerPressed on Grid!");
+
+            Log.Verbose("PointerDeviceType: " + e.Pointer.PointerDeviceType.ToString());
+            if (e.Pointer.PointerDeviceType == Microsoft.UI.Input.PointerDeviceType.Mouse || e.Pointer.PointerDeviceType == Microsoft.UI.Input.PointerDeviceType.Touchpad)
+            {
+                var properties = e.GetCurrentPoint(sender as ContentControl).Properties;
+                if (properties == null)
+                {
+                    Log.Verbose("Properties is null!");
+                }
+
+                if (properties.IsLeftButtonPressed)
+                {
+                    Log.Verbose("Left Pressed");
+                    showContextMenu = false;
+                }
+                else if (properties.IsRightButtonPressed)
+                {
+                    Log.Verbose("Right Pressed");
+                    showContextMenu = true;
+                }
+                else
+                {
+                    Log.Verbose("Nothing pressed?");
+                }
+            }
+
+            e.Handled = false;
+
+            Log.Verbose("showContextMenu is " + showContextMenu.ToString());
         }
 
         bool showContextMenu = false;
-        private async void Grid_PointerPressed(object sender, PointerRoutedEventArgs e)
+        private async void DGrid_PointerReleased(object sender, PointerRoutedEventArgs e)
         {
+            Log.Verbose("HomePage: PointerReleased on Grid!");
+
             if (showContextMenu)
             {
-
                 AppItem app = (sender as Grid).Tag as AppItem;
 
                 //spawn a menuflyout at the button
@@ -79,7 +117,7 @@ namespace PortableAppsManager.Pages
 
                 flyout.Items.Add(unpinitem);
 
-                flyout.ShowAt(sender as DependencyObject, new FlyoutShowOptions() { });
+                flyout.ShowAt(sender as DependencyObject, new FlyoutShowOptions() { Placement = FlyoutPlacementMode.TopEdgeAlignedLeft});
                 showContextMenu = false;
             }
             else
@@ -106,6 +144,13 @@ namespace PortableAppsManager.Pages
                     }
                 }
 
+                //check if app exists and display error if not
+                if (!Launcher.IsAppLaunchAvailable((ring.Tag as AppItem).ExePath))
+                {
+                    DialogService.ShowSimpleDialog("Cannot find program executable. Please check the path or restart the app!", "OK", "Executable Missing");
+                    return;
+                }
+
                 appimage.Visibility = Visibility.Collapsed;
                 ring.Visibility = Visibility.Visible;
 
@@ -126,7 +171,7 @@ namespace PortableAppsManager.Pages
 
         private void Grid_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
-            showContextMenu = true;
+            Log.Verbose("HomePage: RightTapped on Grid!");
         }
 
         private void Unpinitem_Click(object sender, RoutedEventArgs e)
@@ -134,6 +179,12 @@ namespace PortableAppsManager.Pages
             MenuFlyoutItem o = (MenuFlyoutItem)sender;
             AppItem item = (AppItem)o.Tag;
 
+            item.PinToHome = false;
+            Globals.library.UpdateApp(item);
+
+            PinnedApps = Globals.library.GetPinnedApps();
+
+            Bindings.Update();
         }
 
         private void PinnedAppsPanel_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -145,25 +196,38 @@ namespace PortableAppsManager.Pages
         private async void UsagePercentageGauge_Loaded(object sender, RoutedEventArgs e)
         {
             //why am i doing it this way
-            _totalDiskSize = StorageHelper.BytesToHumanReadable(await storageService.GetRemainingDiskQuota());
-
-            long dirSize = await Task.Run(() => storageService.GetDirSize(new DirectoryInfo( Globals.Settings.PortableAppsDirectory)));
-
-            double percentageUsed = (double)dirSize / storageService.GetDriveTotalSpaceAsync(Globals.Settings.PortableAppsDirectory) * 100;
-
-            //MessageBox.Show(Convert.ToInt32(percentageUsed).ToString(), storageService.GetDriveTotalSpaceAsync(Globals.Settings.PortableAppsDirectory).ToString());
-
-            UsagePercentageGauge.Maximum = StorageHelper.BytesToGB(Globals.Settings.MaxDiskUsageBytes);
-            UsagePercentageGauge.Value = StorageHelper.BytesToGB((Globals.Settings.MaxDiskUsageBytes - await storageService.GetRemainingDiskQuota()));
-
-            _totalFolderSize = StorageHelper.BytesToHumanReadable(Convert.ToInt64(dirSize));
-
-            if (await storageService.IsDirQuotaReached())
+            try
             {
-                LimitReached.Visibility = Visibility.Visible;
-            }
+                _totalDiskSize = StorageHelper.BytesToHumanReadable(await storageService.GetRemainingDiskQuota());
 
-            Bindings.Update();
+                long dirSize = await Task.Run(() => storageService.GetDirSize(new DirectoryInfo(Globals.Settings.PortableAppsDirectory)));
+
+                double percentageUsed = (double)dirSize / storageService.GetDriveTotalSpaceAsync(Globals.Settings.PortableAppsDirectory) * 100;
+
+                //MessageBox.Show(Convert.ToInt32(percentageUsed).ToString(), storageService.GetDriveTotalSpaceAsync(Globals.Settings.PortableAppsDirectory).ToString());
+
+                UsagePercentageGauge.Maximum = StorageHelper.BytesToGB(Globals.Settings.MaxDiskUsageBytes);
+                UsagePercentageGauge.Value = StorageHelper.BytesToGB((Globals.Settings.MaxDiskUsageBytes - await storageService.GetRemainingDiskQuota()));
+
+                _totalFolderSize = StorageHelper.BytesToHumanReadable(Convert.ToInt64(dirSize));
+
+                if (await storageService.IsDirQuotaReached())
+                {
+                    LimitReached.Visibility = Visibility.Visible;
+                }
+
+                Bindings.Update();
+            }
+            catch (Exception ex) 
+            {
+                Log.Error(ex.Message);
+                if (ex.GetType() == typeof(DirectoryNotFoundException))
+                {
+                    //directory not found, lets display that
+                    DiskInfoGrid.Visibility = Visibility.Collapsed;
+                    DiskInfoNotFound.Visibility = Visibility.Visible;
+                }
+            }
         }
 
         private void Grid_PointerReleased(object sender, PointerRoutedEventArgs e)

@@ -422,5 +422,14 @@ namespace PortableAppsManager.Pages.Settings
                 }
             }
         }
+
+        private void ScanExpander_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (!Directory.Exists(Globals.Settings.PortableAppsDirectory))
+            {
+                DirectoryNotFoundInfoBar.IsOpen = true;
+                ScanExpander.IsEnabled = false;
+            }
+        }
     }
 }

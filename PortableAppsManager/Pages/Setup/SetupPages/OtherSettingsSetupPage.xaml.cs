@@ -14,6 +14,7 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Microsoft.UI.Xaml.Media.Animation;
 using NavigationService;
+using System.Threading.Tasks;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -30,9 +31,12 @@ namespace PortableAppsManager.Pages.Setup.SetupPages
             this.InitializeComponent();
         }
 
-        private void FinishSetupCard_Click(object sender, RoutedEventArgs e)
+        private async void FinishSetupCard_Click(object sender, RoutedEventArgs e)
         {
             MainWindow.RootAppFrame.Navigate(typeof(ShellPage), null, new DrillInNavigationTransitionInfo());
+
+            await Task.Delay(100); //wait for shell to load?
+
             NavigationService.NavigationService.Navigate(typeof(AppsPage), NavigationService.NavigationService.NavigateAnimationType.Entrance);
         }
     }

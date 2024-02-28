@@ -134,5 +134,10 @@ namespace PortableAppsManager.Pages
         {
             NavigationService.NavigationService.Navigate(typeof(StoragePage), NavigationService.NavigationService.NavigateAnimationType.SlideFromLeft);
         }
+
+        private void AboutManager_Loaded(object sender, RoutedEventArgs e)
+        {
+            AboutManager.IsExpanded = true;
+        }
     }
 }

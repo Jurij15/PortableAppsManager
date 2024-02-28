@@ -7,6 +7,11 @@
     "PortableAppsManager (Unpackaged)": {
       "commandName": "Project",
       "nativeDebugging": false
+    },
+    "PortableAppsManager LOG(unpackaged)": {
+      "commandName": "Project",
+      "commandLineArgs": "-log",
+      "nativeDebugging": false
     }
   }
 }

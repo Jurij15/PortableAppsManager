@@ -27,6 +27,11 @@ namespace PortableAppsManager.Services
 
         public long GetDirSize(DirectoryInfo d)
         {
+            if (!Directory.Exists(d.FullName))
+            {
+                throw new DirectoryNotFoundException($"Globals.Settings.PortableAppsDirectory string is null or directory not found!");
+            }
+
             long size = 0;
             // Add file sizes.
             FileInfo[] fis = d.GetFiles();
@@ -45,6 +50,11 @@ namespace PortableAppsManager.Services
 
         public async Task<List<StorageDirectorySize>> GetTopLevelDirectories(DirectoryInfo d)
         {
+            if (!Directory.Exists(d.FullName))
+            {
+                throw new DirectoryNotFoundException($"Globals.Settings.PortableAppsDirectory string is null or directory not found!");
+            }
+
             List<StorageDirectorySize> list = new List<StorageDirectorySize>();
 
             long TotalParentDirSize = await Task.Run(() => GetDirSize(d));
@@ -67,6 +77,11 @@ namespace PortableAppsManager.Services
 
         public long GetDriveTotalSpaceAsync(string folderPath)
         {
+            if (!Directory.Exists(Globals.Settings.PortableAppsDirectory))
+            {
+                throw new DirectoryNotFoundException($"Globals.Settings.PortableAppsDirectory string is null or directory not found!");
+            }
+
             // Get drive info
             DriveInfo driveInfo = new DriveInfo(Path.GetPathRoot(folderPath));
 
@@ -82,6 +97,11 @@ namespace PortableAppsManager.Services
 
         public long GetTotalFreeDriveSpace(string driveName)
         {
+            if (!Directory.Exists(Globals.Settings.PortableAppsDirectory))
+            {
+                throw new DirectoryNotFoundException($"Globals.Settings.PortableAppsDirectory string is null or directory not found!");
+            }
+
             foreach (DriveInfo drive in DriveInfo.GetDrives())
             {
                 if (drive.IsReady && drive.Name == driveName)
@@ -94,6 +114,11 @@ namespace PortableAppsManager.Services
 
         public async Task<bool> IsDirQuotaReached()
         {
+            if (!Directory.Exists(Globals.Settings.PortableAppsDirectory))
+            {
+                throw new DirectoryNotFoundException($"Globals.Settings.PortableAppsDirectory string is null or directory not found!");
+            }
+
             bool isQuotaReached = false;
 
             long dirSize = await Task.Run(() => GetDirSize(new DirectoryInfo(Globals.Settings.PortableAppsDirectory)));
@@ -113,6 +138,11 @@ namespace PortableAppsManager.Services
 
         public async Task<long> GetRemainingDiskQuota()
         {
+            if (!Directory.Exists(Globals.Settings.PortableAppsDirectory))
+            {
+                throw new DirectoryNotFoundException($"Globals.Settings.PortableAppsDirectory string is null or directory not found!");
+            }
+
             return Globals.Settings.MaxDiskUsageBytes - await Task.Run(() => GetDirSize(new DirectoryInfo(Globals.Settings.PortableAppsDirectory)));
         }
     }

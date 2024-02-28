@@ -9,6 +9,7 @@ using PortableAppsManager.Classes;
 using PortableAppsManager.Helpers;
 using PortableAppsManager.Interop;
 using PortableAppsManager.Services;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -84,39 +85,51 @@ namespace PortableAppsManager.Pages.Settings
 
         private async void UsagePercentageGauge_Loaded(object sender, RoutedEventArgs e)
         {
-            //this is a bit of a mess
+            try
+            {
+                //this is a bit of a mess
 
-            //ModifyDiskUsageQuota.IsEnabled = false;
+                //ModifyDiskUsageQuota.IsEnabled = false;
 
-            DirectoryInfo d = new DirectoryInfo(Globals.Settings.PortableAppsDirectory);
+                DirectoryInfo d = new DirectoryInfo(Globals.Settings.PortableAppsDirectory);
 
-            _totalDiskSize = StorageHelper.BytesToHumanReadable(storageService.GetDriveTotalSpaceAsync(Globals.Settings.PortableAppsDirectory));
+                _totalDiskSize = StorageHelper.BytesToHumanReadable(storageService.GetDriveTotalSpaceAsync(Globals.Settings.PortableAppsDirectory));
 
-            dirSize = await Task.Run(() => storageService.GetDirSize(d));
+                dirSize = await Task.Run(() => storageService.GetDirSize(d));
 
-            double percentageUsed = (double)dirSize / storageService.GetDriveTotalSpaceAsync(Globals.Settings.PortableAppsDirectory) * 100;
+                double percentageUsed = (double)dirSize / storageService.GetDriveTotalSpaceAsync(Globals.Settings.PortableAppsDirectory) * 100;
 
-            UsagePercentageGauge.Maximum = 100;
-            UsagePercentageGauge.Value = Convert.ToInt32(percentageUsed);
+                UsagePercentageGauge.Maximum = 100;
+                UsagePercentageGauge.Value = Convert.ToInt32(percentageUsed);
 
-            CheckUsageQuota();
+                CheckUsageQuota();
 
-            //MessageBox.Show(Convert.ToInt32(percentageUsed).ToString(), storageService.GetDriveTotalSpaceAsync(Globals.Settings.PortableAppsDirectory).ToString());
+                //MessageBox.Show(Convert.ToInt32(percentageUsed).ToString(), storageService.GetDriveTotalSpaceAsync(Globals.Settings.PortableAppsDirectory).ToString());
 
-            _totalFolderSize = StorageHelper.BytesToHumanReadable(Convert.ToInt64(dirSize));
-            _freedrivespace = StorageHelper.BytesToHumanReadable(Convert.ToInt64(storageService.GetTotalFreeDriveSpace(Path.GetPathRoot(Globals.Settings.PortableAppsDirectory))));
+                _totalFolderSize = StorageHelper.BytesToHumanReadable(Convert.ToInt64(dirSize));
+                _freedrivespace = StorageHelper.BytesToHumanReadable(Convert.ToInt64(storageService.GetTotalFreeDriveSpace(Path.GetPathRoot(Globals.Settings.PortableAppsDirectory))));
 
-            Bindings.Update();
+                Bindings.Update();
 
-            storageDirectorySizes = await (storageService.GetTopLevelDirectories(d));
+                storageDirectorySizes = await (storageService.GetTopLevelDirectories(d));
 
-            Bindings.Update();
+                Bindings.Update();
 
-            _useddiskspace = StorageHelper.BytesToHumanReadable(Convert.ToInt64(storageService.GetDriveTotalSpaceAsync(Globals.Settings.PortableAppsDirectory) - Convert.ToInt64(storageService.GetTotalFreeDriveSpace(Path.GetPathRoot(Globals.Settings.PortableAppsDirectory)))));
+                _useddiskspace = StorageHelper.BytesToHumanReadable(Convert.ToInt64(storageService.GetDriveTotalSpaceAsync(Globals.Settings.PortableAppsDirectory) - Convert.ToInt64(storageService.GetTotalFreeDriveSpace(Path.GetPathRoot(Globals.Settings.PortableAppsDirectory)))));
 
-            Bindings.Update();
+                Bindings.Update();
 
-            ModifyDiskUsageQuota.IsEnabled = true;
+                ModifyDiskUsageQuota.IsEnabled = true;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message);
+                if (ex.GetType() == typeof(DirectoryNotFoundException))
+                {
+                    StorageContentGrid.Visibility = Visibility.Collapsed;
+                    DirectoryNotFoundInfoBar.IsOpen = true;
+                }
+            }
         }
 
         private void WhatsThisBtn_Click(object sender, RoutedEventArgs e)

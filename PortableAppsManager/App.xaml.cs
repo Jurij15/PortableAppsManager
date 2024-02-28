@@ -40,7 +40,15 @@ namespace PortableAppsManager
         {
             this.InitializeComponent();
 
-            bool ShowConsole = false; //get the variable somehow
+            bool ShowConsole = false;
+            foreach (var item in Environment.GetCommandLineArgs())
+            {
+                if (item.Contains("-log"))
+                {
+                    ShowConsole = true;
+                }
+            }
+
             if (ShowConsole)
             {
                 ConsoleInterop.SetupConsole();

@@ -96,7 +96,10 @@ namespace PortableAppsManager.Helpers
 
             if (SourceType == Enums.AppImageSourceType.Executable)
             {
-                returnval = ImageHelper.ConvertIconToImageSource(System.Drawing.Icon.ExtractAssociatedIcon(ExePath));
+                if (File.Exists(ExePath))
+                {
+                    returnval = ImageHelper.ConvertIconToImageSource(System.Drawing.Icon.ExtractAssociatedIcon(ExePath));
+                }
             }
             else if (SourceType == Enums.AppImageSourceType.File && AppImageSourcePath != null)
             {

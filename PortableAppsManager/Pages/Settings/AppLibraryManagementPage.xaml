@@ -21,15 +21,24 @@
     <Grid Margin="{StaticResource DefaultPageMargin}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
+        <InfoBar
+            x:Name="DirectoryNotFoundInfoBar"
+            Title="Directory Not Found"
+            IsClosable="False"
+            IsOpen="False"
+            Message="Your library directory was not found. Make sure it exists and restart the app!"
+            Severity="Error" />
         <settings:SettingsExpander
             x:Name="ScanExpander"
-            Grid.Row="0"
+            Grid.Row="1"
             FontFamily="Segoe UI Variable Display"
             Header="Scan"
-            IsExpanded="True">
+            IsExpanded="True"
+            Loaded="ScanExpander_Loaded">
             <Button
                 x:Name="ScanNowBtn"
                 Click="ScanNowBtn_Click"
@@ -110,7 +119,7 @@
 
         <Grid
             x:Name="AppsGrid"
-            Grid.Row="1"
+            Grid.Row="2"
             Visibility="Collapsed">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
