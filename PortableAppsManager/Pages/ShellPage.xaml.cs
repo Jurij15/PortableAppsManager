@@ -49,6 +49,12 @@ namespace PortableAppsManager.Pages
         {
             NavigationService.NavigationService.Initialize(MainNavigation, MainBreadcrum, MainFrame);
             NavigationService.NavigationService.Navigate(typeof(HomePage), NavigationService.NavigationService.NavigateAnimationType.Entrance);
+
+            if (!Globals.library.IsLibraryAvailable())
+            {
+                //library unavailable
+                DialogService.ShowSimpleDialog("Library directory not found or is unavailable. Most app functions will not work!", "OK", "Library Unavailable");
+            }
         }
     }
 }

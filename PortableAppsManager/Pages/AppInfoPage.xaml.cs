@@ -13,6 +13,7 @@ using PortableAppsManager.Enums;
 using PortableAppsManager.Helpers;
 using PortableAppsManager.Interop;
 using PortableAppsManager.Services;
+using PortableAppsManager.Structs;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -35,6 +36,7 @@ namespace PortableAppsManager.Pages
     public sealed partial class AppInfoPage : Page
     {
         AppItem item;
+        Type NavigateBackPageType;
         private AppItemModificationType AppWasModified { get; set; } = AppItemModificationType.None;
 
         Launcher Launcher;
@@ -72,7 +74,8 @@ namespace PortableAppsManager.Pages
                 buttonanim.TryStart(LaunchButton);
             }
 
-            item = e.Parameter as AppItem;
+            item = ((AppInfoPageNavigationParams)e.Parameter).AppItem;
+            NavigateBackPageType = ((AppInfoPageNavigationParams)e.Parameter).BackPageType;
 
             //comment these lines for a cool effect
             //AppIconImage.Source = ImageHelper.GetImageSource(item);
@@ -142,7 +145,7 @@ namespace PortableAppsManager.Pages
             //hide it and navigate back
             BackButtonPressed = true;
             MainWindow.AppTitleBarBackButton.Click -= AppTitleBarBackButton_Click;
-            NavigationService.NavigationService.Navigate(typeof(AppsPage), NavigationService.NavigationService.NavigateAnimationType.NoAnimation, AppWasModified);
+            NavigationService.NavigationService.Navigate(NavigateBackPageType, NavigationService.NavigationService.NavigateAnimationType.NoAnimation, AppWasModified);
         }
         #endregion
         #region Anims

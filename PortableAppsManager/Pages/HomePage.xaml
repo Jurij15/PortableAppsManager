@@ -32,14 +32,20 @@
                 Grid.Row="0"
                 Margin="2,12,0,2"
                 Spacing="4">
-                <TextBlock
-                    Margin="0,0,0,2"
-                    Style="{ThemeResource BodyStrongTextBlockStyle}"
-                    Text="Pinned Apps" />
+                <TextBlock Margin="0,0,0,2" Style="{ThemeResource BodyStrongTextBlockStyle}">
+                    <Run>
+                        Pinned Apps -
+                    </Run>
+                    <Span><Hyperlink x:Name="AppsReoderLinkClick" Click="ReoderLinkClick_Click">Reorder</Hyperlink> </Span>
+                </TextBlock>
                 <GridView
                     x:Name="PinnedAppsPanel"
+                    CanReorderItems="False"
+                    IsItemClickEnabled="False"
+                    ItemClick="PinnedAppsPanel_ItemClick"
                     ItemsSource="{x:Bind PinnedApps, Mode=OneWay}"
                     Loaded="PinnedAppsPanel_Loaded"
+                    ReorderMode="Enabled"
                     SelectionChanged="PinnedAppsPanel_SelectionChanged"
                     SelectionMode="Single">
                     <GridView.ItemContainerTransitions>
@@ -110,8 +116,93 @@
                 </GridView>
             </StackPanel>
             <StackPanel
-                x:Name="SpaceUsedRootPanel"
+                x:Name="PinnedGamesRootPanel"
                 Grid.Row="1"
+                Margin="2,12,0,2"
+                Spacing="4">
+                <TextBlock Margin="0,0,0,2" Style="{ThemeResource BodyStrongTextBlockStyle}">
+                    <Run>
+                        Pinned Games -
+                    </Run>
+                    <Span><Hyperlink x:Name="GamesReoderLinkClick" Click="ReoderLinkClick_Click">Reorder</Hyperlink> </Span>
+                </TextBlock>
+                <GridView
+                    x:Name="PinnedGamesPanel"
+                    IsItemClickEnabled="False"
+                    ItemsSource="{x:Bind PinnedGames, Mode=OneWay}"
+                    Loaded="PinnedGamesPanel_Loaded"
+                    SelectionChanged="PinnedGamesPanel_SelectionChanged"
+                    SelectionMode="Single">
+                    <GridView.ItemContainerTransitions>
+                        <AddDeleteThemeTransition />
+                    </GridView.ItemContainerTransitions>
+                    <GridView.ItemTemplate>
+                        <DataTemplate x:DataType="classes:AppItem">
+                            <ContentControl PointerPressed="Grid_PointerPressed">
+                                <Grid
+                                    Width="170"
+                                    MaxHeight="150"
+                                    Margin="2"
+                                    Padding="14"
+                                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                    CornerRadius="6"
+                                    PointerReleased="DGrid_PointerReleased"
+                                    Tag="{x:Bind}">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <StackPanel
+                                        Grid.Row="0"
+                                        Width="48"
+                                        Height="48"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Top">
+                                        <StackPanel.ChildrenTransitions>
+                                            <PopupThemeTransition />
+                                        </StackPanel.ChildrenTransitions>
+                                        <Image
+                                            x:Name="AppIcon"
+                                            Source="{x:Bind helpers:ImageHelper.GetImageSource(SourceType, AppImageSourcePath, ExePath)}"
+                                            Visibility="Visible" />
+                                        <ProgressRing
+                                            x:Name="LaunchingRing"
+                                            MinWidth="32"
+                                            MinHeight="32"
+                                            HorizontalAlignment="Stretch"
+                                            VerticalAlignment="Stretch"
+                                            IsIndeterminate="True"
+                                            Tag="{x:Bind}"
+                                            Visibility="Collapsed" />
+                                    </StackPanel>
+                                    <TextBlock
+                                        x:Name="AppNameBlock"
+                                        Grid.Row="1"
+                                        Margin="0,2,0,0"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        FontFamily="Segoe UI Variable Display"
+                                        Style="{ThemeResource BodyStrongTextBlockStyle}"
+                                        Text="{x:Bind AppName}"
+                                        TextTrimming="CharacterEllipsis"
+                                        TextWrapping="WrapWholeWords" />
+                                    <GridView Grid.Row="2">
+                                        <GridView.ItemTemplate>
+                                            <DataTemplate />
+                                        </GridView.ItemTemplate>
+                                    </GridView>
+                                </Grid>
+                            </ContentControl>
+                        </DataTemplate>
+                    </GridView.ItemTemplate>
+                </GridView>
+            </StackPanel>
+            <StackPanel
+                x:Name="SpaceUsedRootPanel"
+                Grid.Row="2"
                 Margin="2,12,0,2"
                 Spacing="4">
                 <TextBlock

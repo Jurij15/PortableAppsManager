@@ -22,6 +22,8 @@ namespace PortableAppsManager.Classes
         public bool ShowDescriptionCard { get; set; } =true;
         public bool ShowPortableAppsComCard { get; set; } =true;
 
+        public bool HasSeenGamesPageIntroduction { get; set; } = false;
+
         public long MaxDiskUsageBytes { get; set; } = 10737418240;
 
         public string PortableAppsDirectory { get; set; }

@@ -21,6 +21,7 @@
     <None Remove="Controls\AppItemControl.xaml" />
     <None Remove="Dialogs\AddAppDialog.xaml" />
     <None Remove="Dialogs\EditAppDialogContent.xaml" />
+    <None Remove="Dialogs\GamesPageIntroductionDialog.xaml" />
     <None Remove="Pages\AppInfoPage.xaml" />
     <None Remove="Pages\AppsPage.xaml" />
     <None Remove="Pages\GamesPage.xaml" />
@@ -82,6 +83,9 @@
     <ProjectCapability Include="Msix" />
   </ItemGroup>
   <ItemGroup>
+    <Content Update="Assets\Joystick.svg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Update="Assets\Package.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -129,6 +133,9 @@
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
+    <Page Update="Dialogs\GamesPageIntroductionDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\Settings\StoragePage.xaml">

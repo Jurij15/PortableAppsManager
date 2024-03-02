@@ -35,6 +35,7 @@ namespace PortableAppsManager.Pages
     public sealed partial class HomePage : Page
     {
         List<AppItem> PinnedApps;
+        List<AppItem> PinnedGames;
         Launcher launcher;
         StorageService storageService;
 
@@ -49,11 +50,31 @@ namespace PortableAppsManager.Pages
             PinnedApps = new List<AppItem>();
             launcher = new Launcher();
             storageService = new StorageService();
+            PinnedGames = new List<AppItem>();
         }
 
         private void PinnedAppsPanel_Loaded(object sender, RoutedEventArgs e)
         {
             PinnedApps = Globals.library.GetPinnedApps();
+
+            List<AppItem> indexes = new List<AppItem>(); //indexes to remove
+            //sort the pinned apps to seperate games (atleast apps with tags games)
+            foreach (var item in PinnedApps)
+            {
+                if (item.Tags.Contains("Games"))
+                {
+                    indexes.Add(item);
+                    PinnedGames.Add(item);
+                }
+            }
+
+            foreach (var item in indexes)
+            {
+                PinnedApps.Remove(item);
+            }
+
+            Log.Verbose($"Pinned Apps: {PinnedApps.Count}");
+            Log.Verbose($"Pinned Games: {PinnedGames.Count}");
 
             Bindings.Update();
         }
@@ -117,7 +138,7 @@ namespace PortableAppsManager.Pages
 
                 flyout.Items.Add(unpinitem);
 
-                flyout.ShowAt(sender as DependencyObject, new FlyoutShowOptions() { Placement = FlyoutPlacementMode.TopEdgeAlignedLeft});
+                flyout.ShowAt(e.OriginalSource as DependencyObject, new FlyoutShowOptions() { Placement = FlyoutPlacementMode.TopEdgeAlignedLeft });
                 showContextMenu = false;
             }
             else
@@ -234,6 +255,51 @@ namespace PortableAppsManager.Pages
         {
             NavigationService.NavigationService.Navigate(typeof(SettingsPage), NavigationService.NavigationService.NavigateAnimationType.Entrance); 
             NavigationService.NavigationService.Navigate(typeof(StoragePage), NavigationService.NavigationService.NavigateAnimationType.Entrance);
+        }
+
+        private async void PinnedGamesPanel_Loaded(object sender, RoutedEventArgs e)
+        {
+            await Task.Delay(100);
+            PinnedGamesPanel.ItemsSource = PinnedGames;
+            Log.Verbose((PinnedGamesPanel.ItemsSource as IList<AppItem>).Count.ToString());
+            Bindings.Update();
+        }
+
+        private void PinnedGamesPanel_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private async void PinnedAppsPanel_ItemClick(object sender, ItemClickEventArgs e)
+        {
+        }
+
+        private void PinnedAppsPanel_Drop(object sender, DragEventArgs e)
+        {
+            Log.Verbose(e.Data.ToString());
+        }
+
+        private void PinnedAppsPanel_DropCompleted(UIElement sender, DropCompletedEventArgs args)
+        {
+            Log.Verbose(args.DropResult.ToString());
+        }
+
+        private void PinnedAppsPanel_DragStarting(UIElement sender, DragStartingEventArgs args)
+        {
+            Log.Verbose(args.Data.ToString());
+        }
+
+        private void PinnedAppsPanel_DragOver(object sender, DragEventArgs e)
+        {
+        }
+
+        private void PinnedAppsPanel_DragLeave(object sender, DragEventArgs e)
+        {
+        }
+
+        private void ReoderLinkClick_Click(Microsoft.UI.Xaml.Documents.Hyperlink sender, Microsoft.UI.Xaml.Documents.HyperlinkClickEventArgs args)
+        {
+            NavigationService.NavigationService.Navigate(typeof(SettingsPage), NavigationService.NavigationService.NavigateAnimationType.Entrance);
         }
     }
 }

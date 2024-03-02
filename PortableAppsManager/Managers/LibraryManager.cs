@@ -22,6 +22,16 @@ namespace PortableAppsManager.Managers
             _driller = new Driller();
         }
 
+        public bool IsLibraryAvailable()
+        {
+            if (!Directory.Exists(Globals.Settings.PortableAppsDirectory))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         public List<AppItem> GetAllApps()
         {
             return Globals.Settings.Apps;

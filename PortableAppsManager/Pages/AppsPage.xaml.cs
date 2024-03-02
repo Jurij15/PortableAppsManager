@@ -27,6 +27,7 @@ using PortableAppsManager.Enums;
 using Microsoft.UI;
 using PortableAppsManager.Dialogs;
 using CommunityToolkit.WinUI.UI.Triggers;
+using PortableAppsManager.Structs;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -43,20 +44,6 @@ namespace PortableAppsManager.Pages
         bool AppsItemsLoaded = false;
 
         List<string> _currentTags = new List<string>();
-
-        public class DisplayApp
-        {
-            public DisplayApp(string name, ImageSource imageSource, AppItem appItem)
-            {
-                Name = name;
-                ImgSrc = imageSource;
-                OAppItem = appItem;
-            }
-            public string Name { get; set; }
-            public ImageSource ImgSrc { get; set; }
-
-            public AppItem OAppItem { get; set; }
-        }
 
         AppItemControl CachedItem;
 
@@ -322,11 +309,16 @@ namespace PortableAppsManager.Pages
             var textanim = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardTextAnim", source.APPNAMEBlock);
             var buttonanim = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardButtonAnim", source.APPLABEL);
 
+            //setup params
+            AppInfoPageNavigationParams param = new AppInfoPageNavigationParams();
+            param.BackPageType = typeof(AppsPage);
+            param.AppItem = source.AppItem;
+
             //source.APPLABEL.Visibility = Visibility.Collapsed;
             source.MetadataControl.Visibility = Visibility.Collapsed;
             await Task.Delay(100);
 
-            NavigationService.NavigationService.MainFrame.Navigate(typeof(AppInfoPage), source.AppItem, new SuppressNavigationTransitionInfo());
+            NavigationService.NavigationService.MainFrame.Navigate(typeof(AppInfoPage), param, new SuppressNavigationTransitionInfo());
 
             source.APPLABEL.Visibility = Visibility.Visible;
             source.MetadataControl.Visibility = Visibility.Visible;
