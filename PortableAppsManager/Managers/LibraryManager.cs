@@ -130,7 +130,8 @@ namespace PortableAppsManager.Managers
             ConfigJson.SaveSettings();
         }
 
-        //TODO: use app IDs instead of direct appitems
+        //TODO: use app IDs instead of direct appitems,
+        //currently, pinned apps wont update when normal apps update
         public List<AppItem> GetPinnedApps()
         {
             return Globals.Settings.PinnedApps;
