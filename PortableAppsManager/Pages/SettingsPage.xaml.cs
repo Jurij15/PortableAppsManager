@@ -159,7 +159,7 @@ namespace PortableAppsManager.Pages
 
             newlist = (List<AppItem>)ReoderAppsFlyoutGridView.ItemsSource;
 
-            Globals.library.ClearSetPinnedApps(newlist);
+            Globals.library.ClearSetPinnedApps(newlist.ToList());
 
             HomePinsReorder = newlist;
 

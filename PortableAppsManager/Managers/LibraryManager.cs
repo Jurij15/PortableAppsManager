@@ -130,6 +130,7 @@ namespace PortableAppsManager.Managers
             ConfigJson.SaveSettings();
         }
 
+        //TODO: use app IDs instead of direct appitems
         public List<AppItem> GetPinnedApps()
         {
             return Globals.Settings.PinnedApps;
