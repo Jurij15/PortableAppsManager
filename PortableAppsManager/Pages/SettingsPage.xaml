@@ -3,8 +3,10 @@
     x:Class="PortableAppsManager.Pages.SettingsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:classes="using:PortableAppsManager.Classes"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:global="using:PortableAppsManager"
+    xmlns:helpers="using:PortableAppsManager.Helpers"
     xmlns:local="using:PortableAppsManager.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:navigation="using:NavigationService"
@@ -35,15 +37,15 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <TextBlock
-                    Grid.Row="0"
-                    Margin="0,4,0,4"
-                    Style="{ThemeResource BodyStrongTextBlockStyle}"
-                    Text="Personalization" />
                 <StackPanel Grid.Row="1" Spacing="4">
                     <StackPanel.ChildrenTransitions>
                         <RepositionThemeTransition IsStaggeringEnabled="True" />
                     </StackPanel.ChildrenTransitions>
+                    <TextBlock
+                        Grid.Row="0"
+                        Margin="0,4,0,4"
+                        Style="{ThemeResource BodyStrongTextBlockStyle}"
+                        Text="Personalization" />
                     <settings:SettingsCard
                         x:Name="ThemeCard"
                         Description="Change App Theme"
@@ -103,16 +105,75 @@
                             </DropDownButton.Flyout>
                         </DropDownButton>
                     </settings:SettingsCard>
+                    <settings:SettingsExpander
+                        x:Name="ReorderHomePins"
+                        Description="Change the order of the apps and games, pinned on the home page"
+                        FontFamily="Segoe UI Variable Display"
+                        Header="Reoder Pinned Apps">
+                        <settings:SettingsExpander.HeaderIcon>
+                            <FontIcon Glyph="&#xE718;" />
+                        </settings:SettingsExpander.HeaderIcon>
+                        <settings:SettingsExpander.Items>
+                            <settings:SettingsCard HorizontalContentAlignment="Center">
+                                <settings:SettingsCard.Header>
+                                    <GridView
+                                        x:Name="ReoderAppsFlyoutGridView"
+                                        AllowDrop="True"
+                                        CanDrag="True"
+                                        CanDragItems="True"
+                                        CanReorderItems="True"
+                                        DragItemsCompleted="ReoderAppsFlyoutGridView_DragItemsCompleted"
+                                        Loaded="ReoderAppsFlyoutGridView_Loaded"
+                                        Unloaded="ReoderAppsFlyoutGridView_Unloaded">
+                                        <GridView.ItemTemplate>
+                                            <DataTemplate x:DataType="classes:AppItem">
+                                                <Grid
+                                                    Width="64"
+                                                    MaxHeight="64"
+                                                    Margin="2"
+                                                    Padding="6"
+                                                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                                    CornerRadius="6"
+                                                    Tag="{x:Bind}">
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="Auto" />
+                                                        <RowDefinition Height="Auto" />
+                                                        <RowDefinition Height="Auto" />
+                                                        <RowDefinition Height="Auto" />
+                                                    </Grid.RowDefinitions>
+                                                    <StackPanel
+                                                        Grid.Row="0"
+                                                        Width="48"
+                                                        Height="48"
+                                                        HorizontalAlignment="Center"
+                                                        VerticalAlignment="Top">
+                                                        <StackPanel.ChildrenTransitions>
+                                                            <PopupThemeTransition />
+                                                        </StackPanel.ChildrenTransitions>
+                                                        <Image
+                                                            x:Name="AppIcon"
+                                                            Source="{x:Bind helpers:ImageHelper.GetImageSource(SourceType, AppImageSourcePath, ExePath)}"
+                                                            Visibility="Visible" />
+                                                    </StackPanel>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </GridView.ItemTemplate>
+                                    </GridView>
+                                </settings:SettingsCard.Header>
+                            </settings:SettingsCard>
+                        </settings:SettingsExpander.Items>
+                    </settings:SettingsExpander>
                 </StackPanel>
-                <TextBlock
-                    Grid.Row="2"
-                    Margin="{StaticResource DefaultSectionMargin}"
-                    Style="{ThemeResource BodyStrongTextBlockStyle}"
-                    Text="Manage" />
                 <StackPanel Grid.Row="3" Spacing="4">
                     <StackPanel.ChildrenTransitions>
                         <RepositionThemeTransition IsStaggeringEnabled="True" />
                     </StackPanel.ChildrenTransitions>
+                    <TextBlock
+                        Grid.Row="2"
+                        Margin="{StaticResource DefaultSectionMargin}"
+                        Style="{ThemeResource BodyStrongTextBlockStyle}"
+                        Text="Manage" />
                     <settings:SettingsCard
                         x:Name="LibRescanCard"
                         Click="LibRescanCard_Click"
@@ -137,15 +198,15 @@
                         </settings:SettingsCard.HeaderIcon>
                     </settings:SettingsCard>
                 </StackPanel>
-                <TextBlock
-                    Grid.Row="4"
-                    Margin="{StaticResource DefaultSectionMargin}"
-                    Style="{ThemeResource BodyStrongTextBlockStyle}"
-                    Text="Backups" />
                 <StackPanel Grid.Row="5" Spacing="4">
                     <StackPanel.ChildrenTransitions>
                         <RepositionThemeTransition IsStaggeringEnabled="True" />
                     </StackPanel.ChildrenTransitions>
+                    <TextBlock
+                        Grid.Row="4"
+                        Margin="{StaticResource DefaultSectionMargin}"
+                        Style="{ThemeResource BodyStrongTextBlockStyle}"
+                        Text="Backups" />
                     <settings:SettingsExpander
                         Description="Import or export settings backup"
                         FontFamily="Segoe UI Variable Display"

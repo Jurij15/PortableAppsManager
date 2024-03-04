@@ -1,6 +1,7 @@
 ﻿using Microsoft.UI.Xaml.Documents;
 using PortableAppsManager.Classes;
 using PortableAppsManager.Core;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -20,6 +21,11 @@ namespace PortableAppsManager.Managers
         public LibraryManager(string LibraryPath)
         {
             _driller = new Driller();
+
+            if (Globals.Settings.PinnedApps is null)
+            {
+                Globals.Settings.PinnedApps = new List<AppItem>(); //initialize the array
+            }
         }
 
         public bool IsLibraryAvailable()
@@ -126,17 +132,40 @@ namespace PortableAppsManager.Managers
 
         public List<AppItem> GetPinnedApps()
         {
-            List<AppItem> apps = new List<AppItem>();
+            return Globals.Settings.PinnedApps;
+        }
 
-            foreach (var item in Globals.Settings.Apps)
-            {
-                if (item.PinToHome)
-                {
-                    apps.Add(item);
-                }
-            }
+        public void PinApp(AppItem app)
+        {
+            Globals.Settings.PinnedApps.Add(app);
 
-            return apps;
+            ConfigJson.SaveSettings();
+
+            //also set it in the actuall app class, so that the ui will update
+            app.PinToHome = true;
+            UpdateApp(app);
+        }
+
+        public async void UnpinApp(AppItem app)
+        {
+            Log.Verbose(Globals.Settings.PinnedApps.Remove(app).ToString());
+
+            ConfigJson.SaveSettings();
+
+            //also set it in the actuall app class, so that the ui will update
+            app.PinToHome = false;
+            UpdateApp(app);
+            await Task.Delay(50); //await for update to finish?
+        }
+
+        /// <summary>
+        /// Clears the current array of pinned apps and sets the new one
+        /// </summary>
+        /// <param name="apps">New list of pinned apps</param>
+        public void ClearSetPinnedApps(List<AppItem> apps)
+        {
+            Globals.Settings.PinnedApps = null; //clear the array
+            Globals.Settings.PinnedApps = apps;
         }
     }
 }

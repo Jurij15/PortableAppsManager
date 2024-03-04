@@ -28,6 +28,7 @@ using Microsoft.UI;
 using PortableAppsManager.Dialogs;
 using CommunityToolkit.WinUI.UI.Triggers;
 using PortableAppsManager.Structs;
+using Serilog;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -111,6 +112,7 @@ namespace PortableAppsManager.Pages
                 control.CardLabelBtn_Clicked += Control_CardLabelBtn_Clicked;
 
                 control.PointerReleased += OnPointerReleased;
+                control.PointerPressed += Control_PointerPressed;
 
                 foreach (var tag in item.Tags)
                 {
@@ -285,10 +287,60 @@ namespace PortableAppsManager.Pages
             }
         }
 
+        private void ShowMenu(object source)
+        {
+            //Log.Verbose(source.GetType().ToString());
+            OptionsBar.ShowAt(source as FrameworkElement);
+        }
+
+        bool showContextMenu = false;
+        private void Control_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            Log.Verbose("HomePage: Grid_PointerPressed on Grid!");
+
+            Log.Verbose("PointerDeviceType: " + e.Pointer.PointerDeviceType.ToString());
+            if (e.Pointer.PointerDeviceType == Microsoft.UI.Input.PointerDeviceType.Mouse || e.Pointer.PointerDeviceType == Microsoft.UI.Input.PointerDeviceType.Touchpad)
+            {
+                var properties = e.GetCurrentPoint(sender as ContentControl).Properties;
+                if (properties == null)
+                {
+                    Log.Verbose("Properties is null!");
+                }
+
+                if (properties.IsLeftButtonPressed)
+                {
+                    Log.Verbose("Left Pressed");
+                    showContextMenu = false;
+                }
+                else if (properties.IsRightButtonPressed)
+                {
+                    Log.Verbose("Right Pressed");
+                    showContextMenu = true;
+                }
+                else
+                {
+                    Log.Verbose("Nothing pressed?");
+                }
+            }
+
+            e.Handled = false;
+
+            Log.Verbose("showContextMenu is " + showContextMenu.ToString());
+        }
+
         private void OnPointerReleased(object sender, PointerRoutedEventArgs e)
         {
+            Log.Verbose("OnPOinterReleased");
             AppItemControl source = sender as AppItemControl;
-            NavigateToMoreDetails(source, false);
+
+            if (showContextMenu)
+            {
+                ShowMenu(source);
+            }
+            else
+            {
+                NavigateToMoreDetails(source, false);
+            }
         }
 
         private async void NavigateToMoreDetails(AppItemControl source, bool IgnoreMissingExe = false)

@@ -6,14 +6,17 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using PortableAppsManager.Classes;
+using PortableAppsManager.Interop;
 using PortableAppsManager.Managers;
 using PortableAppsManager.Pages.Settings;
 using PortableAppsManager.Services;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
@@ -42,6 +45,8 @@ namespace PortableAppsManager.Pages
             //     Use the **Dark** default theme.
             Dark
         }
+
+        List<AppItem> HomePinsReorder = new List<AppItem>();
         public SettingsPage()
         {
             this.InitializeComponent();
@@ -138,6 +143,35 @@ namespace PortableAppsManager.Pages
         private void AboutManager_Loaded(object sender, RoutedEventArgs e)
         {
             AboutManager.IsExpanded = true;
+        }
+
+        private void ReoderAppsFlyoutGridView_Loaded(object sender, RoutedEventArgs e)
+        {
+            Log.Verbose("ReoderAppsFlyoutGridView_Loaded");
+            HomePinsReorder = Globals.library.GetPinnedApps();
+            ReoderAppsFlyoutGridView.ItemsSource = HomePinsReorder;
+            Log.Verbose("Set ReoderAppsFlyoutGridView.ItemSource");
+        }
+
+        private void ReoderAppsFlyoutGridView_DragItemsCompleted(ListViewBase sender, DragItemsCompletedEventArgs args)
+        {
+            List<AppItem> newlist = new List<AppItem>();
+
+            newlist = (List<AppItem>)ReoderAppsFlyoutGridView.ItemsSource;
+
+            Globals.library.ClearSetPinnedApps(newlist);
+
+            HomePinsReorder = newlist;
+
+            ReoderAppsFlyoutGridView.ItemsSource = null;
+            ReoderAppsFlyoutGridView.ItemsSource = HomePinsReorder.ToList();
+
+            newlist.Clear(); //i think its a good idea to clear this
+        }
+
+        private void ReoderAppsFlyoutGridView_Unloaded(object sender, RoutedEventArgs e)
+        {
+            Log.Verbose("ReoderAppsFlyoutGridView_Unloaded");
         }
     }
 }

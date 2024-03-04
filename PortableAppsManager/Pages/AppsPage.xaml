@@ -25,6 +25,9 @@
                 <TextBlock Margin="8,0,0,0" Text="{Binding}" />
             </StackPanel>
         </DataTemplate>
+        <CommandBarFlyout x:Name="OptionsBar">
+            <AppBarButton x:Name="GoToDetails" Icon="Share" Label="View details"/>
+        </CommandBarFlyout>
     </Page.Resources>
 
     <Grid Margin="{StaticResource DefaultPageMargin}" Loaded="Grid_Loaded">
@@ -81,8 +84,8 @@
                 Click="MoreOptionsButton_Click">
                 <FontIcon Glyph="&#xE712;" />
                 <Button.Flyout>
-                    <Flyout x:Name="MoreOptionsFlyout" ShouldConstrainToRootBounds="False">
-                        <Grid MinWidth="160" MinHeight="160">
+                    <Flyout x:Name="MoreOptionsFlyout" ShouldConstrainToRootBounds="True">
+                        <Grid MinWidth="160">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />

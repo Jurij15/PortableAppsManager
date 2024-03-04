@@ -81,8 +81,8 @@
                 Visibility="Visible">
                 <FontIcon Glyph="&#xE712;" />
                 <Button.Flyout>
-                    <Flyout x:Name="MoreOptionsFlyout" ShouldConstrainToRootBounds="False">
-                        <Grid MinWidth="160" MinHeight="160">
+                    <Flyout x:Name="MoreOptionsFlyout" ShouldConstrainToRootBounds="True">
+                        <Grid MinWidth="160">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
@@ -101,6 +101,11 @@
                                 Grid.Row="1"
                                 Click="AddAppBtn_Click"
                                 Content="Add App" />
+                            <Button
+                                x:Name="ShowInfoBtn"
+                                Grid.Row="2" Margin="0,4,0,0"
+                                Click="ShowInfoBtn_Click"
+                                Content="Show Introduction" />
                         </Grid>
                     </Flyout>
                 </Button.Flyout>

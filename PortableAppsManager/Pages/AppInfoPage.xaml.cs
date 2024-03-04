@@ -340,14 +340,12 @@ namespace PortableAppsManager.Pages
         {
             if (item.PinToHome)
             {
-                item.PinToHome = false;
+                Globals.library.UnpinApp(item);
             }
             else
             {
-                item.PinToHome = true;
+                Globals.library.PinApp(item);
             }
-
-            Globals.library.UpdateApp(item);
 
             UpdateAppPinState();
         }

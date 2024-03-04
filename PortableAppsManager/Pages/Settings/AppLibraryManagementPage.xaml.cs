@@ -219,6 +219,16 @@ namespace PortableAppsManager.Pages.Settings
             }
 
             UpdateItemsSources(currentindex);
+
+            foreach (var app in Apps)
+            {
+                if (app.ID == App.ID)
+                {
+                    AppList.ScrollIntoView(app, ScrollIntoViewAlignment.Leading);
+                    AppList.SelectedIndex = Apps.IndexOf(app);
+                    break;
+                }
+            }
         }
 
         private async void EditAppInfo_Click(object sender, RoutedEventArgs e)
@@ -235,6 +245,16 @@ namespace PortableAppsManager.Pages.Settings
 
             AppItem modified = content.ModifiedAppItem;
             UpdateModifiedApp(modified);
+
+            foreach (var app in Apps)
+            {
+                if (app.ID == modified.ID)
+                {
+                    AppList.ScrollIntoView(app, ScrollIntoViewAlignment.Leading);
+                    AppList.SelectedIndex = Apps.IndexOf(app);
+                    break;
+                }
+            }
         }
 
         private void AppList_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -252,6 +272,7 @@ namespace PortableAppsManager.Pages.Settings
                 AppDescriptionBox.Text = _selectedItem.Description;
                 AppLanguageBox.Text = _selectedItem.Language;
                 AppLaunchAsAdminBox.Text = _selectedItem.LaunchAsAdmin.ToString();
+                TagsGrid.ItemsSource = _selectedItem.Tags;
             }
         }
 
@@ -430,6 +451,11 @@ namespace PortableAppsManager.Pages.Settings
                 DirectoryNotFoundInfoBar.IsOpen = true;
                 ScanExpander.IsEnabled = false;
             }
+        }
+
+        private void Page_Unloaded(object sender, RoutedEventArgs e)
+        {
+            Apps.Clear(); //clear the apps array so we save on memory
         }
     }
 }

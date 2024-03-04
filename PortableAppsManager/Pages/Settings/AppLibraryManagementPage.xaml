@@ -16,6 +16,7 @@
     navigation:PageProperties.ClearNavigationProperty="False"
     navigation:PageProperties.IsHeaderVisibleProperty="True"
     navigation:PageProperties.PageTitleProperty="Manage Library"
+    Unloaded="Page_Unloaded"
     mc:Ignorable="d">
 
     <Grid Margin="{StaticResource DefaultPageMargin}">

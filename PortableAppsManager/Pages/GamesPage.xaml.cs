@@ -63,17 +63,22 @@ namespace PortableAppsManager.Pages
             return false;
         }
 
+        private async Task ShowIntroDialog()
+        {
+            ContentDialog dialog = DialogService.CreateBlankContentDialog(true);
+            dialog.Content = new GamesPageIntroductionDialog();
+            dialog.CloseButtonText = "OK";
+            await dialog.ShowAsync();
+
+            Globals.Settings.HasSeenGamesPageIntroduction = true;
+            ConfigJson.SaveSettings();
+        }
+
         private async void LoadApps(HashSet<string> Tags, string ContainingName)
         {
             if (!Globals.Settings.HasSeenGamesPageIntroduction)
             {
-                ContentDialog dialog = DialogService.CreateBlankContentDialog(true);
-                dialog.Content = new GamesPageIntroductionDialog();
-                dialog.CloseButtonText = "OK";
-                await dialog.ShowAsync();
-
-                Globals.Settings.HasSeenGamesPageIntroduction = true;
-                ConfigJson.SaveSettings();
+                await ShowIntroDialog();
             }
 
             AppItems.Items.Clear();
@@ -419,6 +424,13 @@ namespace PortableAppsManager.Pages
             LoadApps(null, null);
 
             ClearSortBtn.Visibility = Visibility.Collapsed;
+        }
+
+        private async void ShowInfoBtn_Click(object sender, RoutedEventArgs e)
+        {
+            MoreOptionsFlyout.Hide();// idk why it doesnt hide by itself
+
+            await ShowIntroDialog();
         }
     }
 }

@@ -35,7 +35,6 @@ namespace PortableAppsManager.Pages
     public sealed partial class HomePage : Page
     {
         List<AppItem> PinnedApps;
-        List<AppItem> PinnedGames;
         Launcher launcher;
         StorageService storageService;
 
@@ -50,31 +49,11 @@ namespace PortableAppsManager.Pages
             PinnedApps = new List<AppItem>();
             launcher = new Launcher();
             storageService = new StorageService();
-            PinnedGames = new List<AppItem>();
         }
 
         private void PinnedAppsPanel_Loaded(object sender, RoutedEventArgs e)
         {
             PinnedApps = Globals.library.GetPinnedApps();
-
-            List<AppItem> indexes = new List<AppItem>(); //indexes to remove
-            //sort the pinned apps to seperate games (atleast apps with tags games)
-            foreach (var item in PinnedApps)
-            {
-                if (item.Tags.Contains("Games"))
-                {
-                    indexes.Add(item);
-                    PinnedGames.Add(item);
-                }
-            }
-
-            foreach (var item in indexes)
-            {
-                PinnedApps.Remove(item);
-            }
-
-            Log.Verbose($"Pinned Apps: {PinnedApps.Count}");
-            Log.Verbose($"Pinned Games: {PinnedGames.Count}");
 
             Bindings.Update();
         }
@@ -195,17 +174,22 @@ namespace PortableAppsManager.Pages
             Log.Verbose("HomePage: RightTapped on Grid!");
         }
 
-        private void Unpinitem_Click(object sender, RoutedEventArgs e)
+        private async void Unpinitem_Click(object sender, RoutedEventArgs e)
         {
             MenuFlyoutItem o = (MenuFlyoutItem)sender;
             AppItem item = (AppItem)o.Tag;
 
-            item.PinToHome = false;
-            Globals.library.UpdateApp(item);
+            Log.Verbose(PinnedApps.Count.ToString());
+            Globals.library.UnpinApp(item);
 
             PinnedApps = Globals.library.GetPinnedApps();
 
-            Bindings.Update();
+            //updating ui broke for some reason
+            PinnedAppsPanel.ItemsSource = null;
+            PinnedAppsPanel.ItemsSource = PinnedApps;
+
+            //Bindings.Update();
+            Log.Verbose(PinnedApps.Count.ToString());
         }
 
         private void PinnedAppsPanel_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -255,14 +239,6 @@ namespace PortableAppsManager.Pages
         {
             NavigationService.NavigationService.Navigate(typeof(SettingsPage), NavigationService.NavigationService.NavigateAnimationType.Entrance); 
             NavigationService.NavigationService.Navigate(typeof(StoragePage), NavigationService.NavigationService.NavigateAnimationType.Entrance);
-        }
-
-        private async void PinnedGamesPanel_Loaded(object sender, RoutedEventArgs e)
-        {
-            await Task.Delay(100);
-            PinnedGamesPanel.ItemsSource = PinnedGames;
-            Log.Verbose((PinnedGamesPanel.ItemsSource as IList<AppItem>).Count.ToString());
-            Bindings.Update();
         }
 
         private void PinnedGamesPanel_SelectionChanged(object sender, SelectionChangedEventArgs e)
