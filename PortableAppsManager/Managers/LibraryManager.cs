@@ -208,7 +208,7 @@ namespace PortableAppsManager.Managers
         /// <param name="apps">New list of pinned apps</param>
         public void ClearSetPinnedApps(List<AppItem> apps)
         {
-            Globals.Settings.PinnedApps = null; //clear the array
+            Globals.Settings.PinnedApps = new List<string>(); //clear the array
             foreach (var item in apps)
             {
                 Globals.Settings.PinnedApps.Add(item.ID);

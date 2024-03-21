@@ -26,7 +26,11 @@
             </StackPanel>
         </DataTemplate>
         <CommandBarFlyout x:Name="OptionsBar">
-            <AppBarButton x:Name="GoToDetails" Icon="Share" Label="View details"/>
+            <AppBarButton
+                x:Name="GoToDetails"
+                Click="GoToDetails_Click"
+                Icon="Share"
+                Label="View details" />
         </CommandBarFlyout>
     </Page.Resources>
 
@@ -149,10 +153,11 @@
                 IsIndeterminate="True" />
             <TextBlock
                 Grid.Row="1"
+                Margin="0,4,0,0"
                 HorizontalAlignment="Center"
                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                 Style="{ThemeResource BodyStrongTextBlockStyle}"
-                Text="Loading..." Margin="0,4,0,0"/>
+                Text="Loading..." />
         </Grid>
     </Grid>
 </Page>

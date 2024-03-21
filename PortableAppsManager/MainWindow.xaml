@@ -53,6 +53,7 @@
                 VerticalAlignment="Stretch">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <Image
@@ -68,6 +69,14 @@
                     FontFamily="Segoe UI Variable Display"
                     Style="{ThemeResource CaptionTextBlockStyle}"
                     Text="Portable Apps Manager" />
+                <TextBlock
+                    Grid.Column="2"
+                    Margin="2,4,0,0"
+                    VerticalAlignment="Center"
+                    FontFamily="Segoe UI Variable Display"
+                    Foreground="{ThemeResource TextFillColorTertiaryBrush}" FontSize="10"
+                    Style="{ThemeResource CaptionTextBlockStyle}"
+                    Text="Beta" />
             </Grid>
         </Grid>
         <Frame

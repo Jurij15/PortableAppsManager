@@ -291,6 +291,11 @@ namespace PortableAppsManager.Pages
         {
             //Log.Verbose(source.GetType().ToString());
             OptionsBar.ShowAt(source as FrameworkElement);
+            foreach (AppBarButton item in OptionsBar.PrimaryCommands)
+            {
+                item.Tag = (source as AppItemControl);
+            }
+            
         }
 
         bool showContextMenu = false;
@@ -466,6 +471,41 @@ namespace PortableAppsManager.Pages
             LoadApps(null, null);
 
             ClearSortBtn.Visibility = Visibility.Collapsed;
+        }
+
+        private async void GoToDetails_Click(object sender, RoutedEventArgs e)
+        {
+            AppItemControl control = (sender as Button).Tag as AppItemControl;
+
+            bool res = Launcher.IsAppLaunchAvailable(control.AppItem.ExePath);
+            if (res)
+            {
+                NavigateToMoreDetails(control, true);
+            }
+            else if (!res)
+            {
+                ContentDialog dialog = DialogService.CreateBlankContentDialog(true);
+
+                dialog.Content = $"Executable Path: {control.AppItem.ExePath} \n";
+                dialog.Title = "Saved Program Information";
+
+                dialog.DefaultButton = ContentDialogButton.Close;
+                dialog.CloseButtonText = "Close";
+
+                dialog.PrimaryButtonText = "Show More";
+
+                dialog.PrimaryButtonClick += (o, i) =>
+                {
+                    dialog.Hide();
+                    NavigateToMoreDetails(control, true);
+                };
+
+                await dialog.ShowAsync();
+            }
+            else
+            {
+                //OnPointerReleased((sender as Button).Tag, null);
+            }
         }
     }
 }
