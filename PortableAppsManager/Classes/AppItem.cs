@@ -28,7 +28,7 @@ namespace PortableAppsManager.Classes
         public string Description { get; set; } = ""; //
         public string Language { get; set; }
 
-        public bool PinToHome { get; set; } = false;
+        //public bool PinToHome { get; set; } = false;
 
         public AppImageSourceType SourceType { get; set; } = AppImageSourceType.Executable;
         public string AppImageSourcePath { get; set; } = null;

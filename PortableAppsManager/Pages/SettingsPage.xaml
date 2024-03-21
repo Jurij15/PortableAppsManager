@@ -109,7 +109,8 @@
                         x:Name="ReorderHomePins"
                         Description="Change the order of the apps and games, pinned on the home page"
                         FontFamily="Segoe UI Variable Display"
-                        Header="Reoder Pinned Apps">
+                        Header="Reoder Pinned Apps"
+                        Loaded="ReorderHomePins_Loaded">
                         <settings:SettingsExpander.HeaderIcon>
                             <FontIcon Glyph="&#xE718;" />
                         </settings:SettingsExpander.HeaderIcon>

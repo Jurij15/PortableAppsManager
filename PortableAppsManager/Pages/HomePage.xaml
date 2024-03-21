@@ -47,7 +47,8 @@
                     Loaded="PinnedAppsPanel_Loaded"
                     ReorderMode="Enabled"
                     SelectionChanged="PinnedAppsPanel_SelectionChanged"
-                    SelectionMode="Single">
+                    SelectionMode="Single"
+                    Unloaded="PinnedAppsPanel_Unloaded">
                     <GridView.ItemContainerTransitions>
                         <AddDeleteThemeTransition />
                     </GridView.ItemContainerTransitions>

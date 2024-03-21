@@ -30,7 +30,7 @@ namespace PortableAppsManager.Classes
 
         public List<AppItem> Apps = new List<AppItem>();
 
-        public List<AppItem> PinnedApps = new List<AppItem>();
+        public List<string> PinnedApps = new List<string>();
 
         //FUNCTIONS
         public static void SaveSettings()

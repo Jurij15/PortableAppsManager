@@ -24,7 +24,7 @@ namespace PortableAppsManager.Managers
 
             if (Globals.Settings.PinnedApps is null)
             {
-                Globals.Settings.PinnedApps = new List<AppItem>(); //initialize the array
+                Globals.Settings.PinnedApps = new List<string>(); //initialize the array
             }
         }
 
@@ -41,6 +41,26 @@ namespace PortableAppsManager.Managers
         public List<AppItem> GetAllApps()
         {
             return Globals.Settings.Apps;
+        }
+
+        public AppItem GetApp(string id)
+        {
+            AppItem toReturn = null;
+            foreach (var item in Globals.Settings.Apps)
+            {
+                if (id == item.ID)
+                {
+                    toReturn = item;
+                    break;
+                }
+            }
+
+            if (toReturn is null)
+            {
+                throw new ArgumentException("Cannot find the specified App in Library!");
+            }
+
+            return toReturn;
         }
 
         public List<Driller.DrillerFoundApp> TopLevelIndexLibrary(string DirectoryPath, List<string> Exceptions, bool IgnoreExisting = false)
@@ -134,28 +154,50 @@ namespace PortableAppsManager.Managers
         //currently, pinned apps wont update when normal apps update
         public List<AppItem> GetPinnedApps()
         {
+            List<AppItem> apps = new List<AppItem>();
+
+            foreach (var item in Globals.Settings.PinnedApps)
+            {
+                apps.Add(GetApp(item));
+            }
+
+            return apps;
+        }
+
+        public List<string> GetPinnedIDs()
+        {
             return Globals.Settings.PinnedApps;
+        }
+
+        public bool IsAppPinned(AppItem appItem)
+        {
+            bool returnVal = false;
+
+            foreach (var item in GetPinnedIDs())
+            {
+                if (appItem.ID == item)
+                {
+                    returnVal = true;
+                    break;
+                }
+            }
+
+            return returnVal;
         }
 
         public void PinApp(AppItem app)
         {
-            Globals.Settings.PinnedApps.Add(app);
+            Globals.Settings.PinnedApps.Add(app.ID);
 
             ConfigJson.SaveSettings();
-
-            //also set it in the actuall app class, so that the ui will update
-            app.PinToHome = true;
             UpdateApp(app);
         }
 
         public async void UnpinApp(AppItem app)
         {
-            Log.Verbose(Globals.Settings.PinnedApps.Remove(app).ToString());
+            Log.Verbose(Globals.Settings.PinnedApps.Remove(app.ID).ToString());
 
             ConfigJson.SaveSettings();
-
-            //also set it in the actuall app class, so that the ui will update
-            app.PinToHome = false;
             UpdateApp(app);
             await Task.Delay(50); //await for update to finish?
         }
@@ -167,7 +209,10 @@ namespace PortableAppsManager.Managers
         public void ClearSetPinnedApps(List<AppItem> apps)
         {
             Globals.Settings.PinnedApps = null; //clear the array
-            Globals.Settings.PinnedApps = apps;
+            foreach (var item in apps)
+            {
+                Globals.Settings.PinnedApps.Add(item.ID);
+            }
         }
     }
 }

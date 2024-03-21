@@ -219,6 +219,7 @@ namespace PortableAppsManager.Pages
                 if (await storageService.IsDirQuotaReached())
                 {
                     LimitReached.Visibility = Visibility.Visible;
+                    _totalDiskSize = "0";
                 }
 
                 Bindings.Update();
@@ -276,6 +277,13 @@ namespace PortableAppsManager.Pages
         private void ReoderLinkClick_Click(Microsoft.UI.Xaml.Documents.Hyperlink sender, Microsoft.UI.Xaml.Documents.HyperlinkClickEventArgs args)
         {
             NavigationService.NavigationService.Navigate(typeof(SettingsPage), NavigationService.NavigationService.NavigateAnimationType.Entrance);
+        }
+
+        private void PinnedAppsPanel_Unloaded(object sender, RoutedEventArgs e)
+        {
+            PinnedAppsPanel.ItemsSource = null;
+
+            Bindings.Update();
         }
     }
 }

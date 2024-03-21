@@ -183,7 +183,7 @@ namespace PortableAppsManager.Pages
 
         void UpdateAppPinState()
         {
-            if (item.PinToHome)
+            if (Globals.library.IsAppPinned(item))
             {
                 PinningIcon.Glyph = "\uE735";
             }
@@ -338,7 +338,7 @@ namespace PortableAppsManager.Pages
 
         private void PinAppButton_Click(object sender, RoutedEventArgs e)
         {
-            if (item.PinToHome)
+            if (Globals.library.IsAppPinned(item))
             {
                 Globals.library.UnpinApp(item);
             }

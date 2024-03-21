@@ -173,5 +173,14 @@ namespace PortableAppsManager.Pages
         {
             Log.Verbose("ReoderAppsFlyoutGridView_Unloaded");
         }
+
+        private void ReorderHomePins_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (!Globals.library.IsLibraryAvailable())
+            {
+                ReorderHomePins.IsEnabled = false;
+                ReorderHomePins.Description = "Cannot modify while library is not available.";
+            }
+        }
     }
 }
