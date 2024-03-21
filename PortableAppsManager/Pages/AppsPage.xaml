@@ -53,7 +53,7 @@
                 Grid.Column="0"
                 ItemClick="SearchBox_ItemClick"
                 ItemTemplate="{StaticResource TagTemplate}"
-                PlaceholderText="Start typing to search"
+                PlaceholderText="Search"
                 QueryIcon="{ui:FontIconSource Glyph=&#xE721;,
                                               FontSize=12}"
                 TextChanged="SearchBox_TextChanged"

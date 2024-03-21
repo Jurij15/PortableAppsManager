@@ -41,7 +41,7 @@ namespace PortableAppsManager.Dialogs
             this.InitializeComponent();
             ParentDialog = parent;
 
-            _title = $"App App";
+            _title = $"Add App";
         }
 
 

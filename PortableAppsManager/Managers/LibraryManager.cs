@@ -213,6 +213,8 @@ namespace PortableAppsManager.Managers
             {
                 Globals.Settings.PinnedApps.Add(item.ID);
             }
+
+            ConfigJson.SaveSettings();
         }
     }
 }
