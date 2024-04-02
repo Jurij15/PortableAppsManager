@@ -4,12 +4,12 @@ Launch, update and manage your portable applications with a simple, Microsoft St
 
 # Features
 - Advanced setup
-- View App Description, author and other information
+- Automatically find app Description, author and other information (Only with apps from [PortableApps.com](https://portableapps.com/apps))
 - Launch Apps
 - Check total storage usage of your library and specific app usage
 - Make storage quota for your library
-- Tag your apps
+- Tag your apps to find them easily
 
 # To-Do
-- Games Page
-- Updating
+- App Updating
+- Better Searching
