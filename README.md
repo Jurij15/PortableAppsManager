@@ -1,5 +1,5 @@
 # PortableAppsManager
-Launch, update and manage your portable applications with a simple, Microsoft Store-like interface.
+Manage your portable applications with a simple, Microsoft Store-like interface.
 - Works best with apps from [PortableApps.com](https://portableapps.com/apps)
 
 # Features
