@@ -74,9 +74,11 @@
                     Margin="2,4,0,0"
                     VerticalAlignment="Center"
                     FontFamily="Segoe UI Variable Display"
-                    Foreground="{ThemeResource TextFillColorTertiaryBrush}" FontSize="10"
+                    FontSize="10"
+                    Foreground="{ThemeResource TextFillColorTertiaryBrush}"
                     Style="{ThemeResource CaptionTextBlockStyle}"
-                    Text="Beta" />
+                    Text="Beta"
+                    Visibility="Collapsed" />
             </Grid>
         </Grid>
         <Frame

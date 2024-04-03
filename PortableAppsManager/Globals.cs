@@ -14,7 +14,7 @@ namespace PortableAppsManager
     public class Globals
     {
         private protected readonly static string VersionDefinition = "VERSION - TYPE (DD/MM/YYYY)";
-        public static readonly string Version = "1.0.0 - BETA (04032024)"; //VERSION - TYPE (DD/MM/YYYY)
+        public static readonly string Version = "1.0.0 - BETA (03042024)"; //VERSION - TYPE (DD/MM/YYYY)
 
         public static bool IsFirstTimeRun;
 

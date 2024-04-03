@@ -18,6 +18,9 @@ Launch, update and manage your portable applications with a simple, Microsoft St
 
 ![TagsImage](https://github.com/Jurij15/PortableAppsManager/blob/master/docs/img/TagApps.png)
 
+# How to use
+- Download the latest executable in Releases
+
 # To-Do
 - App Updating
 - Better Searching
